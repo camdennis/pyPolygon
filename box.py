@@ -1,6 +1,6 @@
 """Periodic simulation box and the minimum-image ``wrap`` for pyPolygon.
 
-A packing's boundary conditions come in two flavours (``enums.PackingType``):
+A packing's boundary conditions come in two flavors (``enums.PackingType``):
 
   square        -- the periodic unit square [0, 1)^2. Positions live in [0, 1)^2
                    and displacements wrap into [-0.5, 0.5)^2.
@@ -62,6 +62,18 @@ def wrap(dr, box):
             "latticeVector wrap is added in build step 9 (Phase 9)."
         )
     raise ValueError(f"unknown PackingType: {box.type!r}")
+
+def minImageShift(displacement, box):
+    """Lattice translation that carries ``displacement`` to its minimum image, i.e.
+    ``wrap(displacement) - displacement``. This is the rigid offset to add to a far point
+    so it lands in its nearest periodic image; with single-image interactions it brings one
+    polygon next to another for the crossing / overlap tests. Dispatches on the box type via
+    ``wrap``; zero in free space (``box is None``).
+    """
+    displacement = np.asarray(displacement, dtype = float)
+    if box is None:
+        return np.zeros_like(displacement)
+    return wrap(displacement, box) - displacement
 
 def wrapIntoCell(positions, box):
     """Map positions into the periodic cell. Called unconditionally by the

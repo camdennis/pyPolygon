@@ -3,7 +3,7 @@
 These are the three type flags referenced throughout the plan's module map:
 
   EnergyType    -- which energy/force model a Packing evaluates.
-  PackingType   -- boundary-condition flavour; ``wrap`` branches on this.
+  PackingType   -- boundary-condition flavor; ``wrap`` branches on this.
   MinimizerType -- which minimizer the driver runs.
 
 Checked and approved by Cam, so the definitions below carry no
@@ -36,7 +36,7 @@ class EnergyType(Enum):
 
 
 class PackingType(Enum):
-    """Boundary-condition flavour of a packing.
+    """Boundary-condition flavor of a packing.
 
     ``wrap`` checks this before applying the minimum-image convention:
       square        -- periodic unit square [0, 1)^2.

@@ -15,28 +15,28 @@
 
 \section{Definitions}
 
-A rounded polygon is a CCW backbone polygon with vertices $\vec V_i$ ($i=1,\dots,n$) whose
+A rounded polygon is a CCW backbone polygon with vertices $\vec v_i$ ($i=1,\dots,n$) whose
 corners are replaced by circular arcs of radius $\rho$. Let $z'(i)$ and $z(i)$ be the
 previous and next vertices of $i$. Define the \emph{unit} incoming and outgoing edge
 vectors and their lengths
 \[
-  \eh{z'(i)} = \frac{\vec V_i - \vec V_{z'(i)}}{\ell_{z'(i)}},\qquad
-  \eh{i}     = \frac{\vec V_{z(i)} - \vec V_i}{\ell_i},\qquad
-  \ell_{z'(i)} = \lvert \vec V_i - \vec V_{z'(i)}\rvert,\quad
-  \ell_i = \lvert \vec V_{z(i)} - \vec V_i\rvert .
+  \eh{z'(i)} = \frac{\vec v_i - \vec v_{z'(i)}}{\ell_{z'(i)}},\qquad
+  \eh{i}     = \frac{\vec v_{z(i)} - \vec v_i}{\ell_i},\qquad
+  \ell_{z'(i)} = \lvert \vec v_i - \vec v_{z'(i)}\rvert,\quad
+  \ell_i = \lvert \vec v_{z(i)} - \vec v_i\rvert .
 \]
-The corner (wedge) angle, kiss offset, kiss points, bisector, centre, and swept angle are
+The corner (wedge) angle, kiss offset, kiss points, bisector, center, and swept angle are
 \[
   \theta_i = \arccos\!\big(-\eh{z'(i)}\cdot\eh{i}\big)\in[0,\pi],\qquad
   t_i = \frac{\rho}{\tan(\theta_i/2)},
 \]
 \[
-  \vec a^- = \vec V_i - t_i\,\eh{z'(i)},\qquad
-  \vec a^+ = \vec V_i + t_i\,\eh{i},\qquad
+  \vec a^- = \vec v_i - t_i\,\eh{z'(i)},\qquad
+  \vec a^+ = \vec v_i + t_i\,\eh{i},\qquad
   \hat b = \frac{\eh{i}-\eh{z'(i)}}{\lvert \eh{i}-\eh{z'(i)}\rvert},
 \]
 \[
-  \vec z = \vec V_i + \frac{\rho}{\sin(\theta_i/2)}\,\hat b,\qquad
+  \vec z = \vec v_i + \frac{\rho}{\sin(\theta_i/2)}\,\hat b,\qquad
   \psi_i = \pi - \theta_i .
 \]
 
@@ -56,9 +56,9 @@ $-2\,\partial t_i/\partial\theta_i + \rho\,\partial\psi_i/\partial\theta_i
  = \rho/\sin^2(\theta_i/2) - \rho = \rho\cot^2(\theta_i/2)$, hence
 \[
   \boxed{\;
-  \dd{P}{V_k^\alpha}
+  \dd{P}{v_k^\alpha}
   = \eh{z'(k)}^{\,\alpha} - \eh{k}^{\,\alpha}
-    + \rho\sum_{i=1}^{n}\cot^2\!\Big(\tfrac{\theta_i}{2}\Big)\,\dd{\theta_i}{V_k^\alpha}.
+    + \rho\sum_{i=1}^{n}\cot^2\!\Big(\tfrac{\theta_i}{2}\Big)\,\dd{\theta_i}{v_k^\alpha}.
   \;}
 \]
 
@@ -71,9 +71,9 @@ Cut each corner with the chord $\vec a^-\!\to\vec a^+$ and split the corner corr
   \qquad
   s_i = \begin{cases}+1 & \text{convex}\\ -1 & \text{reflex.}\end{cases}
 \]
-The kite $(\vec V_i,\vec a^-,\vec z,\vec a^+)$ is symmetric, so its perpendicular diagonals
+The kite $(\vec v_i,\vec a^-,\vec z,\vec a^+)$ is symmetric, so its perpendicular diagonals
 $\lvert\vec a^+-\vec a^-\rvert = 2t_i\sin(\theta_i/2)$ and
-$\lvert\vec V_i-\vec z\rvert = \rho/\sin(\theta_i/2)$ give
+$\lvert\vec v_i-\vec z\rvert = \rho/\sin(\theta_i/2)$ give
 \[
   A^{\text{kite}}_i = \tfrac12\big(2t_i\sin\tfrac{\theta_i}{2}\big)\frac{\rho}{\sin(\theta_i/2)}
   = \rho\,t_i,
@@ -92,18 +92,18 @@ the vertices only through $\theta_i$, with
   = -\half\rho^2\cot^2\!\Big(\tfrac{\theta_i}{2}\Big).
 \]
 Together with the backbone shoelace gradient
-$\partial A_{\text{backbone}}/\partial V_k^\alpha
- = \half\,\varepsilon^{\alpha}{}_{\beta}\,(\vec V_{z(k)}-\vec V_{z'(k)})^{\beta}$
+$\partial A_{\text{backbone}}/\partial v_k^\alpha
+ = \half\,\varepsilon^{\alpha}{}_{\beta}\,(\vec v_{z(k)}-\vec v_{z'(k)})^{\beta}$
 (where $\varepsilon^{x}{}_{y}=1=-\varepsilon^{y}{}_{x}$, giving $\half(y_{z(k)}-y_{z'(k)},\,x_{z'(k)}-x_{z(k)})$),
 \[
   \boxed{\;
-  \dd{A}{V_k^\alpha}
-  = \half\,\varepsilon^{\alpha}{}_{\beta}\,(\vec V_{z(k)}-\vec V_{z'(k)})^{\beta}
-    + \half\rho^2\sum_{i=1}^{n} s_i\,\cot^2\!\Big(\tfrac{\theta_i}{2}\Big)\,\dd{\theta_i}{V_k^\alpha}.
+  \dd{A}{v_k^\alpha}
+  = \half\,\varepsilon^{\alpha}{}_{\beta}\,(\vec v_{z(k)}-\vec v_{z'(k)})^{\beta}
+    + \half\rho^2\sum_{i=1}^{n} s_i\,\cot^2\!\Big(\tfrac{\theta_i}{2}\Big)\,\dd{\theta_i}{v_k^\alpha}.
   \;}
 \]
 The corner sums for $\partial P$ and $\partial A$ share the factor
-$\cot^2(\theta_i/2)\,\partial\theta_i/\partial V_k$, differing only by $\rho$ vs.\ $\half\rho^2 s_i$.
+$\cot^2(\theta_i/2)\,\partial\theta_i/\partial v_k$, differing only by $\rho$ vs.\ $\half\rho^2 s_i$.
 
 \section{The angle gradient $\partial\theta/\partial V$}
 
@@ -113,7 +113,7 @@ $1/\ell$ normalization is essential---$\partial\theta/\partial V$ has units of i
 length), only $j\in\{z'(k),k,z(k)\}$ contribute and
 \[
   \boxed{\;
-  \dd{\theta_k}{V_j^\alpha}
+  \dd{\theta_k}{v_j^\alpha}
   = \frac{1}{\sin\theta_k}\Bigg[
     \frac{\delta_{kj}-\delta_{z'(k)j}}{\ell_{z'(k)}}
       \Big(\eh{k}^{\,\alpha} - (\eh{k}\!\cdot\!\eh{z'(k)})\,\eh{z'(k)}^{\,\alpha}\Big)
@@ -122,13 +122,13 @@ length), only $j\in\{z'(k),k,z(k)\}$ contribute and
   \Bigg].
   \;}
 \]
-Writing $\hat u = (\vec V_{z'(k)}-\vec V_k)/\ell_{z'(k)} = -\eh{z'(k)}$ (toward prev) and
-$\hat w = (\vec V_{z(k)}-\vec V_k)/\ell_k = \eh{k}$ (toward next), so
+Writing $\hat u = (\vec v_{z'(k)}-\vec v_k)/\ell_{z'(k)} = -\eh{z'(k)}$ (toward prev) and
+$\hat w = (\vec v_{z(k)}-\vec v_k)/\ell_k = \eh{k}$ (toward next), so
 $\eh{k}\!\cdot\!\eh{z'(k)} = -\cos\theta_k$, the three contributions read
 \[
-  \dd{\theta_k}{\vec V_{z'(k)}} = -\frac{\hat w - \cos\theta_k\,\hat u}{\ell_{z'(k)}\sin\theta_k},\quad
-  \dd{\theta_k}{\vec V_{z(k)}}  = -\frac{\hat u - \cos\theta_k\,\hat w}{\ell_{k}\sin\theta_k},\quad
-  \dd{\theta_k}{\vec V_{k}}     = -\Big(\dd{\theta_k}{\vec V_{z'(k)}} + \dd{\theta_k}{\vec V_{z(k)}}\Big).
+  \dd{\theta_k}{\vec v_{z'(k)}} = -\frac{\hat w - \cos\theta_k\,\hat u}{\ell_{z'(k)}\sin\theta_k},\quad
+  \dd{\theta_k}{\vec v_{z(k)}}  = -\frac{\hat u - \cos\theta_k\,\hat w}{\ell_{k}\sin\theta_k},\quad
+  \dd{\theta_k}{\vec v_{k}}     = -\Big(\dd{\theta_k}{\vec v_{z'(k)}} + \dd{\theta_k}{\vec v_{z(k)}}\Big).
 \]
 This is the routine \texttt{cornerAngleGradients}; the perimeter and area gradients above are
 \texttt{roundedPerimeterGradient} and \texttt{roundedAreaGradient}, all finite-difference

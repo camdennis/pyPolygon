@@ -25,7 +25,7 @@ def backboneEdgeLengths(packing):
     """Per-edge backbone length, raw (no periodic wrap).
 
     Returns an (N,) array whose entry k is |r[next[k]] - r[k]|, the length of the
-    edge leaving vertex k toward its CCW neighbour.
+    edge leaving vertex k toward its CCW neighbor.
     """
     r = packing.positions.reshape(-1, 2)
     e = r[packing.next] - r

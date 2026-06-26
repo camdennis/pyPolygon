@@ -5,3 +5,12 @@ __pycache__/
 .vscode/
 .DS_Store
 *.png
+
+# LaTeX build artifacts (PDFs are kept; these are not)
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.fls
+*.fdb_latexmk

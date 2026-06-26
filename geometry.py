@@ -2,7 +2,7 @@
 
 Each corner is rounded by a circle of radius rho tangent to both incident edges.
 Per vertex this computes:
-  z       -- circle centre (inside the polygon at convex corners, outside at reflex)
+  z       -- circle center (inside the polygon at convex corners, outside at reflex)
   aMinus  -- kiss point on the incoming edge (toward prev[k])
   aPlus   -- kiss point on the outgoing edge (toward next[k])
   t       -- kiss offset from the vertex along each edge, t = rho * cot(theta/2)
@@ -11,7 +11,7 @@ Per vertex this computes:
 
 Edge unit vectors (see notes/roundedDefinitions.pdf): eOutHat = e_i (outgoing edge,
 v_i -> v_next) and eInHat = e_{z'(i)} (incoming edge, v_prev -> v_i). theta is the wedge
-angle arccos(-eInHat . eOutHat) in [0, pi]; the centre sits along the bisector
+angle arccos(-eInHat . eOutHat) in [0, pi]; the center sits along the bisector
 bHat proportional to (eOutHat - eInHat), which points into that wedge -- automatically
 the interior for convex corners and the exterior for reflex ones, so no sign flip needed.
 

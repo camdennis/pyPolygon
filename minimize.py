@@ -6,7 +6,7 @@ Both take the packing and a ``forceEnergy`` callable
 
 and relax ``packing.positions`` in place. Hiding the energy model behind this
 callable lets step 1 pass eqSoftBody while the later collision model passes its
-own force routine (which can refresh neighbours / intersections on each call).
+own force routine (which can refresh neighbors / intersections on each call).
 
 FIRE is the velocity-Verlet variant of Bitzek et al. (2006), mirroring the CUDA
 reference's FIRE.h: half-kick / drift / half-kick, then mix the velocity toward

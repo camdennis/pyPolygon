@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\half}{\tfrac{1}{2}}
+\DeclareMathOperator{\atantwo}{atan2}
+
+\title{Rounded polygons: boundary intersections and outersections}
+\date{}
+\author{}
+
+\begin{document}
+\maketitle
+
+Two rounded polygons $A,B$ cross at four feature combinations: edge--edge (\textbf{ee}),
+edge--arc (\textbf{ea}), arc--edge (\textbf{ae}), arc--arc (\textbf{aa}). We use the 2D
+Levi-Civita symbol $\varepsilon_{\alpha\beta}$ with $\varepsilon_{xy}=-\varepsilon_{yx}=1$; a
+$90^\circ$ rotation is $(\vv n^{\perp})^{\alpha}=\varepsilon^{\alpha}{}_{\beta}\,n^{\beta}$.
+Repeated Greek indices are summed; all position differences use the periodic minimum image.
+
+\paragraph{Periodic boundaries and the pair shift.}
+Positions live in the unit square $[0,1)^2$ with periodic walls (a torus), so two polygons may
+meet across a wall. We work in $A$'s frame and translate the partner $B$ to its nearest
+periodic image: with representative vertices $\vv r_i\in A$, $\vv r_j\in B$, the \emph{pair
+shift} is $\vv T_{ij}=\operatorname{wrap}(\vv r_j-\vv r_i)-(\vv r_j-\vv r_i)$. Every point
+feature of $B$ is offset by this one vector ($\vv z_j\to\vv z_j+\vv T_{ij}$, $\vv a^{\pm}_j\to
+\vv a^{\pm}_j+\vv T_{ij}$); directions are unchanged. $\vv T_{ij}$ is per pair, and by choice
+we keep only this single image. (In code $\vv T_{ij}$ is \texttt{shift}.)
+
+\section{Boundary features}
+
+For a polygon with vertices $\vv v_k$, kiss points $\vv a^{\pm}_k$, corner centers $\vv z_k$,
+radii $\rho_k$, sweeps $\psi_k$ (next vertex $z(k)$, previous $z'(k)$):
+\[
+  \vv P_k(s)=\vv a^{+}_k+s\,\vv u_k,\quad \vv u_k=\vv a^{-}_{z(k)}-\vv a^{+}_k,\quad s\in[0,1]
+  \qquad\text{(edge $E_k$),}
+\]
+\[
+  \vv Q_k(\phi)=\vv z_k+\rho_k(\cos\phi,\sin\phi),\quad
+  \phi^{\pm}_k=\atantwo(\vv a^{\pm}_k-\vv z_k),\quad \psi_k=\phi^{+}_k-\phi^{-}_k
+  \qquad\text{(arc $C_k$).}
+\]
+
+\paragraph{Arc-validity (AVT).}
+The crossing formulas place candidate points on the \emph{full} circle $(\vv z_k,\rho_k)$; the
+arc $C_k$ is only its wedge, symmetric about the outward bisector $-\hat b_k$ and spanning
+$\pm\psi_k/2$ ($\hat b_k$ the bisector from $\vv v_k$ toward $\vv z_k$). A point $\vv R$ on the
+circle lies on $C_k$ iff
+\[
+  \boxed{\;\frac{\vv R-\vv z_k}{\rho_k}\cdot\hat b_k \;\le\; -\cos(\psi_k/2).\;}
+\]
+This holds for convex and reflex corners alike (both arcs bulge toward $\vv v_k$).
+
+\section{Ordering features}
+
+Number a polygon's $2n$ features CCW, $C_0,E_0,C_1,E_1,\dots,C_{n-1},E_{n-1}=0,1,\dots,2n-1$.
+A crossing on feature $f$ of $\partial A$ gets the monotonic boundary coordinate
+\[
+  \boxed{\;\sigma_A = f +
+  \begin{cases}\lambda & f\ \text{even (arc $C_{f/2}$)}\\[2pt] s & f\ \text{odd (edge)}\end{cases}\;}
+  \qquad
+  \lambda=\frac{\phi-\phi^{-}_k}{\psi_k}\ \ (\text{mod }2\pi,\ \text{along }a^{-}_k\!\to a^{+}_k).
+\]
+Sorting a pair's crossings by $\sigma_A$ gives the order met walking $\partial A$ CCW; the
+\emph{outersection} of a crossing is the next one in that cyclic order. It remains to find the
+edge parameter $s$ and the arc angle $\phi$ for each crossing.
+
+\section{Edge--edge (ee)}
+
+Edges $\vv P_k(s)=\vv a^{+}_k+s\,\vv u_k$ and $\vv P_\ell(t)=\vv a^{+}_\ell+t\,\vv u_\ell$. With
+$\vv w_{k\ell}=\vv a^{+}_\ell-\vv a^{+}_k$, a crossing needs
+$\vv P_\ell(t)-\vv P_k(s)=\vv w_{k\ell}-s\,\vv u_k+t\,\vv u_\ell=\vv 0$. Contracting with
+$\varepsilon_{\alpha\beta}$ against $\vv u_\ell$ and against $\vv u_k$,
+\[
+  s=\frac{\varepsilon_{\alpha\beta}\,w_{k\ell}^{\alpha}u_\ell^{\beta}}
+         {\varepsilon_{\alpha\beta}\,u_k^{\alpha}u_\ell^{\beta}},
+  \qquad
+  t=\frac{\varepsilon_{\alpha\beta}\,w_{k\ell}^{\alpha}u_k^{\beta}}
+         {\varepsilon_{\alpha\beta}\,u_k^{\alpha}u_\ell^{\beta}}.
+\]
+A crossing exists iff the denominator $\varepsilon_{\alpha\beta}u_k^{\alpha}u_\ell^{\beta}\neq0$
+(non-parallel) and $s,t\in[0,1]$.
+
+\section{Edge--arc (ea, ae)}
+
+Edge $E_k$ meets the full circle of arc $\ell$. With $\vv w_{k\ell}=\vv a^{+}_k-\vv z_\ell$,
+$\rho_\ell^{2}=\lvert\vv w_{k\ell}+s\,\vv u_k\rvert^{2}$ is the quadratic
+$\lvert\vv u_k\rvert^{2}s^{2}+2(\vv w_{k\ell}\!\cdot\!\vv u_k)s+\lvert\vv w_{k\ell}\rvert^{2}-\rho_\ell^{2}=0$, so
+\[
+  \boxed{\;S_{\pm}=\frac{-(\vv w_{k\ell}\!\cdot\!\vv u_k)\pm\sqrt{D_{k\ell}}}{\lvert\vv u_k\rvert^{2}},
+  \qquad
+  D_{k\ell}=(\vv w_{k\ell}\!\cdot\!\vv u_k)^{2}+\lvert\vv u_k\rvert^{2}\big(\rho_\ell^{2}-\lvert\vv w_{k\ell}\rvert^{2}\big).\;}
+\]
+Keep each root with $S_{\pm}\in[0,1]$ whose point $\vv R=\vv P_k(S_{\pm})$ passes the AVT for arc
+$\ell$ (an edge can cross one arc twice). Its arc angle is $\phi=\atantwo(\vv R-\vv z_\ell)$
+(feeds $\lambda$). \textbf{ae} is identical with the roles swapped (edge on $B$, arc on $A$).
+
+\section{Arc--arc (aa)}
+
+A point $\vv X$ on both circles satisfies $\lvert\vv X-\vv z_k\rvert^{2}=\rho_k^{2}$ and
+$\lvert\vv X-\vv z_\ell\rvert^{2}=\rho_\ell^{2}$. Subtracting cancels $\lvert\vv X\rvert^{2}$ and
+leaves the \emph{radical line}
+\[
+  2\,\vv X\!\cdot\!(\vv z_\ell-\vv z_k)+\lvert\vv z_k\rvert^{2}-\lvert\vv z_\ell\rvert^{2}=\rho_k^{2}-\rho_\ell^{2},
+\]
+perpendicular to $\vv n_{k\ell}=\vv z_\ell-\vv z_k$. With $\hat n_{k\ell}=\vv n_{k\ell}/d$,
+$d=\lvert\vv n_{k\ell}\rvert$, write $\vv X=\vv z_k+a\,\hat n_{k\ell}+h\,\hat n_{k\ell}^{\perp}$;
+the two circle equations give
+\[
+  a=\frac{d^{2}+\rho_k^{2}-\rho_\ell^{2}}{2d},\qquad
+  h=\sqrt{\rho_k^{2}-a^{2}},\qquad
+  \boxed{\;\vv X_{\pm}=\vv z_k+a\,\hat n_{k\ell}\pm h\,\hat n_{k\ell}^{\perp}.\;}
+\]
+Real (an intersection) iff $\lvert\rho_k-\rho_\ell\rvert\le d\le\rho_k+\rho_\ell$ with $d>0$.
+Keep each $\vv X_{\pm}$ that passes the AVT for \emph{both} arcs $C_k$ and $C_\ell$.
+
+\end{document}

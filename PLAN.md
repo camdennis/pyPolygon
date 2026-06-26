@@ -4,10 +4,10 @@
 
 We are building a **clean NumPy reference implementation** of a molecular-dynamics
 model for *rounded polygons* — backbone polygons whose corners are replaced by
-radius-ρ circular arcs. A working but backbone-only CUDA predecessor exists at
-`/home/rdennis/Documents/Code/pyCudaPolygonSTABLE` (the "STABLE" reference); it has
-the data layout, FIRE minimizer, neighbor/intersection machinery, and MC overlap
-check, but **does not implement ρ / rounded corners**, nor the `latticeVector`
+radius-ρ circular arcs. A working but backbone-only CUDA predecessor (the "STABLE"
+reference) preceded this; it had the data layout, FIRE minimizer, neighbor/intersection
+machinery, and MC overlap check, but **does not implement ρ / rounded corners**, nor the
+`latticeVector`
 boundary mode. This Python build adds those, in a form that (a) is readable and
 finite-difference-checkable line by line, and (b) mirrors the reference's flat-array
 layout so numbers cross-check directly and the math ports back to CUDA later.
@@ -147,12 +147,16 @@ point sampling (cell size **0.5**, memory `feedback_mc_cell_size`).
 the vertices within a **per-polygon** ball `D_i` (Cam):
 `D_i = globalPercentage·(maxEdgeLength + edgeLength[i]) + 2ρ`. The global `maxEdgeLength`
 term guarantees coverage of the largest possible partner regardless of how small `i` is;
-the `+2ρ` margin covers the rounded-feature / self-repulsion reach that the edge-length
-terms miss. Record a pair if *either* endpoint finds the other within its own `D`
-(symmetric). Reduces to a global constant when monodisperse. Must retain **same-polygon
-non-adjacent** neighbors too (the self-repulsion needs them), tagged so step 6 routes
-same-shape pairs to self-repulsion and different-shape pairs to overlap/adhesion.
+the `+2ρ` margin covers the rounded-feature reach for inter-polygon crossings that the
+edge-length terms miss. Record a pair if *either* endpoint finds the other within its own
+`D` (symmetric). Reduces to a global constant when monodisperse.
 (Critical-displacement rebuild deferred to step 8.)
+
+**Revised (2026-06-25):** the neighbor list is **inter-polygon only** — self-repulsion is
+no longer routed through it (it is intra-polygon and needs no spatial search; see Phase 6).
+The current `neighbors.py` still keeps/flags same-polygon pairs (`sameShape`); that is
+**transitional** and will be stripped to inter-polygon pairs only when Phase 6 lands,
+dropping the `sameShape` flag.
 
 ## Phase 5 — Intersections ee/ea/ae/aa + outersections (build step 5)  *[outline]*
 Segment–segment (`ee`), segment–arc (`ea/ae`), arc–arc (`aa`) intersection tests;
@@ -171,9 +175,13 @@ Assemble U (prompt line 11) **plus the intra-polygon self-repulsion**, everythin
    the partner, plus partial segments at intersections; arc pieces add circular-segment
    area terms. Validate vs MC.
 2. **Intra-polygon self-repulsion** — radius-ρ corner circles repelling *other vertices
-   of the same polygon* (self-avoidance; never inter-polygon). Pin exact pairing
-   (circle↔circle / circle↔vertex / circle↔edge within one polygon) and functional form
-   with Cam at this step; `overlapCircles.nb` is the reference math.
+   of the same polygon* (self-avoidance for floppy shapes; never inter-polygon).
+   **Scanned DIRECTLY per polygon** over its own non-adjacent vertex pairs — *not* via the
+   neighbor list (own vertices are few, the repulsion is short-range, so no spatial search
+   is needed; this also lets `neighbors.py` drop its same-polygon `sameShape` tracking).
+   Pin exact pairing (circle↔circle / circle↔vertex / circle↔edge within one polygon) and
+   functional form with Cam at this step. (The two-circle overlap area is a standard lens
+   formula — we'll derive it fresh in a `notes/*.tex` then.)
 3. **Adhesion** `−(K_adh/2)·Σ(2·chord/(P_i^t+P_j^t))²` summed over consecutive
    intersection↔outersection pairs incl. cross-feature.
 4. **`K_A`** area springs, **`K_P`** perimeter springs (rounded quantities).
@@ -208,13 +216,9 @@ API to set and rescale each polygon's `targetArea` (and re-derive `targetEdgeLen
 - Cross-check backbone scalars (areas, edge lengths) against `pyCudaPolygonSTABLE`;
   rounded overlap only matches the reference's backbone overlap in the ρ→0 limit.
 
-## Critical reference files (read-only, for cross-checking)
-- `pyCudaPolygonSTABLE/src/model.hpp` — class layout / array names to mirror.
-- `pyCudaPolygonSTABLE/src/kernels.cuh` — geometry, neighbors, intersections,
-  outersections, force/energy passes, MC overlap.
-- `pyCudaPolygonSTABLE/src/FIRE.h`, `enumTypes.h` — minimizer loop and enums.
-- `pyCudaPolygonSTABLE/overlapCircles.nb` — corner-circle (self-repulsion) math (Phase 6).
-- `pyCudaPolygonSTABLE/tests/ForceEnergyDiagnostic.py` — FD gradient-check pattern.
+## Reference material (in-repo, self-contained)
+- `notes/roundedDefinitions.pdf` / `.tex` — definitions, perimeter, area, gradients.
+- `notes/intersections.pdf` / `.tex` — crossings ee/ea/ae/aa, outersections, periodic shift.
 
 ## Open items I'll confirm at the relevant step (not blocking step 1)
 - ρ-feasibility strategy for sharp star corners (Phase 2): cap `t` / shrink local ρ vs

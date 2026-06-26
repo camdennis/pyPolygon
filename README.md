@@ -13,12 +13,12 @@ flat CSR array layout ports back to CUDA. At the moment, pyCudaPolygonSTABLE doe
 **Phase 1 complete** — building and relaxing a single equilateral polygon:
 
 - A random *star* polygon seed (n points scattered in the unit box, ordered CCW about
-  the centre) is relaxed by the **eqSoftBody** spring model (per-edge length springs +
+  the center) is relaxed by the **eqSoftBody** spring model (per-edge length springs +
   an area spring) using **FIRE**, producing an equilateral polygon at a chosen perimeter
   and area. Energy is driven to ~0 and verified: every edge equal, area on target, and
   the analytic force matches a central-difference gradient to ~1e-10.
 
-Remaining phases (rounding the corners, neighbours, intersections, the full collision
+Remaining phases (rounding the corners, neighbors, intersections, the full collision
 energy/force, periodic packing, stress/stiffness) follow the roadmap below.
 
 ## Module map
@@ -56,7 +56,7 @@ print(converged, backboneEdgeLengths(pk).mean(), backboneArea(pk)[0])
 5. Intersections (edge/arc: ee, ea, ae, aa) + outersections
 6. Forces, energies, overlap areas
 7. Minimize the full model with FIRE
-8. Critical-displacement neighbour rebuild
+8. Critical-displacement neighbor rebuild
 9. Lattice vectors
 10. Stress & stiffness tensors
 11. Set / modify per-element area

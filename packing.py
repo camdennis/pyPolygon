@@ -1,12 +1,11 @@
 """The Packing container: flat-array state for a packing of N polygons.
 
-Mirrors the CUDA reference layout (pyCudaPolygonSTABLE/src/model.hpp) so values
-cross-check directly:
+Uses a flat CSR layout (CUDA-portable) so values cross-check directly:
 
   positions        (2N,)  vertex coords, interleaved [x0, y0, x1, y1, ...]
   shapeId          (N,)   polygon index each vertex belongs to
   startIndices     (P+1,) CSR start offset of each polygon's vertex block
-  next, prev       (N,)   cyclic neighbour vertex index within a polygon
+  next, prev       (N,)   cyclic neighbor vertex index within a polygon
   targetEdgeLength (P,)   per-polygon target backbone edge length
   targetArea       (P,)   per-polygon target area
   targetPerimeter  (P,)   per-polygon target perimeter
@@ -104,7 +103,7 @@ class Packing:
         """Build a one-polygon Packing: n points in the unit box, ordered CCW.
 
         Scatters ``n`` points uniformly in [0, 1)^2, then orders them
-        counter-clockwise by angle about ``center`` (default the box centre
+        counter-clockwise by angle about ``center`` (default the box center
         (0.5, 0.5)) to form a (generally irregular, star-shaped) backbone. This
         is the starting configuration that the eqSoftBody minimizer relaxes
         toward equal edge lengths and the target area (build step 1).

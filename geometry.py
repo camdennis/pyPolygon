@@ -67,6 +67,7 @@ def cornerGeometry(packing, rho):
     prv = packing.prev
     nxt = packing.next
 
+    # notes roundedPolygons.tex eq (1.1): incident edge unit vectors
     eIn = r - r[prv]
     eOut = r[nxt] - r
     eInHat = eIn / np.sqrt(np.einsum("ij,ij->i", eIn, eIn))[:, None]
@@ -75,6 +76,7 @@ def cornerGeometry(packing, rho):
     theta = np.arccos(np.clip(-np.einsum("ij,ij->i", eInHat, eOutHat), -1.0, 1.0))  # arccos(-e_z' . e_i)
     halfTheta = 0.5 * theta
     rhoVert = rhoPerVertex(packing, rho)
+    # notes roundedPolygons.tex eq (1.2): kiss offset t_k, kiss points a^pm_k, center z_k
     t = rhoVert / np.tan(halfTheta)
 
     aMinus = r - t[:, None] * eInHat
@@ -101,6 +103,7 @@ def roundedPerimeter(packing, cg, rho):
     """
     edge = backboneEdgeLengths(packing)
     rhoVert = rhoPerVertex(packing, rho)
+    # notes roundedPolygons.tex eq (2.1): rounded perimeter (straight runs + arc lengths)
     perVertex = edge - cg.t - cg.t[packing.next] + rhoVert * cg.psi
     return np.bincount(packing.shapeId, weights = perVertex,
                        minlength = packing.numPolygons)
@@ -118,6 +121,7 @@ def roundedArea(packing, cg, rho):
     is ADDED at convex corners (the arc bulges out past the chord) and SUBTRACTED at reflex
     corners: A_p = A_kissPolygon + sum_k s_k Da_k, with s = +1 convex / -1 reflex.
     """
+    # notes roundedPolygons.tex eq (2.2): rounded area = kiss polygon + circular segments
     am = cg.aMinus
     ap = cg.aPlus
     amNext = cg.aMinus[packing.next]
@@ -138,6 +142,7 @@ def cornerAngleGradients(packing):
     Returns (gPrev, gCenter, gNext), each (N,2) = d theta_k / d r_{prev[k], k, next[k]},
     for theta_k = arccos(uHat . wHat) with uHat toward prev[k] and wHat toward next[k].
     """
+    # notes: TODO -- d theta_k / d v_m has no numbered equation yet; it feeds notes (6.4)-(6.6)
     r = packing.positions.reshape(-1, 2)
     u = r[packing.prev] - r
     w = r[packing.next] - r
@@ -159,6 +164,7 @@ def roundedPerimeterGradient(packing, cg, rho):
     shape (N,2). P = sum L - 2 sum t + sum rho * psi; the L part is the backbone edge unit
     vectors, the t / psi part is dP/dtheta_k = rho / sin^2(theta / 2) - rho scattered via theta.
     """
+    # notes: TODO -- gradient of (2.1) is not yet a numbered equation (the K_P spring (8.3) needs it)
     r = packing.positions.reshape(-1, 2)
     idx = np.arange(packing.numVertices)
     rhoVert = rhoPerVertex(packing, rho)
@@ -186,6 +192,7 @@ def roundedAreaGradient(packing, cg, rho):
     wHat toward next), pushed through their Jacobians; the segment part scatters
     d psi_k = -d theta_k. dt/dtheta = -rho/(2 sin^2(theta/2)).
     """
+    # notes: TODO -- gradient of (2.2) is not yet a numbered equation (the K_A spring (8.3) needs it)
     r = packing.positions.reshape(-1, 2)
     prv, nxt = packing.prev, packing.next
     idx = np.arange(packing.numVertices)
@@ -198,6 +205,7 @@ def roundedAreaGradient(packing, cg, rho):
     uHat = u / a[:, None]
     wHat = w / b[:, None]
     theta = np.pi - cg.psi
+    # notes eq (6.7): dt_k / d theta_k
     dtDtheta = -rhoVert / (2.0 * np.sin(0.5 * theta) ** 2)
 
     am, ap = cg.aMinus, cg.aPlus

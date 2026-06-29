@@ -16,7 +16,7 @@ non-adjacent vertices, which we will scan DIRECTLY per polygon (own vertices are
 repulsion is short-range -- no spatial neighbor tracking needed). So the same-polygon
 (``sameShape`` True) pairs kept here are TRANSITIONAL; in Phase 6 ``findNeighbors`` will be
 reduced to inter-polygon pairs only, and ``sameShape`` will go away. The +2*rho margin then
-covers only the rounded-feature reach for inter-polygon crossings, not self-repulsion.
+covers only the rounded-feature reach for inter-polygon intersections, not self-repulsion.
 """
 
 import numpy as np

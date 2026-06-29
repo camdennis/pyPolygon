@@ -1,0 +1,83 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\half}{\tfrac{1}{2}}
+\DeclareMathOperator{\atantwo}{atan2}
+
+\title{Rounded polygons: overlap area (6a / 6b)}
+\date{}
+\author{}
+
+\begin{document}
+\maketitle
+
+Polygons $A,B$ intersect and generate a region $A\cap B$ with boundary $\partial(A\cap B)$. Its
+area is the Green's-theorem boundary integral
+\[
+  |A\cap B| = \half\,\varepsilon_{\alpha\beta}\oint_{\partial(A\cap B)} X^{\alpha}\,dX^{\beta},
+\]
+accumulated feature by feature relative to a reference point $\vv R$ = the first backbone vertex
+of polygon $A$ (the lower index, $A<B$). The total is $\vv R$-invariant -- the $\vv R$ terms
+telescope around the closed loop -- so $\vv R$ is only there to keep the arithmetic local.
+
+\section{Per-feature area}
+
+A feature piece from point $\vv P$ to $\vv Q$ contributes, for an \textbf{edge},
+\[
+  h_e(\vv P,\vv Q)=\half\,\varepsilon_{\alpha\beta}(P-R)^{\alpha}(Q-R)^{\beta},
+\]
+and for an \textbf{arc} (center $\vv z$, radius $\rho$) a chord term plus a circular segment,
+\[
+  h_a(\vv P,\vv Q)=\half\,\varepsilon_{\alpha\beta}(P-R)^{\alpha}(Q-R)^{\beta}
+  +\half\rho^{2}(\theta-\sin\theta),\qquad
+  \theta=\atantwo\!\Big(\varepsilon_{\alpha\beta}(P-z)^{\alpha}(Q-z)^{\beta},\;(P-z)\!\cdot\!(Q-z)\Big),
+\]
+where $\theta$ is the signed central angle of the sub-arc $\vv P\to\vv Q$. The feature selector is
+\[
+  h(\vv P,\vv Q)=\begin{cases} h_e(\vv P,\vv Q) & f\ \text{odd (edge)}\\[2pt]
+                               h_a(\vv P,\vv Q) & f\ \text{even (arc).}\end{cases}
+\]
+
+\section{Traversal}
+
+The overlap boundary is the kept runs of $\partial A$ inside $B$ and $\partial B$ inside $A$,
+each from an intersection to its outersection. Label an intersection pair $P=\{i,j,k,l\}$: feature
+$i$ (on $A$) meets feature $j$ (on $B$), and following $i$ CCW reaches feature $l$, which meets
+$k$ (shapes $\{A,B,B,A\}$). For an intersection at boundary coordinate $\sigma$, let
+$\sigma^{-}\equiv\lfloor\sigma\rfloor$ be its feature index (the kiss point starting that
+feature), and let $z(\cdot),z'(\cdot)$ be the next / previous feature in CCW order (so
+$\vv q_{z(\sigma^{-})}$ is that feature's far kiss point). With $\vv q$ the intersection and kiss
+points,
+\[
+  U=\sum_{P=\{i,j,k,l\}}\Big\{\,\delta_{i^{-}=l^{-}}\,h(\vv q_i,\vv q_l)
+  +(1-\delta_{i^{-}=l^{-}})\Big[\,h(\vv q_i,\vv q_{z(i^{-})})
+  +\!\!\sum_{m=z(i^{-})}^{z'(l^{-})}\! h(\vv q_m,\vv q_{z(m)})
+  +h(\vv q_{l^{-}},\vv q_l)\,\Big]\Big\}.
+\]
+If the run sits on one feature, $h(\vv q_i,\vv q_l)$; otherwise the partial start feature
+($\vv q_i$ to its end $\vv q_{z(i^{-})}$), the whole interior features ($\vv q_m$ to
+$\vv q_{z(m)}$), and the partial end feature ($\vv q_{l^{-}}$ to $\vv q_l$).
+
+\section{Parallel split, $U=U_{\mathrm{out}}+U_{\mathrm{in}}$}
+
+The interior sum is awkward to parallelize, so peel it off:
+\[
+  U_{\mathrm{out}}=\sum_{P}\Big[\delta_{i^{-}=l^{-}}h(\vv q_i,\vv q_l)
+  +(1-\delta_{i^{-}=l^{-}})\big(h(\vv q_i,\vv q_{z(i^{-})})+h(\vv q_{l^{-}},\vv q_l)\big)\Big],\qquad
+  U_{\mathrm{in}}=\sum_{m=0}^{2n}\;\sum_{P}\delta_{\,m\,\in\,\{z(i^{-}),\,\dots,\,z'(l^{-})\}}\;h(\vv q_m,\vv q_{z(m)}).
+\]
+$U_{\mathrm{out}}$ is per intersection pair (the two partial end features); $U_{\mathrm{in}}$ is
+per \emph{feature} $m$ (the whole interior features), which distributes over threads. The test
+is membership $m\in\{z(i^{-}),\dots,z'(l^{-})\}$ --- the features strictly CCW-between $i$ and
+$l$, walked by $z$. This is the right criterion: it respects the cyclic feature order, whereas
+an $i^{-}<m<l^{-}$ inequality silently drops the interior whenever a run wraps past feature
+$0$.
+
+\paragraph{Validation.} Built both ways; the walk and the $U_{\mathrm{out}}/U_{\mathrm{in}}$
+split agree to machine precision, and the area matches a Monte-Carlo estimate to $\sim0.1\%$
+(convex, free and periodic) and to $\sim0.5\%$ across $60$ non-convex star-pair overlaps (up to
+$8$ intersections).
+
+\end{document}

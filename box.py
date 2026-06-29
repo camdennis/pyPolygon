@@ -67,7 +67,7 @@ def minImageShift(displacement, box):
     """Lattice translation that carries ``displacement`` to its minimum image, i.e.
     ``wrap(displacement) - displacement``. This is the rigid offset to add to a far point
     so it lands in its nearest periodic image; with single-image interactions it brings one
-    polygon next to another for the crossing / overlap tests. Dispatches on the box type via
+    polygon next to another for the intersection / overlap tests. Dispatches on the box type via
     ``wrap``; zero in free space (``box is None``).
     """
     displacement = np.asarray(displacement, dtype = float)

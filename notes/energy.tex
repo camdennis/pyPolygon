@@ -1,0 +1,65 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\half}{\tfrac{1}{2}}
+
+\title{Rounded polygons: the energy}
+\date{}
+\author{}
+
+\begin{document}
+\maketitle
+
+The model's potential energy is a sum of terms, each on the \emph{rounded} polygon (boundary =
+straight edge runs $+$ corner arcs). Vertices are $\vv v_k$; the force is $\vv F_k=-\partial
+U/\partial\vv v_k$. Only the overlap term is active right now -- the other coefficients are set to
+$0$ -- so this note fixes the full form and flags what still needs a derivative.
+\[
+  U=U_{\mathrm{overlap}}+U_{\mathrm{self}}+U_{\mathrm{adh}}+U_{A}+U_{P}.
+\]
+
+\paragraph{Overlap (active).} The pairwise overlap area summed over polygon pairs,
+\[
+  U_{\mathrm{overlap}}=K_{o}\sum_{i<j}\big|A_i\cap A_j\big|,
+\]
+with global stiffness $K_{o}$ ($K_o=1$ for now). Each $|A_i\cap A_j|$ is the boundary integral of
+\texttt{overlapArea} (6a/6b); its gradient -- the overlap force -- is derived in
+\texttt{overlapForce.tex} and FD-validated against $d(\texttt{overlapAreas})/d\vv v$ to machine
+precision. \textbf{This is the only term wired into the code.}
+
+\paragraph{Self-repulsion (off, $=0$).} A radius-$\rho$ corner circle repels the \emph{other
+vertices of its own polygon} (intra-polygon self-avoidance, never inter-polygon), scanned directly
+over each polygon's own non-adjacent vertex pairs. Exact pairing (circle--circle / circle--vertex /
+circle--edge) and functional form to be pinned down; gradient TBD.
+
+\paragraph{Adhesion (off, $=0$).} Over consecutive intersection$\leftrightarrow$outersection
+pairs (including cross-feature pairs), with chord length $\ell$ between the pair and per-polygon
+target perimeters $P^{t}$,
+\[
+  U_{\mathrm{adh}}=-\frac{K_{\mathrm{adh}}}{2}\sum_{\text{pairs}}\Big(\frac{2\,\ell}{P^{t}_i+P^{t}_j}\Big)^{2},
+\]
+global $K_{\mathrm{adh}}$. Gradient TBD (moves with the intersection points, as in the overlap
+force).
+
+\paragraph{Area spring (off, $=0$).} Rounded area $A_i$ toward per-polygon target $A^{t}_i$,
+\[
+  U_{A}=\frac{K_{A}}{2}\sum_i\big(A_i-A^{t}_i\big)^2,
+\]
+global $K_{A}$. The rounded area and its gradient are \texttt{roundedArea} /
+\texttt{roundedAreaGradient} in \texttt{geometry.py} (FD-checked), so this term is ready to switch
+on.
+
+\paragraph{Perimeter spring (off, $=0$).} Rounded perimeter $P_i$ toward target $P^{t}_i$,
+\[
+  U_{P}=\frac{K_{P}}{2}\sum_i\big(P_i-P^{t}_i\big)^2,
+\]
+global $K_{P}$. Likewise \texttt{roundedPerimeter} / \texttt{roundedPerimeterGradient} are ready.
+
+\paragraph{Status.} $K_{\mathrm{adh}}=K_{A}=K_{P}=0$ and self-repulsion off, so $U=U_{\mathrm{overlap}}$
+and $\vv F=-\partial U_{\mathrm{overlap}}/\partial\vv v$. The area/perimeter springs need only their
+(existing) gradients wired in; adhesion and self-repulsion need their gradients derived, each in its
+own follow-up note.
+
+\end{document}

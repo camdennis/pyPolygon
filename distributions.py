@@ -6,6 +6,7 @@ is the periodic cell area, 1 by the area-1 calibration). Two distributions:
   logNormal  -- lognormal areas with log-std ``sigma`` (continuous polydispersity).
   biDisperse -- two sizes; ``sizeRatio`` is the LENGTH ratio (so the area ratio is
                 ``sizeRatio**2``), with ``fractionLarge`` of the polygons large.
+  mono       -- all equal (each polygon gets phi/N).
 """
 
 import numpy as np
@@ -31,6 +32,8 @@ def sampleAreas(N, kind = "logNormal", phi = 1.0, cellArea = 1.0, rng = None,
         nLarge = int(round(fractionLarge * N))
         raw = np.ones(N)
         raw[:nLarge] = sizeRatio ** 2
+    elif kind == "mono":
+        raw = np.ones(N)
     else:
         raise ValueError(f"unknown area distribution: {kind!r}")
     return raw / raw.sum() * (phi * cellArea)

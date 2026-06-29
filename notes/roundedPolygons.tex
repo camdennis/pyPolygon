@@ -1,0 +1,317 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb}
+\usepackage[margin=1in]{geometry}
+\numberwithin{equation}{section}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\half}{\tfrac{1}{2}}
+\DeclareMathOperator{\atantwo}{atan2}
+
+\title{Rounded polygons: geometry, intersections, overlap, and forces}
+\date{}
+\author{}
+
+\begin{document}
+\maketitle
+
+A \emph{rounded polygon} is a backbone polygon whose corners are radius-$\rho$ circular arcs. We
+use the 2D Levi-Civita symbol $\varepsilon_{\alpha\beta}$ ($\varepsilon_{xy}=-\varepsilon_{yx}=1$),
+write $\vv a\otimes\vv b\equiv\varepsilon_{\alpha\beta}a^{\alpha}b^{\beta}$ for the 2D cross, and sum
+repeated Greek indices. Vertices are $\vv v_k$; $z(k),z'(k)$ are the next / previous vertex CCW.
+Inter-polygon position differences use the periodic minimum image.
+
+\section{Rounded-polygon geometry}
+
+At corner $\vv v_k$ the two incident edge units are
+\begin{equation}
+  \hat e_k=\frac{\vv v_{z(k)}-\vv v_k}{|\vv e_k|}\ \ (\text{outgoing}),\qquad
+  \hat e_{z'(k)}=\frac{\vv v_k-\vv v_{z'(k)}}{|\vv e_{z'(k)}|}\ \ (\text{incoming}),
+\end{equation}
+the wedge angle is $\theta_k=\arccos(-\hat e_{z'(k)}\!\cdot\!\hat e_k)\in[0,\pi]$, and the corner is
+rounded by a circle of radius $\rho$ tangent to both edges. The kiss offset, kiss points, bisector,
+and center are
+\begin{equation}
+  t_k=\frac{\rho}{\tan(\theta_k/2)},\quad
+  \vv a^{+}_k=\vv v_k+t_k\hat e_k,\quad
+  \vv a^{-}_k=\vv v_k-t_k\hat e_{z'(k)},\quad
+  \vv z_k=\vv v_k+\frac{\rho}{\sin(\theta_k/2)}\,\hat b_k,
+\end{equation}
+with bisector $\hat b_k=(\hat e_k-\hat e_{z'(k)})/|\hat e_k-\hat e_{z'(k)}|$ and $|\hat e_k-\hat
+e_{z'(k)}|=2\cos(\theta_k/2)$. The arc $C_k$ sweeps $\psi_k=\pi-\theta_k$, and $\hat b_k$ points from
+$\vv v_k$ toward $\vv z_k$ (into the corner when convex, outward when reflex). The rounding is
+feasible iff each edge fits its two offsets, $t_k+t_{z(k)}\le|\vv e_k|$.
+
+\paragraph{Arc-validity (AVT).} The intersection formulas (\S3) place candidate points on the
+\emph{full} circle $(\vv z_k,\rho_k)$; the arc is only the wedge symmetric about $-\hat b_k$ spanning
+$\pm\psi_k/2$. A circle point $\vv X$ lies on $C_k$ iff
+\begin{equation}
+  \frac{\vv X-\vv z_k}{\rho_k}\cdot\hat b_k\ \le\ -\cos(\psi_k/2),
+\end{equation}
+which holds for convex and reflex corners alike (both arcs bulge toward $\vv v_k$).
+
+\section{Rounded area and perimeter}
+
+Number the $2n$ boundary features CCW with arcs $C_k$ and edges $E_k$ alternating: the edge runs
+$\vv a^{+}_k\to\vv a^{-}_{z(k)}$ and the arc $C_k$ runs $\vv a^{-}_k\to\vv a^{+}_k$.
+
+\paragraph{Perimeter.} Straight runs plus arc lengths,
+\begin{equation}
+  P=\sum_k\big(|\vv e_k|-t_k-t_{z(k)}\big)+\sum_k\rho_k\psi_k.
+\end{equation}
+
+\paragraph{Area.} Read the rounded area as the polygon through the kiss points (every corner cut by
+its chord $\vv a^{-}_k\to\vv a^{+}_k$) \emph{plus} a circular segment per corner:
+\begin{equation}
+  A=A_{\text{kiss polygon}}+\sum_k s_k\,\half\rho_k^2(\psi_k-\sin\psi_k),\qquad
+  s_k=\begin{cases}+1&\text{convex}\\-1&\text{reflex},\end{cases}
+\end{equation}
+the segment added at convex corners (the arc bulges past the chord) and subtracted at reflex ones.
+This ``polygon $+$ segments'' reading is the same one the overlap area uses (\S4).
+
+\section{Boundary intersections and outersections}
+
+Two rounded polygons $A,B$ meet at four feature combinations: edge--edge (\textbf{ee}), edge--arc
+(\textbf{ea}), arc--edge (\textbf{ae}), arc--arc (\textbf{aa}).
+
+\paragraph{Periodic pair shift.} Positions live in the unit square $[0,1)^2$ with periodic walls.
+We work in $A$'s frame and translate $B$ to its nearest image: with representative vertices $\vv
+r_i\in A$, $\vv r_j\in B$, the \emph{pair shift} is $\vv T_{ij}=\operatorname{wrap}(\vv r_j-\vv
+r_i)-(\vv r_j-\vv r_i)$, applied once to every point feature of $B$ ($\vv z_j\to\vv z_j+\vv T_{ij}$,
+$\vv a^{\pm}_j\to\vv a^{\pm}_j+\vv T_{ij}$); we keep only this single image. (In code, \texttt{shift}.)
+
+\paragraph{Features.} The edge and arc are parametrized
+\begin{equation}
+  \vv P_k(s)=\vv a^{+}_k+s\,\vv u_k,\ \ \vv u_k=\vv a^{-}_{z(k)}-\vv a^{+}_k,\ s\in[0,1];
+  \qquad
+  \vv Q_k(\phi)=\vv z_k+\rho_k(\cos\phi,\sin\phi),
+\end{equation}
+with $\phi^{\pm}_k=\atantwo(\vv a^{\pm}_k-\vv z_k)$, $\psi_k=\phi^{+}_k-\phi^{-}_k$.
+
+\paragraph{Boundary coordinate and outersection.} Number the $2n$ features
+$0,1,\dots,2n-1$; an intersection on feature $f$ of $\partial A$ gets
+\begin{equation}
+  \sigma_A=f+\begin{cases}\lambda & f\ \text{even (arc)}\\ s & f\ \text{odd (edge)},\end{cases}
+  \qquad \lambda=\frac{\phi-\phi^{-}_k}{\psi_k}.
+\end{equation}
+Sorting a pair's intersections by $\sigma_A$ gives the order met walking $\partial A$ CCW; the
+\emph{outersection} of an intersection is the next one in that cyclic order.
+
+\paragraph{ee.} For edges $k,\ell$ with $\vv w_{k\ell}=\vv a^{+}_\ell-\vv a^{+}_k$, the two edge
+fractions ($\vv P_k(s_k)=\vv P_\ell(s_\ell)$) are
+\begin{equation}
+  s_k=\frac{\varepsilon_{\alpha\beta}w_{k\ell}^{\alpha}u_\ell^{\beta}}{\varepsilon_{\alpha\beta}u_k^{\alpha}u_\ell^{\beta}},\qquad
+  s_\ell=\frac{\varepsilon_{\alpha\beta}w_{k\ell}^{\alpha}u_k^{\beta}}{\varepsilon_{\alpha\beta}u_k^{\alpha}u_\ell^{\beta}},
+\end{equation}
+valid iff the denominator $\neq0$ and $s_k,s_\ell\in[0,1]$.
+
+\paragraph{ea / ae.} Edge $E_k$ meets the full circle of arc $\ell$; with $\vv w_{k\ell}=\vv
+a^{+}_k-\vv z_\ell$,
+\begin{equation}
+  S_{\pm}=\frac{-(\vv w_{k\ell}\!\cdot\!\vv u_k)\pm\sqrt{D_{k\ell}}}{|\vv u_k|^2},\quad
+  D_{k\ell}=(\vv w_{k\ell}\!\cdot\!\vv u_k)^2+|\vv u_k|^2(\rho_\ell^2-|\vv w_{k\ell}|^2).
+\end{equation}
+Keep each root in $[0,1]$ whose point passes the AVT for arc $\ell$ (an edge can hit one arc
+twice); \textbf{ae} swaps the roles.
+
+\paragraph{aa.} A point on both circles lies on the radical line; with $\vv n_{k\ell}=\vv z_\ell-\vv
+z_k$, $d=|\vv n_{k\ell}|$, $\hat n=\vv n_{k\ell}/d$,
+\begin{equation}
+  a=\frac{d^2+\rho_k^2-\rho_\ell^2}{2d},\quad h=\sqrt{\rho_k^2-a^2},\quad
+  \vv X_{\pm}=\vv z_k+a\,\hat n\pm h\,\hat n^{\perp},
+\end{equation}
+real iff $|\rho_k-\rho_\ell|\le d\le\rho_k+\rho_\ell$; keep each $\vv X_{\pm}$ passing the AVT for
+both arcs.
+
+\section{Overlap area}
+
+The overlap region $A\cap B$ has area $\half\varepsilon_{\alpha\beta}\oint_{\partial(A\cap
+B)}X^{\alpha}dX^{\beta}$, accumulated feature by feature relative to a reference $\vv R$ = the first
+backbone vertex of $A$ (the total is $\vv R$-invariant; $\vv R$ just keeps the arithmetic local).
+Each feature piece $\vv P\to\vv Q$ contributes the chord triangle from $\vv R$,
+\begin{equation}
+  h_e(\vv P,\vv Q)=\half\,\varepsilon_{\alpha\beta}(P-R)^{\alpha}(Q-R)^{\beta},
+\end{equation}
+and an \emph{arc} piece adds its circular segment
+\begin{equation}
+  h_a(\vv P,\vv Q)=\half\rho^2(\theta-\sin\theta),\qquad
+  \theta=\atantwo\big(\varepsilon_{\alpha\beta}(P-z)^{\alpha}(Q-z)^{\beta},\,(P-z)\!\cdot\!(Q-z)\big),
+\end{equation}
+the signed central angle of the sub-arc. So each feature contributes
+\begin{equation}
+  h(\vv P,\vv Q)=\begin{cases}h_e(\vv P,\vv Q) & \text{edge}\\ h_e(\vv P,\vv Q)+h_a(\vv P,\vv Q) & \text{arc:}\end{cases}
+\end{equation}
+the boundary's chord-polygon (all the $h_e$) plus a segment on every arc -- the same ``polygon $+$
+segments'' picture as \S2.
+
+\paragraph{Traversal.} The overlap boundary is the kept runs of $\partial A$ inside $B$ and
+$\partial B$ inside $A$, each from an intersection to its outersection. Label an intersection pair
+$P=\{i,j,k,l\}$: feature $i$ (on $A$) meets $j$ (on $B$), and following $i$ CCW reaches feature $l$,
+which meets $k$. With $\sigma^{-}\equiv\lfloor\sigma\rfloor$ the feature index and $\vv q$ the
+intersection / kiss points,
+\begin{equation}
+  U=\sum_{P}\Big\{\delta_{i^{-}=l^{-}}h(\vv q_i,\vv q_l)
+  +(1-\delta_{i^{-}=l^{-}})\Big[h(\vv q_i,\vv q_{z(i^{-})})
+  +\!\!\sum_{m=z(i^{-})}^{z'(l^{-})}\!\!h(\vv q_m,\vv q_{z(m)})+h(\vv q_{l^{-}},\vv q_l)\Big]\Big\}.
+\end{equation}
+A run on one feature gives $h(\vv q_i,\vv q_l)$; otherwise the partial start feature, the whole
+interior features, and the partial end feature.
+
+\paragraph{Parallel split.} Peel off the interior sum, $U=U_{\mathrm{out}}+U_{\mathrm{in}}$ with
+$U_{\mathrm{out}}$ per intersection pair (the two partial end features) and $U_{\mathrm{in}}=\sum_m\sum_P
+\delta_{m\in\{z(i^{-}),\dots,z'(l^{-})\}}h(\vv q_m,\vv q_{z(m)})$ per interior feature $m$. The walk
+and the split agree to machine precision and match Monte Carlo to $\sim0.1\%$ (convex) /
+$\sim0.5\%$ (non-convex).
+
+\section{Overlap forces}
+
+The overlap energy is $K_o\,U$ (\S8), so the force is $\vv F=-K_o\,\partial U/\partial\vv v$, and
+$U=\sum_{\text{pieces}}h$. Differentiating a piece, with its endpoints $\vv P,\vv Q$ moving and (on
+an arc) its center $\vv z$,
+\begin{equation}
+  \frac{\partial h}{\partial v_k^{\alpha}}
+  =\frac{\partial h}{\partial P^{\beta}}\frac{\partial P^{\beta}}{\partial v_k^{\alpha}}
+  +\frac{\partial h}{\partial Q^{\beta}}\frac{\partial Q^{\beta}}{\partial v_k^{\alpha}}
+  +\mathbf 1_{\text{arc}}\frac{\partial h_a}{\partial z^{\beta}}\frac{\partial z^{\beta}}{\partial v_k^{\alpha}},
+\end{equation}
+where $\partial h/\partial P=\partial h_e/\partial P$ on an edge and $\partial h_e/\partial
+P+\partial h_a/\partial P$ on an arc (likewise $Q$). $\vv R$-invariance lets us drop $d\vv R$.
+
+\paragraph{Edge piece.} From $h_e=\half\varepsilon_{\alpha\beta}(P-R)^{\alpha}(Q-R)^{\beta}$,
+\begin{equation}
+  \frac{\partial h_e}{\partial P^{\gamma}}=\half\,\varepsilon_{\gamma\beta}(Q^{\beta}-R^{\beta}),
+  \qquad
+  \frac{\partial h_e}{\partial Q^{\gamma}}=-\half\,\varepsilon_{\gamma\beta}(P^{\beta}-R^{\beta}).
+\end{equation}
+
+\paragraph{Arc segment.} $\partial h_a/\partial(\cdot)=\half\rho^2(1-\cos\theta)\,\partial\theta/\partial(\cdot)$,
+and since $\vv P,\vv Q$ are on the circle, $\cos\theta=(P-z)\!\cdot\!(Q-z)/\rho^2$. Implicit
+differentiation of $\tan\theta$ with the Schouten identity $A^{\alpha}\varepsilon_{\gamma\beta}-A^{\gamma}\varepsilon_{\alpha\beta}=A^{\beta}\varepsilon_{\gamma\alpha}$ gives
+\begin{equation}
+  \frac{\partial\theta}{\partial P^{\gamma}}=\frac{1}{\rho^2}(P^{\alpha}-z^{\alpha})\varepsilon_{\gamma\alpha},
+\end{equation}
+\begin{equation}
+  \frac{\partial\theta}{\partial Q^{\gamma}}=-\frac{1}{\rho^2}(Q^{\alpha}-z^{\alpha})\varepsilon_{\gamma\alpha},
+\end{equation}
+\begin{equation}
+  \frac{\partial h_a}{\partial P^{\gamma}}=\half(1-\cos\theta)(P^{\alpha}-z^{\alpha})\varepsilon_{\gamma\alpha},
+  \qquad
+  \frac{\partial h_a}{\partial Q^{\gamma}}=-\half(1-\cos\theta)(Q^{\alpha}-z^{\alpha})\varepsilon_{\gamma\alpha}.
+\end{equation}
+For the center, $\theta$ depends only on $\vv P-\vv z,\vv Q-\vv z$, so
+$\partial\theta/\partial\vv P+\partial\theta/\partial\vv Q+\partial\theta/\partial\vv z=0$ and
+\begin{equation}
+  \frac{\partial h_a}{\partial z^{\gamma}}=-\half(1-\cos\theta)\,\varepsilon_{\gamma\alpha}(P^{\alpha}-Q^{\alpha}).
+\end{equation}
+
+\section{Derivatives of features}
+
+The endpoints $\vv P,\vv Q$ are kiss points $\vv a^{\pm}$ or arc centers $\vv z$ (the ``easy''
+pieces) or intersection points $\vv q$. We compute the kiss-point / center Jacobians here and avoid
+$\partial\vv q/\partial\vv v$ entirely in \S7.
+
+\paragraph{Unit vector.} For $\hat u=\vv u/|\vv u|$, $\partial\hat
+u^{\alpha}/\partial u^{\beta}=|\vv u|^{-1}\Pi_u^{\alpha\beta}$ with
+\begin{equation}
+  \Pi_u^{\alpha\beta}=\delta^{\alpha\beta}-\hat u^{\alpha}\hat u^{\beta}
+\end{equation}
+the projection off $\hat u$. Each edge unit is a normalized vertex difference, so
+\begin{equation}
+  \frac{\partial\hat e_j^{\alpha}}{\partial v_k^{\beta}}
+  =\frac{1}{|\vv e_j|}\,\Pi_{e_j}^{\alpha\beta}\big(\delta_{z(j)k}-\delta_{jk}\big),
+\end{equation}
+and (block above, twice, with $|\hat e_k-\hat e_{z'(k)}|=2\cos(\theta_k/2)$)
+\begin{equation}
+  \frac{\partial\hat b_k^{\alpha}}{\partial v_m^{\beta}}
+  =\frac{1}{|\hat e_k-\hat e_{z'(k)}|}\,\Pi_{b_k}^{\alpha\gamma}
+  \Big(\frac{\partial\hat e_k^{\gamma}}{\partial v_m^{\beta}}-\frac{\partial\hat e_{z'(k)}^{\gamma}}{\partial v_m^{\beta}}\Big).
+\end{equation}
+
+\paragraph{Points.} Product-rule each point ($\otimes$ the outer product, $c=\rho/\sin(\theta_k/2)$,
+$\partial t_k/\partial\vv v_m=(dt_k/d\theta_k)\,\partial\theta_k/\partial\vv v_m$ and likewise for
+$c$, with $\partial\theta_k/\partial\vv v_m$ from \texttt{cornerAngleGradients}):
+\begin{equation}
+  \frac{\partial\vv a^{+}_k}{\partial\vv v_m}=\delta_{mk}I+\hat e_k\otimes\frac{\partial t_k}{\partial\vv v_m}+t_k\frac{\partial\hat e_k}{\partial\vv v_m},
+\end{equation}
+\begin{equation}
+  \frac{\partial\vv a^{-}_k}{\partial\vv v_m}=\delta_{mk}I-\hat e_{z'(k)}\otimes\frac{\partial t_k}{\partial\vv v_m}-t_k\frac{\partial\hat e_{z'(k)}}{\partial\vv v_m},
+\end{equation}
+\begin{equation}
+  \frac{\partial\vv z_k}{\partial\vv v_m}=\delta_{mk}I+\hat b_k\otimes\frac{\partial c}{\partial\vv v_m}+c\,\frac{\partial\hat b_k}{\partial\vv v_m},
+\end{equation}
+with the two scalar derivatives (the $\tfrac12$ is $d(\theta_k/2)/d\theta_k$)
+\begin{equation}
+  \frac{dt_k}{d\theta_k}=-\frac{\rho}{2\sin^2(\theta_k/2)},
+\end{equation}
+\begin{equation}
+  \frac{dc}{d\theta_k}=-\frac{\rho\cos(\theta_k/2)}{2\sin^2(\theta_k/2)}=-\frac{\rho}{2\sin(\theta_k/2)\tan(\theta_k/2)}.
+\end{equation}
+
+\section{Assembling the force}
+
+We avoid $\partial\vv q/\partial\vv v$ by differentiating the area through its boundary. With $\vv
+a\times\vv b=\varepsilon_{\alpha\beta}a^{\alpha}b^{\beta}$, vary $A_{\cap}=\half\oint X\times dX$ and
+integrate by parts; the closed-loop boundary term vanishes, leaving
+\begin{equation}
+  \delta A_{\cap}=\oint_{\partial(A\cap B)}\delta\vv X\times d\vv X.
+\end{equation}
+The boundary point $\vv X$ is a function of the vertices, so a vertex motion $\{\delta\vv v_j\}$
+gives $\delta\vv X=\sum_j(\partial\vv X/\partial\vv v_j)\delta\vv v_j$. By linearity, $\delta
+A_{\cap}=\sum_j\big[\oint(\partial\vv X/\partial\vv v_j)\times d\vv X\big]\delta\vv v_j$, and the
+coefficient of $\delta\vv v_j$ is the gradient,
+\begin{equation}
+  \frac{\partial A_{\cap}}{\partial\vv v_j}=\oint_{\partial(A\cap B)}\frac{\partial\vv X}{\partial\vv v_j}\times d\vv X.
+\end{equation}
+On a run lying on a feature, $\partial\vv X/\partial\vv v_j$ is the velocity of a point pinned to that
+feature at fixed parameter -- the \S6 Jacobians $\delta\vv a^{\pm},\delta\vv z$. A run's endpoints are
+intersection points; moving one slides it tangentially along the boundary, which leaves the integral
+unchanged, so we keep the current endpoints and never form $d\vv q$. Evaluate
+$\int_{\text{piece}}\delta\vv X\times d\vv X$ per kept piece $\vv P\to\vv Q$ ($\vv d=\vv Q-\vv P$).
+
+\paragraph{Edge piece ($E_m$).} A point at edge fraction $s$ is $\vv X(s)=(1-s)\vv a^{+}_m+s\,\vv
+a^{-}_{z(m)}$, so $\delta\vv X(s)=(1-s)\delta\vv a^{+}_m+s\,\delta\vv a^{-}_{z(m)}$ is linear in $s$.
+Reparametrize by $\lambda\in[0,1]$, $\vv X=\vv P+\lambda\vv d$, $d\vv X=\vv d\,d\lambda$; bilinearity
+of $\times$ gives $\int_0^1\delta\vv X\times\vv d\,d\lambda=\half(\delta\vv X_P+\delta\vv X_Q)\times\vv
+d$, with $\half(\delta\vv X_P+\delta\vv X_Q)=(1-\bar s)\delta\vv a^{+}_m+\bar s\,\delta\vv
+a^{-}_{z(m)}$, $\bar s=\half(s_P+s_Q)$:
+\begin{equation}
+  \delta A_{\text{edge},m}=\big[(1-\bar s)\,\delta\vv a^{+}_m+\bar s\,\delta\vv a^{-}_{z(m)}\big]\times\vv d.
+\end{equation}
+
+\paragraph{Arc piece ($C_m$).} A point at angle $\phi$ is $\vv X(\phi)=\vv z_m+\rho(\cos\phi,\sin\phi)$;
+the circle translates rigidly with $\vv z_m$, so $\delta\vv X=\delta\vv z_m$ is constant along the arc
+and $\int\delta\vv X\times d\vv X=\delta\vv z_m\times\!\int d\vv X=\delta\vv z_m\times\vv d$ ($\int
+d\vv X=\vv d$, the chord, path-independent):
+\begin{equation}
+  \delta A_{\text{arc},m}=\delta\vv z_m\times\vv d.
+\end{equation}
+
+\paragraph{Assembly.} Write the kept piece's feature point as $\vv f_m$ (the bracket above on an
+edge, $\vv z_m$ on an arc) with chord $\vv d_m=\vv Q-\vv P$. Replacing $\delta\vv X$ by the Jacobian
+column $\partial\vv f_m/\partial\vv v_j$ in (7.2),
+\begin{equation}
+  \frac{\partial A_{\cap}}{\partial v_j^{\gamma}}=\sum_{\text{features }m}\frac{\partial f_m^{\alpha}}{\partial v_j^{\gamma}}\,\varepsilon_{\alpha\beta}\,d_m^{\beta},
+\end{equation}
+\begin{equation}
+  \frac{\partial\vv f_m}{\partial\vv v_j}=\begin{cases}(1-\bar s_m)\dfrac{\partial\vv a^{+}_m}{\partial\vv v_j}+\bar s_m\dfrac{\partial\vv a^{-}_{z(m)}}{\partial\vv v_j}&\text{edge}\\[8pt]\dfrac{\partial\vv z_m}{\partial\vv v_j}&\text{arc,}\end{cases}
+\end{equation}
+summed over the kept feature pieces of every overlapping pair.
+The force is $\vv F_j=-K_o\,\partial A_{\cap}/\partial\vv v_j$ (\texttt{overlapForce.py}). FD-checked
+to machine precision against $\partial(\texttt{overlapAreas})/\partial\vv v$, with the net force
+summing to $\vv0$ (translation invariance) to $\sim10^{-16}$.
+
+\section{The energy}
+
+The full potential is a sum of terms on the rounded polygon, $U=U_{\mathrm{overlap}}+U_{\mathrm{self}}
++U_{\mathrm{adh}}+U_A+U_P$; only the overlap term is active (the rest have coefficient $0$).
+\begin{align}
+  U_{\mathrm{overlap}}&=K_o\sum_{i<j}|A_i\cap A_j| && (\text{active; force in \S7})\\
+  U_{\mathrm{adh}}&=-\frac{K_{\mathrm{adh}}}{2}\sum_{\text{pairs}}\Big(\frac{2\ell}{P^t_i+P^t_j}\Big)^2 && (\text{off}),\\
+  U_A&=\frac{K_A}{2}\sum_i(A_i-A^t_i)^2,\qquad
+  U_P=\frac{K_P}{2}\sum_i(P_i-P^t_i)^2 && (\text{off}),
+\end{align}
+with global stiffnesses $K_o,K_{\mathrm{adh}},K_A,K_P$ and per-polygon targets $A^t_i,P^t_i$.
+Self-repulsion (intra-polygon corner-circle avoidance) is also off. The area / perimeter springs
+need only their existing gradients (\texttt{roundedArea/PerimeterGradient}) switched on; adhesion and
+self-repulsion need their own derivations.
+
+\end{document}

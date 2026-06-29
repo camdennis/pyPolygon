@@ -13,7 +13,6 @@ enums included, not just ``def`` functions -- gets tagged until you check it off
 
 from enum import Enum, auto
 
-
 class EnergyType(Enum):
     """The energy/force model evaluated for a packing.
 
@@ -27,13 +26,11 @@ class EnergyType(Enum):
     areaOnly   -- area spring only.
     softBody   -- collisions plus edge + area springs.
     """
-
     eqSoftBody = auto()
     normal = auto()
     edgeOnly = auto()
     areaOnly = auto()
     softBody = auto()
-
 
 class PackingType(Enum):
     """Boundary-condition flavor of a packing.
@@ -43,17 +40,14 @@ class PackingType(Enum):
       latticeVector -- general parallelepiped defined by lattice vectors
                        (build step 9); the ``wrap`` branch is stubbed until then.
     """
-
     square = auto()
     latticeVector = auto()
 
 
 class MinimizerType(Enum):
     """Which minimizer the driver runs.
-
     GD   -- plain gradient descent.
     FIRE -- Fast Inertial Relaxation Engine (adaptive dt / alpha).
     """
-
     GD = auto()
     FIRE = auto()

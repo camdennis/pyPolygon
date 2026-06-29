@@ -165,29 +165,42 @@ the partner intersection of the same pair (reference `updateOutersectionsKernel`
 binary-search + cyclic-distance pairing). Must support cross-feature pairing (see
 adhesion note).
 
-## Phase 6 — Forces, energies, overlap areas (build step 6)  *[outline]*
+## Phase 6 — Forces, energies, overlap areas (build step 6)  *[broken into sub-phases]*
 Assemble U (prompt line 11) **plus the intra-polygon self-repulsion**, everything on the
 **rounded** polygon. `K_adh`, `K_A`, `K_P` are **global scalars** (Cam); `targetArea`/
-`targetPerimeter` are per-polygon:
-1. **Rounded overlap area** + derivative via Green's-theorem boundary integral over the
-   **rounded** boundary (straight edge runs + corner arcs) — two passes (reference
-   interior/exterior split = prompt steps 3 & 4): full edge/arc features strictly inside
-   the partner, plus partial segments at intersections; arc pieces add circular-segment
-   area terms. Validate vs MC.
-2. **Intra-polygon self-repulsion** — radius-ρ corner circles repelling *other vertices
-   of the same polygon* (self-avoidance for floppy shapes; never inter-polygon).
-   **Scanned DIRECTLY per polygon** over its own non-adjacent vertex pairs — *not* via the
-   neighbor list (own vertices are few, the repulsion is short-range, so no spatial search
-   is needed; this also lets `neighbors.py` drop its same-polygon `sameShape` tracking).
-   Pin exact pairing (circle↔circle / circle↔vertex / circle↔edge within one polygon) and
-   functional form with Cam at this step. (The two-circle overlap area is a standard lens
-   formula — we'll derive it fresh in a `notes/*.tex` then.)
-3. **Adhesion** `−(K_adh/2)·Σ(2·chord/(P_i^t+P_j^t))²` summed over consecutive
-   intersection↔outersection pairs incl. cross-feature.
-4. **`K_A`** area springs, **`K_P`** perimeter springs (rounded quantities).
-⚠️ Known risk areas from memory: numerical instability at dense configs / short edges
-(`project_phase2_dual_status`) and intersection-topology micro-jumps
-(`project_normal_topology_followup`) — budget FD checks here.
+`targetPerimeter` are per-polygon. The overlap term is the heavyweight (and where the known
+landmines live — the `walkArea` cross-feature bug and topology micro-jumps), so it is split
+out. Build straightforward first, optimize later (memory `project_cuda_python_architecture`).
+
+- **6a — Overlap area via the walk (energy; serial baseline).** Per pair, order crossings by
+  σ_A and σ_B, store the `entering` flag, trace intersection→outersection runs (∂A-inside-B
+  alternating with ∂B-inside-A), integrate `½ε_{αβ}∮X^α dX^β` over edge runs + corner-arc runs
+  (arcs add circular-segment terms). This serial walk is the **correct reference baseline**.
+  Validate vs **MC** (cell size 0.5, memory `feedback_mc_cell_size`); stress-test harder later.
+- **6b — Overlap area, parallel method.** A `pyCudaPolygonSTABLE`-style reformulation
+  (interior/exterior per-feature passes, no serial walk) for CUDA portability — structure
+  borrowed from the reference, **correctness cross-checked against the 6a walk** (do not import
+  its bugs; memory `project_pycuda_reference_caveat`).
+- **6c — Overlap force.** `∂(overlap area)/∂vertex`, including the moving intersection points.
+  FD-validate.
+- **6d — Intra-polygon self-repulsion (energy + force).** Radius-ρ corner circles repelling
+  *other vertices of the same polygon* (self-avoidance for floppy shapes; never inter-polygon),
+  **scanned DIRECTLY per polygon** over own non-adjacent vertex pairs (not the neighbor list;
+  also lets `neighbors.py` drop `sameShape`). Pin exact pairing (circle↔circle / circle↔vertex
+  / circle↔edge) and functional form with Cam. (Two-circle overlap is a standard lens formula,
+  derived fresh in a `notes/*.tex` then.) FD-validate.
+- **6e — Adhesion (energy + force).** `−(K_adh/2)·Σ(2·chord/(P_i^t+P_j^t))²` over consecutive
+  intersection↔outersection pairs incl. cross-feature. FD-validate.
+- **6f — K_A / K_P springs (energy + force).** Rounded area & perimeter springs reusing the
+  Phase-3 gradients. FD-validate.
+- **6g — Assemble the full model.** Combine all terms into the energy/force entry point;
+  FD-validate the total. (The shrink→minimize→reset-φ protocol lives with Phase 7.)
+
+⚠️ Known risk areas (memory): instability at dense configs / short edges
+(`project_phase2_dual_status`); intersection-topology micro-jumps
+(`project_normal_topology_followup`); cross-feature pairing in the walk
+(`project_phase2_walkarea_incomplete`, `project_phase5_crossing_completeness`). Budget FD/MC
+checks heavily here.
 
 ## Phase 7 — Minimize the full model (build step 7)  *[outline]*
 FIRE loop refreshing neighbors + intersections each step.

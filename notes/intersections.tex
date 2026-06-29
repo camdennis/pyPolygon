@@ -13,7 +13,7 @@
 \begin{document}
 \maketitle
 
-Two rounded polygons $A,B$ cross at four feature combinations: edge--edge (\textbf{ee}),
+Two rounded polygons $A,B$ intersect at four feature combinations: edge--edge (\textbf{ee}),
 edge--arc (\textbf{ea}), arc--edge (\textbf{ae}), arc--arc (\textbf{aa}). We use the 2D
 Levi-Civita symbol $\varepsilon_{\alpha\beta}$ with $\varepsilon_{xy}=-\varepsilon_{yx}=1$; a
 $90^\circ$ rotation is $(\vv n^{\perp})^{\alpha}=\varepsilon^{\alpha}{}_{\beta}\,n^{\beta}$.
@@ -43,7 +43,7 @@ radii $\rho_k$, sweeps $\psi_k$ (next vertex $z(k)$, previous $z'(k)$):
 \]
 
 \paragraph{Arc-validity (AVT).}
-The crossing formulas place candidate points on the \emph{full} circle $(\vv z_k,\rho_k)$; the
+The intersection formulas place candidate points on the \emph{full} circle $(\vv z_k,\rho_k)$; the
 arc $C_k$ is only its wedge, symmetric about the outward bisector $-\hat b_k$ and spanning
 $\pm\psi_k/2$ ($\hat b_k$ the bisector from $\vv v_k$ toward $\vv z_k$). A point $\vv R$ on the
 circle lies on $C_k$ iff
@@ -55,21 +55,21 @@ This holds for convex and reflex corners alike (both arcs bulge toward $\vv v_k$
 \section{Ordering features}
 
 Number a polygon's $2n$ features CCW, $C_0,E_0,C_1,E_1,\dots,C_{n-1},E_{n-1}=0,1,\dots,2n-1$.
-A crossing on feature $f$ of $\partial A$ gets the monotonic boundary coordinate
+An intersection on feature $f$ of $\partial A$ gets the monotonic boundary coordinate
 \[
   \boxed{\;\sigma_A = f +
   \begin{cases}\lambda & f\ \text{even (arc $C_{f/2}$)}\\[2pt] s & f\ \text{odd (edge)}\end{cases}\;}
   \qquad
   \lambda=\frac{\phi-\phi^{-}_k}{\psi_k}\ \ (\text{mod }2\pi,\ \text{along }a^{-}_k\!\to a^{+}_k).
 \]
-Sorting a pair's crossings by $\sigma_A$ gives the order met walking $\partial A$ CCW; the
-\emph{outersection} of a crossing is the next one in that cyclic order. It remains to find the
-edge parameter $s$ and the arc angle $\phi$ for each crossing.
+Sorting a pair's intersections by $\sigma_A$ gives the order met walking $\partial A$ CCW; the
+\emph{outersection} of an intersection is the next one in that cyclic order. It remains to find the
+edge parameter $s$ and the arc angle $\phi$ for each intersection.
 
 \section{Edge--edge (ee)}
 
 Edges $\vv P_k(s)=\vv a^{+}_k+s\,\vv u_k$ and $\vv P_\ell(t)=\vv a^{+}_\ell+t\,\vv u_\ell$. With
-$\vv w_{k\ell}=\vv a^{+}_\ell-\vv a^{+}_k$, a crossing needs
+$\vv w_{k\ell}=\vv a^{+}_\ell-\vv a^{+}_k$, an intersection needs
 $\vv P_\ell(t)-\vv P_k(s)=\vv w_{k\ell}-s\,\vv u_k+t\,\vv u_\ell=\vv 0$. Contracting with
 $\varepsilon_{\alpha\beta}$ against $\vv u_\ell$ and against $\vv u_k$,
 \[
@@ -79,7 +79,7 @@ $\varepsilon_{\alpha\beta}$ against $\vv u_\ell$ and against $\vv u_k$,
   t=\frac{\varepsilon_{\alpha\beta}\,w_{k\ell}^{\alpha}u_k^{\beta}}
          {\varepsilon_{\alpha\beta}\,u_k^{\alpha}u_\ell^{\beta}}.
 \]
-A crossing exists iff the denominator $\varepsilon_{\alpha\beta}u_k^{\alpha}u_\ell^{\beta}\neq0$
+An intersection exists iff the denominator $\varepsilon_{\alpha\beta}u_k^{\alpha}u_\ell^{\beta}\neq0$
 (non-parallel) and $s,t\in[0,1]$.
 
 \section{Edge--arc (ea, ae)}
@@ -93,7 +93,7 @@ $\lvert\vv u_k\rvert^{2}s^{2}+2(\vv w_{k\ell}\!\cdot\!\vv u_k)s+\lvert\vv w_{k\e
   D_{k\ell}=(\vv w_{k\ell}\!\cdot\!\vv u_k)^{2}+\lvert\vv u_k\rvert^{2}\big(\rho_\ell^{2}-\lvert\vv w_{k\ell}\rvert^{2}\big).\;}
 \]
 Keep each root with $S_{\pm}\in[0,1]$ whose point $\vv R=\vv P_k(S_{\pm})$ passes the AVT for arc
-$\ell$ (an edge can cross one arc twice). Its arc angle is $\phi=\atantwo(\vv R-\vv z_\ell)$
+$\ell$ (an edge can intersect one arc twice). Its arc angle is $\phi=\atantwo(\vv R-\vv z_\ell)$
 (feeds $\lambda$). \textbf{ae} is identical with the roles swapped (edge on $B$, arc on $A$).
 
 \section{Arc--arc (aa)}

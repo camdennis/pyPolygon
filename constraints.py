@@ -69,6 +69,18 @@ import warnings
 import numpy as np
 
 
+
+# np.linalg.qr ONLY TAKES STACKED (3-D) INPUT FROM NUMPY 1.22. The stacked svd and solve used elsewhere
+# in this file have accepted stacks since 1.8, so this one call is the whole portability surface, and on
+# an older numpy it raises "Array must be two-dimensional" from deep inside the constraint projection --
+# which reads as a malformed Jacobian rather than a version gap. Probed ONCE at import, because
+# _qrFactor is on the per-step path and the loop fallback is only for the old case.
+try:
+    np.linalg.qr(np.zeros((1, 2, 2)))
+    _STACKED_QR = True
+except (np.linalg.LinAlgError, ValueError):
+    _STACKED_QR = False
+
 _RANK_RCOND = 1e-12
 _MIN_EDGE_LENGTH = 1e-15
 # Floor on |A| in the shape index P / sqrt(A), whose gradient carries A^(-3/2). A polygon that has
@@ -607,7 +619,13 @@ class ShapeConstraints(_RaggedBlocks):
         Falling through to ``_decompose`` instead raises there, naming the cause."""
         if not np.all(np.isfinite(J)):
             return None
-        Q, R = np.linalg.qr(np.swapaxes(J, 1, 2))
+        stacked = np.swapaxes(J, 1, 2)
+        if _STACKED_QR:
+            Q, R = np.linalg.qr(stacked)
+        else:
+            factored = [np.linalg.qr(block) for block in stacked]
+            Q = np.stack([pair[0] for pair in factored])
+            R = np.stack([pair[1] for pair in factored])
         diagonal = np.abs(np.diagonal(R, axis1 = 1, axis2 = 2))
         largest = diagonal.max(axis = 1, keepdims = True)
         if np.any(diagonal <= _RANK_RCOND * np.maximum(largest, _MIN_EDGE_LENGTH)):

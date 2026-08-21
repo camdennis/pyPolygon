@@ -8,6 +8,10 @@ and refines it to an exact side, then writes
     <prefix>.png    the packing, colored by how the contacts hold each square
     <prefix>.txt    4 * count vertex positions, box normalized to the UNIT square
 
+with ``prefix`` defaulting to ``~/data/packings/packing<count>seed<seed>``. OUTSIDE THE REPO ON
+PURPOSE: ``*.png`` is gitignored here, so a run writing into the working tree drops half its output
+somewhere git will not keep and the other half where it will.
+
 THE COLORING IS WHAT THE PICTURE IS FOR.
 
   red     RATTLER -- fewer than three contacts, so the graph does not hold it and it comes out of the
@@ -21,6 +25,7 @@ The title carries the side against the best known, POSITIVE MEANING BETTER: a sm
 the same unit squares is the improvement, so ``+0.05%`` beat the record and ``-0.21%`` fell short.
 """
 import argparse
+import os
 import warnings
 
 import matplotlib
@@ -36,6 +41,7 @@ import refine as rf
 import squeeze as sq
 from model import Model
 
+OUTPUT_DIR = os.path.join("~", "data", "packings")
 WALL = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 1.0], [1.0, 0.0]])
 CORNERS = ((0.5, 0.5), (-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5))
 
@@ -324,7 +330,10 @@ def main():
     parser = argparse.ArgumentParser(description = __doc__.splitlines()[0])
     parser.add_argument("count", type = int, help = "number of unit squares")
     parser.add_argument("seed", type = int, help = "random seed for the build")
-    parser.add_argument("--prefix", default = None, help = "output path stem")
+    parser.add_argument("--prefix", default = None,
+                        help = "full output path stem; overrides --outputDir")
+    parser.add_argument("--outputDir", default = OUTPUT_DIR,
+                        help = f"directory for the two files (default {OUTPUT_DIR})")
     parser.add_argument("--steps", type = int, default = 100, help = "roundness schedule rungs")
     parser.add_argument("--digits", type = int, default = 60, help = "refinement precision")
     parser.add_argument("--chorded", action = "store_true",
@@ -334,7 +343,12 @@ def main():
                                "otherwise makes redundant")
     given = parser.parse_args()
 
-    prefix = given.prefix or f"packing{given.count}seed{given.seed}"
+    prefix = given.prefix or os.path.join(given.outputDir,
+                                          f"packing{given.count}seed{given.seed}")
+    prefix = os.path.expanduser(prefix)
+    parent = os.path.dirname(prefix)
+    if parent:
+        os.makedirs(parent, exist_ok = True)
     model = cornerCut(given.count, given.seed, scheduleSteps = given.steps,
                       exactArcs = not given.chorded, bisect = given.bisect)
     state, rattlers, flexible, result = analyze(asPacking(model, given.count), given.count,

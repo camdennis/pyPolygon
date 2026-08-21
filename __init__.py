@@ -1,10 +1,11 @@
-"""pyPolygon -- a NumPy reference for packings of rounded polygons.
+"""pyPolygon -- a NumPy reference for packings of sharp (straight-edged) polygons.
 
-The reference is a set of flat modules (box, geometry, neighbors, intersections,
-overlap, packingBuilder, visualize, validate, ...) that import one another by bare
-name. Importing the package puts its own directory on sys.path so those intra-package
-imports resolve whether the package is imported from inside or outside its directory,
-then exposes the high-level Model facade.
+The reference is a set of flat modules (enums, box, packing, distributions, packingBuilder,
+softBody, polygonOverlap, plummerOverlap, selfRepulsion, minimize, cache) that import one
+another by bare name. ``Model`` (model.py) builds the equilateral backbones; the sharp and
+Plummer-mollified overlap energies are driven directly off ``model.packing``. Importing the
+package puts its own directory on sys.path so those intra-package imports resolve whether the
+package is imported from inside or outside its directory, then exposes the Model facade.
 """
 
 import os as _os

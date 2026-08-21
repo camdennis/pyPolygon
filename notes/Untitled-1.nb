@@ -1,0 +1,3724 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    152453,       3714]
+NotebookOptionsPosition[    151517,       3689]
+NotebookOutlinePosition[    151920,       3705]
+CellTagsIndexPosition[    151877,       3702]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"\[Integral]", 
+   RowBox[{
+    SqrtBox[
+     RowBox[{
+      SuperscriptBox["x", "2"], "+", "1"}]], 
+    RowBox[{"\[DifferentialD]", "x"}]}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.9931510720252867`*^9, 3.993151093582762*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"10695e26-6d27-43f6-92d6-7799ef60b704"],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", "2"], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"x", " ", 
+     SqrtBox[
+      RowBox[{"1", "+", 
+       SuperscriptBox["x", "2"]}]]}], "+", 
+    RowBox[{"ArcTanh", "[", 
+     FractionBox["x", 
+      SqrtBox[
+       RowBox[{"1", "+", 
+        SuperscriptBox["x", "2"]}]]], "]"}]}], ")"}]}]], "Output",
+ CellChangeTimes->{{3.9931510851160107`*^9, 3.993151094867078*^9}},
+ CellLabel->"Out[2]=",ExpressionUUID->"c2b72143-6d25-4dc7-aba0-0f60e2b73dd1"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"Integrate", "[", 
+   RowBox[{
+    RowBox[{
+     FractionBox["1", "2"], " ", 
+     RowBox[{"(", 
+      FractionBox[
+       RowBox[{"ArcSinh", "[", "x", "]"}], 
+       SqrtBox[
+        RowBox[{
+         SuperscriptBox["x", "2"], "+", "1"}]]], ")"}], 
+     RowBox[{"(", 
+      FractionBox[
+       RowBox[{
+        RowBox[{"nu", " ", "x"}], "-", "m"}], 
+       RowBox[{
+        RowBox[{"A", " ", 
+         SuperscriptBox["x", "2"]}], "+", 
+        RowBox[{"B", " ", "x"}], " ", "+", " ", "c"}]], ")"}]}], ",", "x", 
+    ",", 
+    RowBox[{"Assumptions", "->", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"A", ">", "0"}], ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"4", "A", " ", "c"}], "-", 
+         SuperscriptBox["B", "2"]}], ">", "0"}]}], "}"}]}]}], "]"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.9931514874097147`*^9, 3.993151540811232*^9}, {
+  3.993153251567123*^9, 3.9931533146775427`*^9}, {3.993153415351433*^9, 
+  3.993153419623406*^9}, {3.993153975109816*^9, 3.9931539994734077`*^9}, {
+  3.993154087686095*^9, 3.993154122234725*^9}, {3.993154475195209*^9, 
+  3.9931544874243193`*^9}, {3.993157328933593*^9, 3.993157336831444*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"8c434799-95c8-4726-8ef2-072ab73268b0"],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", "2"], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"-", "m"}], " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"-", 
+        RowBox[{
+         FractionBox["1", 
+          SqrtBox[
+           RowBox[{
+            SuperscriptBox["B", "2"], "-", 
+            RowBox[{"4", " ", "A", " ", "c"}]}]]], 
+         RowBox[{"2", " ", "A", " ", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"-", 
+             FractionBox[
+              RowBox[{"\[ImaginaryI]", " ", "\[Pi]", " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"-", "2"}], " ", "A"}], "+", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                   RowBox[{"Tanh", "[", 
+                    FractionBox[
+                    RowBox[{"ArcSinh", "[", "x", "]"}], "2"], "]"}]}]}], 
+                 SqrtBox[
+                  RowBox[{
+                   RowBox[{"4", " ", 
+                    SuperscriptBox["A", "2"]}], "+", 
+                   SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]], 
+                "]"}]}], 
+              SqrtBox[
+               RowBox[{
+                RowBox[{"4", " ", 
+                 SuperscriptBox["A", "2"]}], "+", 
+                SuperscriptBox[
+                 RowBox[{"(", 
+                  RowBox[{"B", "+", 
+                   SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]]}],
+             "-", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"2", " ", 
+                RowBox[{"(", 
+                 RowBox[{
+                  FractionBox["\[Pi]", "2"], "-", 
+                  RowBox[{"\[ImaginaryI]", " ", 
+                   RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}], " ", 
+                RowBox[{"ArcTanh", "[", 
+                 FractionBox[
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                   RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                  
+                  RowBox[{
+                   SqrtBox["2"], " ", 
+                   SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+               "-", 
+               RowBox[{"2", " ", 
+                RowBox[{"ArcCos", "[", 
+                 FractionBox[
+                  RowBox[{"\[ImaginaryI]", " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                  RowBox[{"2", " ", "A"}]], "]"}], " ", 
+                RowBox[{"ArcTanh", "[", 
+                 FractionBox[
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                   RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                  
+                  RowBox[{
+                   SqrtBox["2"], " ", 
+                   SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+               "+", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"ArcCos", "[", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]], "]"}], "-", 
+                  RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}], "-", 
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}]}], ")"}]}]}], ")"}], " ", 
+                RowBox[{"Log", "[", 
+                 FractionBox[
+                  RowBox[{
+                   SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                   SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", 
+                    FractionBox["1", "2"]}], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                  RowBox[{
+                   SqrtBox["2"], " ", 
+                   SqrtBox[
+                    RowBox[{
+                    RowBox[{"-", "\[ImaginaryI]"}], " ", "A"}]], " ", 
+                   SqrtBox[
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "+", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"ArcCos", "[", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]], "]"}], "+", 
+                  RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}], "-", 
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}]}], ")"}]}]}], ")"}], " ", 
+                RowBox[{"Log", "[", 
+                 FractionBox[
+                  RowBox[{
+                   SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                   SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                  RowBox[{
+                   SqrtBox["2"], " ", 
+                   SqrtBox[
+                    RowBox[{
+                    RowBox[{"-", "\[ImaginaryI]"}], " ", "A"}]], " ", 
+                   SqrtBox[
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "-", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"ArcCos", "[", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]], "]"}], "+", 
+                  RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                   RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                 ")"}], " ", 
+                RowBox[{"Log", "[", 
+                 RowBox[{"1", "-", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                   RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"-", 
+                   RowBox[{"ArcCos", "[", 
+                    FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]], "]"}]}], "+", 
+                  RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                   RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                 ")"}], " ", 
+                RowBox[{"Log", "[", 
+                 RowBox[{"1", "-", 
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                   RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+               RowBox[{"\[ImaginaryI]", " ", 
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"PolyLog", "[", 
+                   RowBox[{"2", ",", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}], "-", 
+                  RowBox[{"PolyLog", "[", 
+                   RowBox[{"2", ",", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], ")"}]}]}], ")"}], 
+             "/", 
+             RowBox[{"(", 
+              RowBox[{
+               SqrtBox["2"], " ", 
+               SqrtBox[
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "2"}], " ", 
+                  SuperscriptBox["A", "2"]}], "-", 
+                 SuperscriptBox["B", "2"], "+", 
+                 RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                 RowBox[{"B", " ", 
+                  SqrtBox[
+                   RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}]}], 
+           ")"}]}]}]}], "-", 
+       RowBox[{
+        FractionBox["1", 
+         SqrtBox[
+          RowBox[{
+           SuperscriptBox["B", "2"], "-", 
+           RowBox[{"4", " ", "A", " ", "c"}]}]]], 
+        RowBox[{"2", " ", "A", " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{"\[ImaginaryI]", " ", "\[Pi]", " ", 
+              RowBox[{"ArcTanh", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{"2", " ", "A"}], "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Tanh", "[", 
+                   FractionBox[
+                    RowBox[{"ArcSinh", "[", "x", "]"}], "2"], "]"}]}]}], 
+                SqrtBox[
+                 RowBox[{
+                  RowBox[{"4", " ", 
+                   SuperscriptBox["A", "2"]}], "+", 
+                  SuperscriptBox[
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]], 
+               "]"}]}], 
+             SqrtBox[
+              RowBox[{
+               RowBox[{"4", " ", 
+                SuperscriptBox["A", "2"]}], "+", 
+               SuperscriptBox[
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"-", "B"}], "+", 
+                  SqrtBox[
+                   RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]]}],
+            "-", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"2", " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 FractionBox["\[Pi]", "2"], "-", 
+                 RowBox[{"\[ImaginaryI]", " ", 
+                  RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}], " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Cot", "[", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+              "-", 
+              RowBox[{"2", " ", 
+               RowBox[{"ArcCos", "[", 
+                RowBox[{"-", 
+                 FractionBox[
+                  RowBox[{"\[ImaginaryI]", " ", 
+                   RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                  RowBox[{"2", " ", "A"}]]}], "]"}], " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Tan", "[", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+              "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  RowBox[{"-", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}], "-", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}], "-", 
+                    
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+                   ")"}]}]}], ")"}], " ", 
+               RowBox[{"Log", "[", 
+                FractionBox[
+                 RowBox[{
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                  SuperscriptBox["\[ExponentialE]", 
+                   RowBox[{
+                    RowBox[{"-", 
+                    FractionBox["1", "2"]}], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{"\[ImaginaryI]", " ", "A"}]], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  RowBox[{"-", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}], "-", 
+                    
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+                   ")"}]}]}], ")"}], " ", 
+               RowBox[{"Log", "[", 
+                FractionBox[
+                 RowBox[{
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                  SuperscriptBox["\[ExponentialE]", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{"\[ImaginaryI]", " ", "A"}]], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "-", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  RowBox[{"-", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"ArcTanh", "[", 
+                   FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                ")"}], " ", 
+               RowBox[{"Log", "[", 
+                RowBox[{"1", "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                  RowBox[{"(", 
+                   RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"-", 
+                  RowBox[{"ArcCos", "[", 
+                   RowBox[{"-", 
+                    FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}]}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"ArcTanh", "[", 
+                   FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                ")"}], " ", 
+               RowBox[{"Log", "[", 
+                RowBox[{"1", "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                  RowBox[{"(", 
+                   RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+              RowBox[{"\[ImaginaryI]", " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"PolyLog", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{"-", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}], ")"}]}]}], "]"}], "-", 
+                 RowBox[{"PolyLog", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{"-", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}], ")"}]}]}], "]"}]}], 
+                ")"}]}]}], ")"}], "/", 
+            RowBox[{"(", 
+             RowBox[{
+              SqrtBox["2"], " ", 
+              SqrtBox[
+               RowBox[{
+                RowBox[{
+                 RowBox[{"-", "2"}], " ", 
+                 SuperscriptBox["A", "2"]}], "-", 
+                SuperscriptBox["B", "2"], "+", 
+                RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                RowBox[{"B", " ", 
+                 SqrtBox[
+                  RowBox[{
+                   SuperscriptBox["B", "2"], "-", 
+                   RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}]}], 
+          ")"}]}]}]}], ")"}]}], "+", 
+    RowBox[{"nu", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        FractionBox["1", 
+         SqrtBox[
+          RowBox[{
+           SuperscriptBox["B", "2"], "-", 
+           RowBox[{"4", " ", "A", " ", "c"}]}]]], 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"B", "+", 
+           SqrtBox[
+            RowBox[{
+             SuperscriptBox["B", "2"], "-", 
+             RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{"\[ImaginaryI]", " ", "\[Pi]", " ", 
+              RowBox[{"ArcTanh", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", "2"}], " ", "A"}], "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Tanh", "[", 
+                   FractionBox[
+                    RowBox[{"ArcSinh", "[", "x", "]"}], "2"], "]"}]}]}], 
+                SqrtBox[
+                 RowBox[{
+                  RowBox[{"4", " ", 
+                   SuperscriptBox["A", "2"]}], "+", 
+                  SuperscriptBox[
+                   RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]], 
+               "]"}]}], 
+             SqrtBox[
+              RowBox[{
+               RowBox[{"4", " ", 
+                SuperscriptBox["A", "2"]}], "+", 
+               SuperscriptBox[
+                RowBox[{"(", 
+                 RowBox[{"B", "+", 
+                  SqrtBox[
+                   RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]]}],
+            "-", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"2", " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 FractionBox["\[Pi]", "2"], "-", 
+                 RowBox[{"\[ImaginaryI]", " ", 
+                  RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}], " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Cot", "[", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+              "-", 
+              RowBox[{"2", " ", 
+               RowBox[{"ArcCos", "[", 
+                FractionBox[
+                 RowBox[{"\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                 RowBox[{"2", " ", "A"}]], "]"}], " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Tan", "[", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+              "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  FractionBox[
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                   RowBox[{"2", " ", "A"}]], "]"}], "-", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}], "-", 
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}]}], ")"}]}]}], ")"}], " ", 
+               RowBox[{"Log", "[", 
+                FractionBox[
+                 RowBox[{
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                  SuperscriptBox["\[ExponentialE]", 
+                   RowBox[{
+                    RowBox[{"-", 
+                    FractionBox["1", "2"]}], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{"-", "\[ImaginaryI]"}], " ", "A"}]], " ", 
+                  SqrtBox[
+                   RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  FractionBox[
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                   RowBox[{"2", " ", "A"}]], "]"}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}], "-", 
+                    RowBox[{"ArcTanh", "[", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}], 
+                    "]"}]}], ")"}]}]}], ")"}], " ", 
+               RowBox[{"Log", "[", 
+                FractionBox[
+                 RowBox[{
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                  SuperscriptBox["\[ExponentialE]", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{"-", "\[ImaginaryI]"}], " ", "A"}]], " ", 
+                  SqrtBox[
+                   RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "-", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  FractionBox[
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                   RowBox[{"2", " ", "A"}]], "]"}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"ArcTanh", "[", 
+                   FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                ")"}], " ", 
+               RowBox[{"Log", "[", 
+                RowBox[{"1", "-", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                  RowBox[{"(", 
+                   RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"-", 
+                  RowBox[{"ArcCos", "[", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]], "]"}]}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"ArcTanh", "[", 
+                   FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "-",
+                     "B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                ")"}], " ", 
+               RowBox[{"Log", "[", 
+                RowBox[{"1", "-", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                  RowBox[{"(", 
+                   RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+              RowBox[{"\[ImaginaryI]", " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"PolyLog", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}], "-", 
+                 RowBox[{"PolyLog", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", "\[ImaginaryI]", " ", "A"}], "+",
+                     "B", "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], ")"}]}]}], ")"}], 
+            "/", 
+            RowBox[{"(", 
+             RowBox[{
+              SqrtBox["2"], " ", 
+              SqrtBox[
+               RowBox[{
+                RowBox[{
+                 RowBox[{"-", "2"}], " ", 
+                 SuperscriptBox["A", "2"]}], "-", 
+                SuperscriptBox["B", "2"], "+", 
+                RowBox[{"2", " ", "A", " ", "c"}], "-", 
+                RowBox[{"B", " ", 
+                 SqrtBox[
+                  RowBox[{
+                   SuperscriptBox["B", "2"], "-", 
+                   RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}]}], 
+          ")"}]}]}], "-", 
+       RowBox[{
+        FractionBox["1", 
+         SqrtBox[
+          RowBox[{
+           SuperscriptBox["B", "2"], "-", 
+           RowBox[{"4", " ", "A", " ", "c"}]}]]], 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", "B"}], "+", 
+           SqrtBox[
+            RowBox[{
+             SuperscriptBox["B", "2"], "-", 
+             RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"-", 
+            FractionBox[
+             RowBox[{"\[ImaginaryI]", " ", "\[Pi]", " ", 
+              RowBox[{"ArcTanh", "[", 
+               FractionBox[
+                RowBox[{
+                 RowBox[{"2", " ", "A"}], "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Tanh", "[", 
+                   FractionBox[
+                    RowBox[{"ArcSinh", "[", "x", "]"}], "2"], "]"}]}]}], 
+                SqrtBox[
+                 RowBox[{
+                  RowBox[{"4", " ", 
+                   SuperscriptBox["A", "2"]}], "+", 
+                  SuperscriptBox[
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]], 
+               "]"}]}], 
+             SqrtBox[
+              RowBox[{
+               RowBox[{"4", " ", 
+                SuperscriptBox["A", "2"]}], "+", 
+               SuperscriptBox[
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"-", "B"}], "+", 
+                  SqrtBox[
+                   RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], "2"]}]]]}],
+            "-", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"2", " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 FractionBox["\[Pi]", "2"], "-", 
+                 RowBox[{"\[ImaginaryI]", " ", 
+                  RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}], " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Cot", "[", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+              "-", 
+              RowBox[{"2", " ", 
+               RowBox[{"ArcCos", "[", 
+                RowBox[{"-", 
+                 FractionBox[
+                  RowBox[{"\[ImaginaryI]", " ", 
+                   RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                  RowBox[{"2", " ", "A"}]]}], "]"}], " ", 
+               RowBox[{"ArcTanh", "[", 
+                FractionBox[
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                  RowBox[{"Tan", "[", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+              "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  RowBox[{"-", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}], "-", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}], "-", 
+                    
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+                   ")"}]}]}], ")"}], " ", 
+               RowBox[{"Log", "[", 
+                FractionBox[
+                 RowBox[{
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                  SuperscriptBox["\[ExponentialE]", 
+                   RowBox[{
+                    RowBox[{"-", 
+                    FractionBox["1", "2"]}], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{"\[ImaginaryI]", " ", "A"}]], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  RowBox[{"-", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"(", 
+                   RowBox[{
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Cot", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}], "-", 
+                    
+                    RowBox[{"ArcTanh", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}], 
+                   ")"}]}]}], ")"}], " ", 
+               RowBox[{"Log", "[", 
+                FractionBox[
+                 RowBox[{
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                  SuperscriptBox["\[ExponentialE]", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", "\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}]]}], 
+                 RowBox[{
+                  SqrtBox["2"], " ", 
+                  SqrtBox[
+                   RowBox[{"\[ImaginaryI]", " ", "A"}]], " ", 
+                  SqrtBox[
+                   RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"2", " ", "A", " ", "x"}]}]]}]], "]"}]}], "-", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"ArcCos", "[", 
+                  RowBox[{"-", 
+                   FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"ArcTanh", "[", 
+                   FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                ")"}], " ", 
+               RowBox[{"Log", "[", 
+                RowBox[{"1", "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                  RowBox[{"(", 
+                   RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"-", 
+                  RowBox[{"ArcCos", "[", 
+                   RowBox[{"-", 
+                    FractionBox[
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{"B", "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}]}], 
+                    RowBox[{"2", " ", "A"}]]}], "]"}]}], "+", 
+                 RowBox[{"2", " ", "\[ImaginaryI]", " ", 
+                  RowBox[{"ArcTanh", "[", 
+                   FractionBox[
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "+", "B", 
+                    "-", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}], ")"}], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], "]"}]}], 
+                    
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]], "]"}]}]}], 
+                ")"}], " ", 
+               RowBox[{"Log", "[", 
+                RowBox[{"1", "+", 
+                 RowBox[{
+                  RowBox[{"(", 
+                   RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                  RowBox[{"(", 
+                   RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}]}], "]"}]}], "+", 
+              RowBox[{"\[ImaginaryI]", " ", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{"PolyLog", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{"-", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}], ")"}]}]}], "]"}], "-", 
+                 RowBox[{"PolyLog", "[", 
+                  RowBox[{"2", ",", 
+                   RowBox[{"-", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "B"}], "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}]}], ")"}], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "-", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}], "/", 
+                    RowBox[{"(", 
+                    RowBox[{"2", " ", "A", " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"2", " ", "\[ImaginaryI]", " ", "A"}], "-", "B", 
+                    "+", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]], "+", 
+                    RowBox[{
+                    SqrtBox["2"], " ", 
+                    SqrtBox[
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"-", "2"}], " ", 
+                    SuperscriptBox["A", "2"]}], "-", 
+                    SuperscriptBox["B", "2"], "+", 
+                    RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                    RowBox[{"B", " ", 
+                    SqrtBox[
+                    RowBox[{
+                    SuperscriptBox["B", "2"], "-", 
+                    RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]], " ", 
+                    RowBox[{"Tan", "[", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    FractionBox["\[Pi]", "2"], "-", 
+                    RowBox[{"\[ImaginaryI]", " ", 
+                    RowBox[{"ArcSinh", "[", "x", "]"}]}]}], ")"}]}], 
+                    "]"}]}]}], ")"}]}], ")"}]}], ")"}]}]}], "]"}]}], 
+                ")"}]}]}], ")"}], "/", 
+            RowBox[{"(", 
+             RowBox[{
+              SqrtBox["2"], " ", 
+              SqrtBox[
+               RowBox[{
+                RowBox[{
+                 RowBox[{"-", "2"}], " ", 
+                 SuperscriptBox["A", "2"]}], "-", 
+                SuperscriptBox["B", "2"], "+", 
+                RowBox[{"2", " ", "A", " ", "c"}], "+", 
+                RowBox[{"B", " ", 
+                 SqrtBox[
+                  RowBox[{
+                   SuperscriptBox["B", "2"], "-", 
+                   RowBox[{"4", " ", "A", " ", "c"}]}]]}]}]]}], ")"}]}]}], 
+          ")"}]}]}]}], ")"}]}]}], ")"}]}]], "Output",
+ CellChangeTimes->{
+  3.993154001741951*^9, {3.993154491832631*^9, 3.9931545004132357`*^9}},
+ CellLabel->"Out[8]=",ExpressionUUID->"6e075464-cf8d-4887-915d-3738f5def555"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"FullSimplify", "[", 
+  RowBox[{"Integrate", "[", 
+   RowBox[{
+    RowBox[{
+     FractionBox["1", "2"], " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"x", " ", 
+        SqrtBox[
+         RowBox[{"1", "+", 
+          SuperscriptBox["x", "2"]}]]}], "+", 
+       RowBox[{"ArcSinh", "[", "x", "]"}]}], ")"}], "*", 
+     RowBox[{"(", 
+      FractionBox[
+       RowBox[{"m", "-", 
+        RowBox[{"nu", " ", "x"}]}], 
+       RowBox[{
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox["x", "2"], "+", "1"}]], 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"A", " ", 
+           SuperscriptBox["x", "2"]}], "+", 
+          RowBox[{"B", " ", "x"}], " ", "+", " ", "c"}], ")"}]}]], ")"}]}], 
+    ",", "x", ",", 
+    RowBox[{"Assumptions", "->", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"A", ">", "0"}], ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"4", "A", " ", "c"}], "-", 
+         SuperscriptBox["B", "2"]}], ">", "0"}]}], "}"}]}]}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"0d77a58a-5304-4376-888e-57fe8ee4203e"],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{3.993153336228633*^9, 3.993153955881487*^9},
+ CellLabel->"Out[5]=",ExpressionUUID->"68348e06-d3a9-4ea1-9792-c60e89426eb0"]
+}, Open  ]]
+},
+WindowSize->{606., 365.25},
+WindowMargins->{{158.625, Automatic}, {10.875, Automatic}},
+FrontEndVersion->"13.1 for Linux x86 (64-bit) (June 16, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"5ed61fed-da7b-4a4a-af40-42f9b5bd5f29"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 361, 9, 43, "Input",ExpressionUUID->"10695e26-6d27-43f6-92d6-7799ef60b704"],
+Cell[944, 33, 494, 15, 54, "Output",ExpressionUUID->"c2b72143-6d25-4dc7-aba0-0f60e2b73dd1"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1475, 53, 1290, 35, 87, "Input",ExpressionUUID->"8c434799-95c8-4726-8ef2-072ab73268b0"],
+Cell[2768, 90, 147433, 3552, 9964, "Output",ExpressionUUID->"6e075464-cf8d-4887-915d-3738f5def555"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[150238, 3647, 1083, 35, 122, "Input",ExpressionUUID->"0d77a58a-5304-4376-888e-57fe8ee4203e"],
+Cell[151324, 3684, 177, 2, 33, "Output",ExpressionUUID->"68348e06-d3a9-4ea1-9792-c60e89426eb0"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

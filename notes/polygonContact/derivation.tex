@@ -1,0 +1,347 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{bm}
+\usepackage{array}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\asinh}{\operatorname{arcsinh}}
+\newcommand{\that}{\hat\theta}
+\newcommand{\tauh}{\hat\tau}
+\newcommand{\rvec}{\vec\rho}
+
+\title{Analytic Derivation of the Energy and Force\\[0.3em]
+\large Polygon--Polygon Contact, Nonconvex Admitted, No Quadrature}
+\author{R.\ C.\ Dennis}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Every step from the geometry to the assembled per-vertex force. Each antiderivative below has been verified symbolically with exact zero residual, each polynomial expansion coefficient by coefficient, and the assembled gradient against central finite differences on ten configurations including nonconvex pairs in both orderings.
+\end{abstract}
+
+\section{Notation}
+\label{sec:notation}
+
+\emph{Body $A$}, whose boundary is integrated: vertices $a_0,\dots,a_{N-1}$ counterclockwise, with
+\begin{equation}
+e_i = a_{i+1}-a_i, \qquad L_i = |e_i|, \qquad \that_i = e_i/L_i .
+\end{equation}
+
+\emph{Body $B$}, into which distance is measured: vertices $b_0,\dots,b_{M-1}$ counterclockwise, with
+\begin{equation}
+g_j = b_{j+1}-b_j, \qquad G_j = |g_j|, \qquad \tauh_j = g_j/G_j, \qquad n_j = R\,\tauh_j,
+\end{equation}
+where
+\begin{equation}
+R = \begin{pmatrix} 0 & 1\\ -1 & 0\end{pmatrix}, \qquad R^2 = -I, \qquad R\,n_j = -\tauh_j,
+\end{equation}
+so that $n_j = (\tauh_{j,y},\,-\tauh_{j,x})$ is the \textbf{outward} unit normal. Cross products are scalars, $u\times v = u_xv_y - u_yv_x$.
+
+The signed distance to the line supporting edge $j$ of $B$ is
+\begin{equation}
+\ell_j(x) = n_j\cdot(b_j-x), \qquad \ell_j > 0 \ \text{ on the interior side.}
+\label{eq:elldef}
+\end{equation}
+
+Points on edge $i$ of $A$ are parametrized by
+\begin{equation}
+x(t) = a_i + t\,e_i = (1-t)\,a_i + t\,a_{i+1}, \qquad t\in[0,1], \qquad d\ell = L_i\,dt .
+\label{eq:param}
+\end{equation}
+The second form is the useful one: it gives immediately
+\begin{equation}
+\frac{\partial x(t)}{\partial a_i} = (1-t)\,I, \qquad \frac{\partial x(t)}{\partial a_{i+1}} = t\,I .
+\label{eq:dxda}
+\end{equation}
+
+The contact law is $\varphi(d) = \tfrac{k}{3}d^3$, so $\varphi'(d) = k\,d^2$ and $\varphi(0) = 0$.
+
+\section{The energy}
+\label{sec:energy}
+
+\begin{equation}
+E = \frac{1}{2}\sum_{(P,Q)\in\{(A,B),(B,A)\}}\ \int_{\partial P\cap Q}\varphi\big(d_Q(x)\big)\,d\ell(x),
+\qquad d_Q(x) = \dist(x,\partial Q).
+\label{eq:master}
+\end{equation}
+Take one ordered pair $(A,B)$ and one edge $i$ of $A$. By \eqref{eq:param},
+\begin{equation}
+E_i = L_i \sum_{\rm spans}\int_{t_0}^{t_1}\varphi\big(d_B(x(t))\big)\,dt \;\equiv\; L_i\,S_i .
+\label{eq:Ei}
+\end{equation}
+Three sub-problems remain: locate the span limits, split each span by nearest feature, integrate in closed form on each piece.
+
+\subsection{Span limits from edge--edge crossings}
+
+Edge $i$ of $A$ meets edge $j$ of $B$ where $a_i + t\,e_i = b_j + s\,g_j$, i.e.\ $(a_i-b_j) + t\,e_i = s\,g_j$. Crossing with $g_j$ annihilates the $s$ term and crossing with $e_i$ annihilates the $t$ term, giving
+\begin{equation}
+\boxed{\;t_c = \frac{(b_j-a_i)\times g_j}{e_i\times g_j}, \qquad
+s_c = \frac{(b_j-a_i)\times e_i}{e_i\times g_j}\;}
+\label{eq:cross}
+\end{equation}
+Accept the crossing when $t_c\in(0,1)$ and $s_c\in[0,1]$. Collect all accepted $t_c$ on edge $i$, adjoin $\{0,1\}$, and sort; each consecutive pair $[t_0,t_1]$ is a span if its midpoint lies inside $B$, tested by crossing parity. Parity is exact for any simple polygon and requires no convexity, no decomposition, and no root finding.
+
+Span endpoints are of two kinds, and the distinction is used in Section~\ref{sec:domain}:
+\begin{itemize}\itemsep1pt
+\item \emph{vertex endpoint}, $t\in\{0,1\}$: fixed in parameter space, so $\partial t/\partial v = 0$;
+\item \emph{crossing endpoint}, $t = t_c$: lies on $\partial B$, so $d_B = 0$ there identically.
+\end{itemize}
+
+\subsection{Nearest-feature partition}
+
+$d_B(x)$ is the minimum over two kinds of candidate:
+\begin{center}
+\begin{tabular}{lll}
+\hline
+candidate & admissible when & distance\\
+\hline
+interior of edge $j$ & $0\le \tauh_j\cdot(x-b_j)\le G_j$ & $d = |\ell_j(x)|$\\
+vertex $b_j$ & always & $d = |x-b_j|$\\
+\hline
+\end{tabular}
+\end{center}
+A minimum of continuous functions is continuous, and the switching locus is by definition the set where two candidates are equal, so $d_B$ never jumps. Subdivide each span at the switch parameters; because $d_B$ is continuous across each subdivision, the sub-stretch boundary terms will cancel in Section~\ref{sec:breakpoints} and the subdivision never needs differentiating.
+
+For \emph{convex} $B$ the nearest feature of an interior point is always an edge; vertex-nearest sub-stretches arise \textbf{only at reflex vertices}. The integer-exponent requirement below is therefore a consequence of nonconvexity alone.
+
+\subsection{Case E: edge-nearest sub-stretch}
+
+Substituting \eqref{eq:param} into \eqref{eq:elldef},
+\begin{equation}
+d(t) = n_j\cdot(b_j - a_i - t\,e_i) = \alpha_j - m_j\,t, \qquad
+\boxed{\;\alpha_j = n_j\cdot(b_j-a_i), \quad m_j = n_j\cdot e_i\;}
+\label{eq:affine}
+\end{equation}
+so $d$ is affine in $t$. Because the exponent is an integer, the integrand is a \emph{polynomial},
+\begin{equation}
+d^3 = \alpha^3 - 3\alpha^2 m\,t + 3\alpha m^2 t^2 - m^3 t^3,
+\end{equation}
+and with the moments $M_q = \int_{t_a}^{t_b}t^q\,dt = (t_b^{q+1}-t_a^{q+1})/(q+1)$,
+\begin{equation}
+\boxed{\;\int_{t_a}^{t_b} d^3\,dt = \alpha^3 M_0 - 3\alpha^2 m\,M_1 + 3\alpha m^2 M_2 - m^3 M_3 \;}
+\label{eq:Iedge}
+\end{equation}
+
+\paragraph{Why not the antiderivative.} $\int d^3dt = [d(t_a)^4 - d(t_b)^4]/4m$ is algebraically identical but divides by $m = n_j\cdot e_i$, which vanishes \emph{exactly} when the two edges are parallel --- the physically dominant face-on-face case --- and cancels catastrophically nearby. Equation~\eqref{eq:Iedge} has no division by $m$, no cancellation, and needs no tolerance branch.
+
+\subsection{Case V: vertex-nearest sub-stretch}
+
+Let $c = a_i - b_j$, so $x(t)-b_j = c + t\,e_i$ and
+\begin{equation}
+|x(t)-b_j|^2 = |c|^2 + 2t\,(c\cdot e_i) + t^2L_i^2
+= L_i^2\Big(t + \frac{c\cdot e_i}{L_i^2}\Big)^2 + |c|^2 - \frac{(c\cdot e_i)^2}{L_i^2}.
+\end{equation}
+Completing the square therefore introduces
+\begin{equation}
+\boxed{\;t_j = \frac{\that\cdot(b_j-a_i)}{L_i}, \quad w = L_i(t-t_j), \quad
+r^2 = |c|^2 - (\that\cdot c)^2, \quad s = \sqrt{w^2+r^2}\;}
+\label{eq:quad}
+\end{equation}
+with $d(t) = s$; here $t_j$ is the foot parameter of $b_j$ on the edge line and $r$ its perpendicular offset. The displacement decomposes as
+\begin{equation}
+x(t)-b_j = w\,\that + \rvec, \qquad \rvec = c - (\that\cdot c)\,\that, \qquad |\rvec| = r,
+\label{eq:decomp}
+\end{equation}
+with $\rvec$ \emph{constant} along the sub-stretch. Since $dt = dw/L_i$,
+\begin{equation}
+\int d^3\,dt = \frac{1}{L_i}\Big[\Phi_r(w)\Big]_{w_a}^{w_b}, \qquad
+\boxed{\;\Phi_r(w) = \frac{w\,(2w^2+5r^2)\,s}{8} + \frac{3r^4}{8}\,\asinh\frac{w}{r}\;}
+\label{eq:Ivert}
+\end{equation}
+
+\paragraph{Check.} Differentiating the first term gives $(8w^4+16w^2r^2+5r^4)/8s$ and the second gives $3r^4/8s$, since $\tfrac{d}{dw}\asinh(w/r) = 1/s$. Their sum is $8(w^2+r^2)^2/8s = s^3$. \quad$\checkmark$
+
+This is where the integer exponent is forced: $\int(w^2+r^2)^{n/2}dw$ is elementary only for $n\in\Z$, so the Hertzian $n = 5/2$ fails here, and only here.
+
+\subsection{Assembled energy}
+
+\begin{equation}
+\boxed{\;
+E = \frac{1}{2}\sum_{(P,Q)}\ \sum_i\ L_i \sum_{\rm spans}\ \sum_{\rm sub\text{-}stretches}
+\frac{k}{3}\times
+\begin{cases}
+\text{\eqref{eq:Iedge}} & \text{edge-nearest},\\[3pt]
+\big[\Phi_r(w_b)-\Phi_r(w_a)\big]/L_i & \text{vertex-nearest}.
+\end{cases}
+\;}
+\label{eq:Efinal}
+\end{equation}
+No quadrature appears anywhere.
+
+\section{The force}
+\label{sec:force}
+
+We need $F_v = -\partial E/\partial v$ for every vertex $v$ of both bodies. From \eqref{eq:Ei}, $E_i = L_iS_i$ with moving integration limits, so Leibniz gives exactly three groups:
+\begin{equation}
+\frac{\partial E_i}{\partial v} =
+\underbrace{\frac{\partial L_i}{\partial v}\,S_i}_{\text{measure}}
+\;+\; \underbrace{L_i\sum_{\rm spans}\Big[\varphi(t_1)\frac{\partial t_1}{\partial v} - \varphi(t_0)\frac{\partial t_0}{\partial v}\Big]}_{\text{domain}}
+\;+\; \underbrace{L_i\sum_{\rm spans}\int_{t_0}^{t_1}\varphi'(d)\,\frac{\partial d}{\partial v}\bigg|_t\,dt}_{\text{integrand}} .
+\label{eq:leibniz}
+\end{equation}
+
+\subsection{Measure group}
+
+Since $L_i = |a_{i+1}-a_i|$, one has $\partial L_i/\partial a_{i+1} = \that$ and $\partial L_i/\partial a_i = -\that$, so
+\begin{equation}
+\boxed{\;\frac{\partial E}{\partial a_{i+1}} \mathrel{+}= S_i\,\that, \qquad
+\frac{\partial E}{\partial a_i} \mathrel{+}= -S_i\,\that\;}
+\label{eq:measure}
+\end{equation}
+with $S_i$ the edge's own $\int\varphi\,dt$, already computed for the energy.
+
+\paragraph{Caution.} The factor $L_i$ in front of the integrand group is easy to drop, and dropping it is \emph{exact} whenever $L_i = 1$. A test suite built on unit squares will not detect the omission; finite differencing on an edge of length $2$ exposes it as a $48\%$ error.
+
+\subsection{Domain group vanishes identically}
+\label{sec:domain}
+
+At a vertex endpoint $\partial t/\partial v = 0$. At a crossing endpoint $d_B = 0$, hence $\varphi = \tfrac{k}{3}\cdot 0 = 0$. Both terms are zero:
+\begin{equation}
+\boxed{\;\text{domain group} \;=\; 0\;}
+\label{eq:domainzero}
+\end{equation}
+This is the structural payoff of $\varphi(0) = 0$, and it is why crossing-through-vertex events are $C^2$ rather than merely continuous. The crossing derivative $\partial t_c/\partial v$ implied by \eqref{eq:cross} is never needed.
+
+\subsection{Sub-stretch breakpoints contribute nothing}
+\label{sec:breakpoints}
+
+Splitting a span at nearest-feature switches introduces interior limits that also move under $v$. But $d_B$ is continuous across a switch, so $\varphi$ takes the same value from both sides and the two boundary terms are equal and opposite. The bisection or root finding that locates the switch never has to be differentiated.
+
+\subsection{Integrand group, Case E}
+
+\paragraph{Derivative in $x$.} From \eqref{eq:affine}, $\partial d/\partial x = -n_j$, constant on the sub-stretch.
+
+\paragraph{Derivative in $B$'s vertices.} The normal rotates, so this requires care. From $\tauh_j = g_j/G_j$, in two dimensions the component of $\delta g_j$ perpendicular to $\tauh_j$ lies along $n_j$, whence
+\begin{equation}
+\delta\tauh_j = \frac{(n_j\cdot\delta g_j)}{G_j}\,n_j
+\quad\Longrightarrow\quad
+\delta n_j = R\,\delta\tauh_j = \frac{(n_j\cdot\delta g_j)}{G_j}\,R\,n_j
+= -\frac{(n_j\cdot\delta g_j)}{G_j}\,\tauh_j .
+\label{eq:dn}
+\end{equation}
+Introduce the normalized foot parameter
+\begin{equation}
+\sigma_j(t) = \frac{\tauh_j\cdot\big(x(t)-b_j\big)}{G_j} = \sigma^0_j + \sigma^1_j t,
+\qquad \sigma^0_j = \frac{\tauh_j\cdot(a_i-b_j)}{G_j}, \quad \sigma^1_j = \frac{\tauh_j\cdot e_i}{G_j},
+\label{eq:sigma}
+\end{equation}
+affine in $t$, so that $\tauh_j\cdot(b_j-x) = -\sigma_jG_j$. Then with $\delta g_j = \delta b_{j+1}-\delta b_j$,
+\begin{equation}
+\delta d = \delta n_j\cdot(b_j-x) + n_j\cdot\delta b_j
+= \sigma_j\,(n_j\cdot\delta g_j) + n_j\cdot\delta b_j
+= (1-\sigma_j)\,n_j\cdot\delta b_j + \sigma_j\,n_j\cdot\delta b_{j+1},
+\end{equation}
+that is
+\begin{equation}
+\boxed{\;\frac{\partial d}{\partial b_j} = (1-\sigma_j)\,n_j, \qquad
+\frac{\partial d}{\partial b_{j+1}} = \sigma_j\,n_j, \qquad
+\frac{\partial d}{\partial x} = -n_j\;}
+\label{eq:lever}
+\end{equation}
+a lever rule: the normal load is split between the edge's endpoints according to where the perpendicular from $x$ meets the edge. On an edge-nearest sub-stretch $\sigma_j\in[0,1]$ by definition, so this is genuine interpolation, never extrapolation.
+
+\paragraph{The two moments.} With $\varphi' = kd^2$ and $d$ affine, both required integrals are polynomials in the same $M_q$:
+\begin{equation}
+P_0 = \int\varphi'\,dt = k\big[\alpha^2M_0 - 2\alpha m M_1 + m^2M_2\big], \qquad
+P_1 = \int\varphi'\,t\,dt = k\big[\alpha^2M_1 - 2\alpha m M_2 + m^2M_3\big].
+\label{eq:P01}
+\end{equation}
+By \eqref{eq:dxda} the $x$-derivative enters with weights $(1-t)$ and $t$, and $\int\varphi'(1-t)\,dt = P_0-P_1$. Writing $\Sigma_j = \sigma^0_jP_0 + \sigma^1_jP_1 = \int\varphi'\sigma_j\,dt$, the assembled contributions are
+\begin{equation}
+\boxed{
+\begin{aligned}
+\frac{\partial E}{\partial a_i} &\mathrel{+}= -L_i(P_0-P_1)\,n_j, &\qquad
+\frac{\partial E}{\partial a_{i+1}} &\mathrel{+}= -L_i P_1\,n_j,\\
+\frac{\partial E}{\partial b_j} &\mathrel{+}= L_i(P_0-\Sigma_j)\,n_j, &\qquad
+\frac{\partial E}{\partial b_{j+1}} &\mathrel{+}= L_i \Sigma_j\,n_j .
+\end{aligned}}
+\label{eq:gradE}
+\end{equation}
+
+\subsection{Integrand group, Case V}
+
+From \eqref{eq:decomp}, $\partial d/\partial x = (x-b_j)/d = (w\that+\rvec)/s$ and $\partial d/\partial b_j = -(x-b_j)/d$. Hence
+\begin{equation}
+\varphi'(d)\,\frac{\partial d}{\partial x} = k\,s^2\cdot\frac{w\that+\rvec}{s} = k\,s\,\big(w\,\that + \rvec\big),
+\end{equation}
+so the integrals needed are $\int s\,dw$, $\int w\,s\,dw$ and $\int w^2s\,dw$, all elementary:
+\begin{equation}
+\boxed{\;
+J_0 = \int\! s\,dw = \frac{ws + r^2\asinh(w/r)}{2}, \quad
+J_1 = \int\! w\,s\,dw = \frac{s^3}{3}, \quad
+J_2 = \int\! w^2 s\,dw = \frac{ws^3}{4} - \frac{r^2ws}{8} - \frac{r^4}{8}\asinh\frac{w}{r}\;}
+\label{eq:Js}
+\end{equation}
+each verified by differentiation to exact zero. With $dt = dw/L_i$ and $t = t_j + w/L_i$, define the \emph{vector} moments, using $\Delta J_q = J_q(w_b)-J_q(w_a)$:
+\begin{equation}
+V_0 = \frac{k}{L_i}\Big[\that\,\Delta J_1 + \rvec\,\Delta J_0\Big], \qquad
+V_1 = \frac{k}{L_i}\Big[t_j\big(\that\,\Delta J_1 + \rvec\,\Delta J_0\big)
++ \frac{1}{L_i}\big(\that\,\Delta J_2 + \rvec\,\Delta J_1\big)\Big],
+\label{eq:V01}
+\end{equation}
+so that $V_0 = \int\varphi'(\partial d/\partial x)\,dt$ and $V_1 = \int\varphi'(\partial d/\partial x)\,t\,dt$. Then
+\begin{equation}
+\boxed{\;
+\frac{\partial E}{\partial a_i}\mathrel{+}= L_i(V_0-V_1), \qquad
+\frac{\partial E}{\partial a_{i+1}}\mathrel{+}= L_i V_1, \qquad
+\frac{\partial E}{\partial b_j}\mathrel{+}= -L_i V_0 \;}
+\label{eq:gradV}
+\end{equation}
+
+\paragraph{Caution.} In \eqref{eq:V01} the vector $\rvec$ enters \emph{undivided}. Substituting the unit vector $\rvec/r$ is a natural slip that produces relative errors of $10^{-3}$, and conservation checks do not catch it.
+
+\subsection{Assembled force}
+
+\begin{equation}
+\boxed{\;F_v = -\frac{\partial E}{\partial v}\;}
+\end{equation}
+obtained by scattering \eqref{eq:measure}, \eqref{eq:gradE} and \eqref{eq:gradV} into a per-vertex array, summed over sub-stretches, spans, edges, and both orderings, with the overall factor $\tfrac12$ from \eqref{eq:master}.
+
+\section{Conservation, exactly}
+\label{sec:conservation}
+
+\subsection{Net force}
+
+\emph{Case E.} At fixed $t$ the contributions carry direction $-n_j$ split as $(1-t),t$ onto $a_i,a_{i+1}$, and $+n_j$ split as $(1-\sigma_j),\sigma_j$ onto $b_j,b_{j+1}$. Summing all four,
+\begin{equation}
+\big[(1-t)+t\big](-n_j) + \big[(1-\sigma_j)+\sigma_j\big](+n_j) = -n_j + n_j = 0 .
+\end{equation}
+
+\emph{Case V.} $A$ receives $+u$ and $B$ receives $-u$ with $u = (x-b_j)/d$; these cancel.
+
+\emph{Measure.} $-\that + \that = 0$.
+
+Each identity holds \emph{pointwise in $t$}, hence after integration, hence in floating point --- not by cancellation between separately accumulated sums.
+
+\subsection{Net torque}
+
+\emph{Case E.} The $A$-side resultant acts at $(1-t)a_i + ta_{i+1} = x(t)$ by \eqref{eq:param}. The $B$-side resultant acts at $(1-\sigma_j)b_j + \sigma_jb_{j+1} = b_j + \sigma_jg_j \equiv q_j$, the perpendicular foot, which satisfies $q_j = x + \ell_jn_j$: indeed $n_j\cdot(q_j-b_j) = n_j\cdot(x-b_j) + \ell_j = -\ell_j + \ell_j = 0$, so $q_j$ lies on line $j$. Therefore
+\begin{equation}
+x\times(-n_j) + q_j\times n_j = (q_j-x)\times n_j = \ell_j\,(n_j\times n_j) = 0 .
+\end{equation}
+
+\emph{Case V.} $x\times u - b_j\times u = (x-b_j)\times u = (x-b_j)\times\dfrac{(x-b_j)}{d} = 0$.
+
+Exact sub-stretch by sub-stretch, so it can be asserted per sub-stretch in a debug kernel rather than only on the global sum.
+
+\section{Two traps}
+\label{sec:traps}
+
+\paragraph{Consistency.} Equation~\eqref{eq:leibniz} differentiates the \emph{exact} integral. If the energy is instead evaluated by fixed-node Gauss--Legendre quadrature, that sum has its own dependence on the moving nodes and \eqref{eq:leibniz} is simply not its derivative. Doing this produced relative gradient errors near $10^{-2}$, worst on spans containing a feature switch, where the integrand is only $C^1$ and the rule converges slowly. Whatever expression is evaluated for the energy must be the expression that is differentiated. With the closed forms of Section~\ref{sec:energy} the issue does not arise.
+
+\paragraph{Conservation is a weak test.} Section~\ref{sec:conservation} holds structurally, independent of whether $P_0$, $P_1$, $V_0$, $V_1$ are correct. It passed on every buggy intermediate version, including one carrying a $48\%$ error. Only finite differencing localizes errors, and it must be run on a contacting edge of non-unit length and on a face-parallel pair, or the two most likely bugs stay invisible.
+
+\section{Verification status}
+\label{sec:status}
+
+\paragraph{Symbolic.} $\Phi_r$, $J_0$, $J_1$, $J_2$ differentiate to their integrands with exact zero residual; the polynomial expansions of $d^3$, $d^2$ and $d^2t$ match \eqref{eq:Iedge} and \eqref{eq:P01} coefficient by coefficient.
+
+\paragraph{Numerical.} The assembled gradient was checked against central finite differences on ten configurations: parallel faces at $L_i = 1$ and $2$, a $30^\circ$ rotation, face-on-face with no vertex of $A$ inside $B$, vertex-on-face, crossed bars, deep overlap, and an L-shaped hexagon against a twelve-pointed star in both orderings and with one body rotated. Worst relative error $7\times10^{-7}$ at $h = 10^{-7}$, falling to $1.6\times10^{-12}$ absolute at $h = 10^{-5}$ and rising again below that --- finite-difference-limited, not analytic-error-limited. Net force and torque vanish at $2\times10^{-16}$ relative on every case. Energy and full gradient together take $43$~ms for a six-vertex against twelve-vertex nonconvex pair, versus $2.3$~s for the same gradient by central differencing: a $54\times$ speedup, growing linearly with vertex count.
+
+\end{document}

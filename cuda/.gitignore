@@ -1,0 +1,6 @@
+testPlummer
+testPlummerPair
+testSharpPacking
+vectors/
+*.o
+testPlummerGrad

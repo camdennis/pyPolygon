@@ -1,0 +1,392 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{bm}
+
+\newtheorem{lemma}{Lemma}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\asinh}{\operatorname{arcsinh}}
+
+\title{Contact Mechanics for Nonconvex Deformable Polygons\\[0.3em]
+\large Exact Interfacial Integrals in Closed Form}
+\author{R.\ C.\ Dennis}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+A contact law for simple polygons, convex or not, built from exact geometry and elementary integrals. The repulsive energy integrates a cubic penetration cost over the buried portion of one boundary, located exactly from edge--edge crossings; the integrand has an elementary antiderivative on every sub-stretch, so no quadrature appears anywhere. Derivatives with respect to the vertex coordinates are likewise closed-form, verified against finite differences and $54\times$ faster than differencing. No convex decomposition is used --- it is shown to be quantitatively wrong for any depth-based energy, low by a factor of $19$ on a convex control case. The construction is $C^2$ through contact onset, nearest-feature switches, and crossing-through-vertex events, and is exactly translation-invariant along a flat interface, so it is frictionless by construction rather than by convergence. It fails, by a finite force jump, only where a boundary crosses the other body's medial axis, bounding penetration well below the local inradius --- a limit that binds tightly for thin-limbed shapes and is the model's principal practical constraint. The natural decomposition of a configuration is four-level: pair, overlap component, span, sub-stretch, with the overlap component rather than the pair being the physical contact.
+\end{abstract}
+
+\section{Scope and requirements}
+\label{sec:scope}
+
+Let $A$ and $B$ be simple closed polygons, not assumed convex, with vertices in counterclockwise order. The degrees of freedom are the vertex coordinates: the bodies deform, so every derivative is taken with respect to vertices and no rigid-body parametrization is available.
+
+\emph{(R1) Detection.} Nonzero overlap area must give nonzero energy and nonzero force. Section~\ref{sec:rejected} exhibits four natural constructions that violate this or its companion (R2) on configurations occurring generically.
+
+\emph{(R2) Contact-type contrast.} Face-on-face and vertex-on-face contacts at equal penetration depth must have substantially different energies, in proportion to shared interface.
+
+\emph{(R3) Nonconvexity.} Reflex vertices admitted without convex decomposition.
+
+\emph{(R4) Regularity.} $C^2$ in the vertex coordinates, surviving contact onset, contact loss, and the internal combinatorial events of the construction.
+
+\emph{(R5) Closed form.} No quadrature; every integral elementary.
+
+\emph{(R6) Conservation.} Net force and torque vanishing by algebraic identity, in floating point.
+
+\emph{(R7) Exact frictionlessness.} Zero tangential force for relative sliding along a flat interface, identically and not merely to within a discretization error. This requirement exists because the intended application isolates adhesion as the sole source of contact hysteresis (Section~\ref{sec:adhesion}), and any geometric corrugation would confound it.
+
+(R5) is the binding constraint and it fixes the repulsive exponent (Section~\ref{sec:repulsion}).
+
+\section{The energy}
+\label{sec:energy}
+
+Let $d_Q(x) = \dist(x,\partial Q)$. The repulsive energy is
+\begin{equation}
+\boxed{\;
+E = \frac{1}{2}\sum_{(P,Q)}\ \int_{\partial P\cap Q} \frac{k}{3}\,d_Q(x)^3\,d\ell(x),
+\;}
+\label{eq:master}
+\end{equation}
+summed over both orderings $(A,B)$ and $(B,A)$, which removes the arbitrary choice of whose boundary to integrate. Here $k$ has dimensions of energy per length$^4$.
+
+Two properties organize everything that follows. The geometry enters the \emph{domain} only through membership in $Q$, which is exact and cheap for nonconvex polygons via crossing parity, and enters the \emph{integrand} only through the metric $d_Q$, which is not; keeping these two roles separate is what makes the construction work. And the integral is one-dimensional, so cost is linear rather than quadratic in mesh resolution.
+
+Equation~\eqref{eq:master} is a segment-to-segment contact law. Its point-sampled counterparts are the node-to-surface laws of computational contact mechanics, whose failure to transmit a uniform pressure across a face-on-face interface is the classical patch-test failure that motivated segment-to-segment and mortar methods; Section~\ref{sec:rejected} reproduces that failure quantitatively here.
+
+\paragraph{Exact frictionlessness.} Along a flat interface, sliding $P$ tangentially changes neither $d_Q$ at any point of the buried stretch nor the stretch's length, so \eqref{eq:master} is invariant and the tangential force vanishes identically. This is worth stating as a property rather than assuming it: it is exactly what a representation by disks distributed along the boundary fails to provide (Section~\ref{sec:rejected}), where the residual corrugation acts as a geometric static friction of $10^{-3}$ even at $25$ disks per contact radius.
+
+\section{The four-level decomposition}
+\label{sec:levels}
+
+A configuration decomposes naturally into four nested levels, and distinguishing them is more than bookkeeping: they are the right units for four different purposes.
+
+\emph{Pair.} Two polygons whose bounding boxes overlap. This is the unit for broad-phase culling and nothing else. It is \emph{not} the unit of contact, and treating it as such is the source of several errors.
+
+\emph{Overlap component.} A connected component of $A\cap B$. Its boundary is a closed cycle of alternating spans drawn from $\partial A\cap B$ and $\partial B\cap A$, joined at edge--edge crossings, since $\partial(A\cap B) = (\partial A\cap B)\cup(\partial B\cap A)$. This is the physical contact: it has a single well-defined interface, one chord, one maximum penetration depth, and --- when adhesion is present --- one bond.
+
+For convex polygons a pair carries at most one component, which is why the pair and the contact are conventionally conflated. For nonconvex polygons they are distinct. Two twelve-vertex crosses at a relative rotation of $45^\circ$ produce four crossings and \emph{two} disjoint overlap lobes from a single pair; the same crosses merely offset produce one. An L-shaped hexagon against a twelve-pointed star produces four crossings but a single component whose boundary cycle contains two spans from each body. Component count is bounded by half the crossing count and is not determined by it.
+
+Three consequences follow. Contact number, and therefore any isostaticity count, must be tallied in components, not pairs. The validity check of Section~\ref{sec:regularity} is a per-component quantity, since $d_{\max}$ and the relevant inradius both are. And if bonds are to be tracked across a quasistatic trajectory --- births, deaths, and the hysteresis they carry --- the object with persistent identity is the component, identified by its bounding set of crossings; a pair-level tally cannot distinguish one lobe closing from another opening.
+
+\emph{Span.} A maximal sub-segment of a single edge of $P$ lying inside $Q$ (Section~\ref{sec:spans}). This is the unit of the energy: \eqref{eq:master} is a sum over spans, each depending only on one edge of $P$ and the geometry of $Q$. It is therefore also the natural unit of parallel work. Pair-level parallelism is badly imbalanced, since most pairs contribute nothing while a few contribute many spans; span-level parallelism is close to uniform. Each span writes to exactly two vertices of $P$ and, per sub-stretch, one or two of $Q$, so gradient assembly is a sparse scatter with small fixed fan-out.
+
+\emph{Sub-stretch.} A portion of a span on which a single feature of $\partial Q$ is nearest (Section~\ref{sec:features}). This is the unit of arithmetic: one closed-form expression per sub-stretch, with a branch on feature type. It is the right granularity for a GPU kernel, being both uniform in cost and free of internal branching once the feature is known.
+
+So: cull on pairs, count physics on components, sum energy over spans, evaluate arithmetic on sub-stretches. The span list is also the right thing to persist between quasistatic steps, since its topology mostly survives small deformations and the changes are exactly the discrete events of interest.
+
+\section{Spans from edge--edge crossings}
+\label{sec:spans}
+
+\begin{lemma}[Span decomposition]
+\label{lem:spans}
+For simple polygons $A$, $B$, the set $\partial A\cap B$ is a finite union of closed sub-segments of the edges of $A$ whose endpoints are either vertices of $A$ or points of $\partial A\cap\partial B$.
+\end{lemma}
+
+\begin{proof}
+On a single edge $x(t) = a_i + t\,e_i$, $t\in[0,1]$, the indicator $\Theta_B(x(t))$ changes value only where $x(t)\in\partial B$. That set is finite unless an edge of $A$ is collinear with an edge of $B$ (Section~\ref{sec:numerics}), so the preimage of $\{1\}$ is a finite union of intervals whose endpoints are crossing parameters or edge endpoints.
+\end{proof}
+
+For each edge of $A$: compute crossing parameters against every edge of $B$ by the two-line determinant, sort them together with $\{0,1\}$, and retain those sub-intervals whose midpoint lies in $B$. Midpoint membership is decided by crossing parity, which is exact for arbitrary simple polygons and requires no supporting-half-plane representation, no convex decomposition, and no root finding. Cost is $O(N_AN_B)$ per pair after broad-phase culling.
+
+Span endpoints come in two kinds and the distinction drives the regularity result. A \emph{vertex endpoint} occurs where a vertex of $A$ lies inside $B$: the span ends because the edge does, and $t\in\{0,1\}$ is fixed in parameter space, so it contributes no boundary term when differentiated. A \emph{crossing endpoint} occurs where $\partial A$ pierces $\partial B$, and there $d_B = 0$ identically, so the integrand of \eqref{eq:master} vanishes and again no boundary term survives. The repulsive energy therefore has \emph{no} domain-variation terms at all (Section~\ref{sec:gradient}).
+
+Verified against a $2\times10^5$-node reference, the span construction reproduces the buried arclength $\mathcal H^1(\partial A\cap B)$ to $2\times10^{-16}$ on convex pairs and to the reference's own discretization error, $3\times10^{-6}$, on an L-shaped hexagon against a twelve-pointed star in both orderings.
+
+\section{Nearest-feature partition of a span}
+\label{sec:features}
+
+The integrand depends on $d_B$, piecewise smooth with pieces indexed by nearest feature. If the perpendicular foot from $x$ onto the line of edge $j$ of $B$ lies within that edge's endpoints, the edge interior is a candidate with
+\begin{equation}
+d = |\ell_j(x)|, \qquad \ell_j(x) = n_j\cdot(b_j - x),
+\end{equation}
+$n_j$ the outward unit normal; otherwise the candidate is the vertex distance $|x-b_j|$. The minimum over all candidates is $d_B$ exactly, for convex and nonconvex $B$ alike --- this is the step that makes (R3) hold without qualification.
+
+Along a straight stretch the two candidate types behave qualitatively differently, and that difference is the whole content of the closed-form result. Edge-interior candidates are \emph{affine} in the parameter,
+\begin{equation}
+\ell_j(x(t)) = \alpha - m\,t, \qquad \alpha = n_j\cdot(b_j-a_i), \quad m = n_j\cdot e_i .
+\label{eq:affine}
+\end{equation}
+Vertex candidates give the square root of a quadratic: with $L_i = |e_i|$, $\hat\theta = e_i/L_i$, $t_j = \hat\theta\cdot(b_j-a_i)/L_i$, $w = L_i(t-t_j)$, and $r$ the perpendicular offset of $b_j$ from the edge line,
+\begin{equation}
+|x(t)-b_j| = \sqrt{w^2+r^2} \equiv s, \qquad x(t)-b_j = w\,\hat\theta + \vec\rho, \quad |\vec\rho\,| = r,
+\label{eq:quad}
+\end{equation}
+with $\vec\rho$ \emph{constant} along the stretch.
+
+Subdivide at parameters where the nearest feature changes. Edge-versus-edge and vertex-versus-vertex conditions are linear in $t$ (angle and perpendicular bisectors respectively); edge-versus-vertex conditions are quadratic. At every such point the competing distances are equal, so $d_B$ is continuous across the subdivision. Whether the \emph{gradient} also survives is decided not by how many features are tied --- two are tied at every switch --- but by whether they are realized by the same nearest point:
+\begin{equation}
+\boxed{\;\text{tied features share their nearest point} \iff \nabla d_B \text{ continuous} \iff d_B \in C^1 \text{ there.}\;}
+\label{eq:realizing}
+\end{equation}
+Incident features do share it. At the wall between edge $j$ and its own endpoint $b_j$, both candidates are realized at $b_j$ itself, approached from either side with a continuous direction; measured on an L-shape, the two tied distances are both $0.1000000$ and both realized at the same point, separation $0$, with $d_B$ passing through at constant slope. Non-incident features do not. At a medial axis the two realizations are distinct points, and the nearest point jumps across the locus: measured across a limb of the cross, distances $0.159991$ and $0.160009$ realized at points $0.320000$ apart, which is the full limb width, and the slope of $d_B$ turns from $+1$ to $-1$ for a gradient jump of exactly $2$.
+
+Most subdivisions are of the first kind and therefore cost no regularity, and none of them contributes a gradient term (Section~\ref{sec:gradient}). A run-time assertion for medial-axis proximity must test the separation of the realizing points; counting near-tied features does not distinguish the two cases, and probing the gradient numerically requires a step larger than the offset between the sample point and the exact locus or both probes land on the same side.
+
+The exception is the medial axis of $B$, where two non-incident features compete and $\nabla d_B$ genuinely jumps. Section~\ref{sec:regularity} shows this is the one place the construction degrades, and it degrades badly.
+
+\section{The cubic exponent and the closed forms}
+\label{sec:repulsion}
+
+Write $\varphi(d) = \tfrac{k}{n}d^n$ and ask what $n$ permits closed-form evaluation on both feature types. On edge-nearest stretches \eqref{eq:affine} gives $(\alpha-mt)^n$, elementary for every $n$. On vertex-nearest stretches \eqref{eq:quad} gives $(w^2+r^2)^{n/2}$, and
+\begin{equation}
+\int(w^2+r^2)^{n/2}\,dw \ \text{ is elementary} \iff n\in\mathbb Z ,
+\end{equation}
+an incomplete beta function otherwise. The Hertzian $n = 5/2$ therefore fails (R5) outright. Regularity (R4) independently requires $\varphi''(0^+) = 0$, i.e.\ $n>2$: the harmonic $n=2$ is only $C^1$ and jumps the stiffness at every contact creation and destruction, which along an athermal quasistatic trajectory is the dominant event class. The smallest integer satisfying both is
+\begin{equation}
+\boxed{\;n = 3: \qquad \varphi(d) = \tfrac{k}{3}d^3, \qquad \varphi'(d) = k d^2, \qquad \varphi''(d) = 2kd.\;}
+\end{equation}
+This is $C^2$ at onset, with $\varphi'''$ jumping from $0$ to $2k$ --- the same regularity class as $5/2$ --- and elementary on both feature types. Nothing physical is lost. The $3/2$ force law is a three-dimensional sphere--sphere result, whereas planar contact between cylinders is linear with a logarithmic correction, so no exponent in a two-dimensional polygon model inherits the Hertzian interpretation; the exponent was always a regularity choice, and $n=3$ makes it a regularity and integrability choice at once.
+
+\paragraph{Edge-nearest stretches: the polynomial form.} Because the exponent is an integer and $d$ is affine, the integrand is a \emph{polynomial} in $t$. With moments $M_q = (t_b^{q+1}-t_a^{q+1})/(q+1)$ on a sub-stretch $[t_a,t_b]$,
+\begin{equation}
+\int_{t_a}^{t_b}\!\! d^3\,dt \;=\; \alpha^3 M_0 - 3\alpha^2 m\,M_1 + 3\alpha m^2 M_2 - m^3 M_3 .
+\label{eq:Iedge}
+\end{equation}
+Use this, not the antiderivative $[(\alpha-mt_a)^4-(\alpha-mt_b)^4]/4m$. The two are algebraically identical, but the latter divides by $m = n_j\cdot e_i$, which vanishes \emph{exactly} in the face-parallel configuration --- the physically dominant one --- and cancels catastrophically near it. Equation~\eqref{eq:Iedge} has no division by $m$, no cancellation, and needs no near-parallel branch or tolerance whatsoever. This is a second dividend of the integer exponent, independent of the integrability argument: an entire class of numerical fragility does not arise. An earlier draft guarded the $1/m$ form with a tolerance, and the guard leaked relative gradient errors of $10^{-3}$ through precisely the parallel-face contacts the model is built around.
+
+\paragraph{Vertex-nearest stretches.}
+\begin{equation}
+\Phi_r(w) \equiv \int(w^2+r^2)^{3/2}dw = \frac{w\,(2w^2+5r^2)\,s}{8} + \frac{3r^4}{8}\,\asinh\frac{w}{r},
+\label{eq:Ivert}
+\end{equation}
+contributing $[\Phi_r(w_b)-\Phi_r(w_a)]/L_i$ before the $d\ell$ factor; verified against $30$-digit quadrature to $3\times10^{-18}$. Precision degrades as $r\to0$ through the logarithm, but the $r^4$ prefactor suppresses that term; use $\asinh(w/r) = \ln w - \ln r + \ln(1+\sqrt{1+r^2/w^2})$ for $w \gg r > 0$.
+
+Assembled over all sub-stretches of all spans of both orderings, this evaluates \eqref{eq:master} with no quadrature. Against a $2\times10^4$-node reference it agrees to $6\times10^{-10}$--$10^{-8}$ relative --- the reference's own error --- on face-on-face, crossed-bar, vertex-on-face and deep-overlap convex configurations, and on an L-shaped hexagon against a twelve-pointed star in both orderings.
+
+\section{The analytic gradient}
+\label{sec:gradient}
+
+Consider one ordered pair, $E = \sum_{\rm spans} L_i\int_{t_0}^{t_1}\varphi(d_B(x(t)))\,dt$. Differentiating with respect to any vertex coordinate $v$ of either body gives exactly three groups,
+\begin{equation}
+\frac{\partial E}{\partial v} = \underbrace{\frac{\partial L_i}{\partial v}\int_{t_0}^{t_1}\!\!\varphi\,dt}_{\text{measure}}
+\;+\; \underbrace{L_i\Big[\varphi(t_1)\frac{\partial t_1}{\partial v} - \varphi(t_0)\frac{\partial t_0}{\partial v}\Big]}_{\text{domain}}
+\;+\; \underbrace{L_i\int_{t_0}^{t_1}\!\!\varphi'(d)\,\frac{\partial d}{\partial v}\bigg|_t dt}_{\text{integrand}} .
+\label{eq:threegroups}
+\end{equation}
+
+\paragraph{The domain group is empty.} At a vertex endpoint $\partial t/\partial v = 0$; at a crossing endpoint $d_B = 0$ so $\varphi = 0$. Both terms vanish identically. This is the structural payoff of the cubic exponent beyond its integrability, and it is what makes crossing-through-vertex events $C^2$ rather than merely continuous (Section~\ref{sec:regularity}).
+
+\paragraph{Sub-stretch breakpoints contribute nothing.} The nearest-feature partition introduces interior breakpoints that also move under $v$, but $d_B$ is continuous across a switch, so the boundary terms from the two adjacent sub-stretches are equal and opposite. The bisection or root finding used to locate the breakpoints therefore never needs to be differentiated --- a substantial practical simplification, and the same fact that makes feature switches $C^2$.
+
+\paragraph{Measure.} $\partial L_i/\partial a_{i+1} = \hat\theta$ and $\partial L_i/\partial a_i = -\hat\theta$, multiplying the span's own $\int\varphi\,dt$, which the energy already computes. The factor $L_i$ multiplying the integrand group is easy to lose, and omitting it is \emph{exact} whenever the contacting edge happens to have unit length, so a test suite built on unit squares will not detect the omission; finite differencing on an edge of length $2$ exposed it as a $48\%$ error.
+
+\paragraph{Integrand.} With $\partial x/\partial v = (1-t)\delta_{v,a_i} + t\,\delta_{v,a_{i+1}}$, the group needs only the two moments
+\begin{equation}
+P_0 = \int\varphi'(d)\,dt, \qquad P_1 = \int\varphi'(d)\,t\,dt,
+\end{equation}
+since $\int\varphi'(1-t)\,dt = P_0 - P_1$. On an edge-nearest sub-stretch $\partial d/\partial x = -n_j$ is constant, and $\varphi' = kd^2$ with $d$ affine makes $P_0$, $P_1$ polynomials in the moments $M_q$ of \eqref{eq:Iedge}. The derivative with respect to $B$'s vertices uses the lever rule \eqref{eq:lever} with $\sigma_j(t) = \sigma_0 + \sigma_1 t$ affine, so $\int\varphi'\sigma\,dt = \sigma_0P_0 + \sigma_1P_1$ and no new integrals appear.
+
+On a vertex-nearest sub-stretch $\partial d/\partial x = (w\hat\theta+\vec\rho\,)/d$ and, since $\varphi'\,\partial d/\partial x = k\,d\,(w\hat\theta+\vec\rho\,)$ with $d = s$, every required integral is elementary:
+\begin{equation}
+\int\! w\,s\,dw = \frac{s^3}{3}, \qquad
+\int\! s\,dw = \frac{w s + r^2\asinh(w/r)}{2}, \qquad
+\int\! w^2 s\,dw = \frac{w s^3}{4} - \frac{r^2 w s}{8} - \frac{r^4}{8}\asinh\frac{w}{r}.
+\label{eq:vecints}
+\end{equation}
+Note that $\vec\rho$ enters undivided; substituting the unit vector $\hat\rho$ is a natural slip and produces relative errors of $10^{-3}$ that conservation checks do not catch.
+
+\paragraph{Consistency is not optional.} An earlier implementation evaluated the integrand by fixed-node Gauss--Legendre quadrature while taking the gradient in the Leibniz form \eqref{eq:threegroups}. That is wrong: \eqref{eq:threegroups} differentiates the exact integral, whereas the quadrature sum has its own dependence on the moving nodes. The mismatch appeared as relative gradient errors near $10^{-2}$, worst on spans containing a feature switch where the integrand is only $C^1$ and the rule converges slowly. Whatever expression is evaluated for the energy must be the expression that is differentiated; with the closed forms above the question does not arise.
+
+\paragraph{Conservation.} From $\delta\hat t_j = |f_j|^{-1}(n_j\cdot\delta f_j)n_j$ and hence $\delta n_j = -|f_j|^{-1}(n_j\cdot\delta f_j)\hat t_j$, with $f_j = b_{j+1}-b_j$ and $\sigma_j = \hat t_j\cdot(x-b_j)/|f_j|$,
+\begin{equation}
+\frac{\partial\ell_j}{\partial b_j} = (1-\sigma_j)\,n_j, \qquad
+\frac{\partial\ell_j}{\partial b_{j+1}} = \sigma_j\,n_j, \qquad
+\frac{\partial\ell_j}{\partial x} = -n_j,
+\label{eq:lever}
+\end{equation}
+which sum to zero, so a rigid translation of both bodies leaves every $\ell_j$ invariant and the net force vanishes identically in floating point. On an edge-nearest sub-stretch $\sigma_j\in[0,1]$ by construction, so the load distribution is a genuine interpolation rather than an extrapolation. For torque, the resultant acts at the perpendicular foot $q_j = b_j + \sigma_j f_j$ with $q_j - x = \ell_j n_j$, so the contribution is $\ell_j(n_j\times n_j) = 0$ sub-stretch by sub-stretch, with no cancellation between separately computed terms. On a vertex-nearest sub-stretch $\partial d/\partial b_j = -\partial d/\partial x$ and both identities are immediate.
+
+\paragraph{Verification.} Checked against central finite differences on ten configurations: parallel faces at edge lengths $1$ and $2$, a $30^\circ$ rotation, face-on-face with no vertex of $A$ inside $B$, vertex-on-face, crossed bars, deep overlap, and an L-shaped hexagon against a twelve-pointed star in both orderings and with one body rotated. Worst relative error $7\times10^{-7}$ at $h = 10^{-7}$, falling to $1.6\times10^{-12}$ absolute at $h = 10^{-5}$ and rising again below that: finite-difference-limited, not analytic-error-limited. Net force and torque vanish at $2\times10^{-16}$ relative on every case. \emph{Conservation passed on every buggy intermediate version as well}, because it is structural; it is a necessary and very weak check, and only the finite-difference comparison localizes errors. Cost for one nonconvex pair with $6$ and $12$ vertices: $43$~ms for energy and full gradient together, against $2.3$~s for the same gradient by central differences --- a $54\times$ speedup, growing linearly with vertex count.
+
+\section{Regularity and the validity limit}
+\label{sec:regularity}
+
+Four event classes could break smoothness in the vertex coordinates. All were tested by one-sided finite differences on a translation parameter.
+
+\emph{Contact onset and loss.} The integrand vanishes as $d^3$ and the span length vanishes as well, so the energy vanishes as $\delta^3$ for a face-on-face approach at depth $\delta$ and as $\delta^{7/2}$ for a corner tangency where the chord grows as $\sqrt\delta$. Both $C^2$.
+
+\emph{Crossing-through-vertex.} The jump in $dE/dt$ decays as $1.3\times10^{-6}\to4.0\times10^{-8}\to1.3\times10^{-9}$ for $h = 10^{-3},10^{-4},10^{-5}$, and the $d^2E/dt^2$ jump reaches $10^{-13}$. The mechanism is that the vertex lies on $\partial B$ at the event, so $d_B = 0$ and the boundary term carries a factor $d_B^3$. $C^2$, and it is the cubic exponent that makes it so.
+
+\emph{Nearest-feature switch.} The jump in $dE/dt$ decays as $h^2$, reaching $4.0\times10^{-12}$, and the $d^2E/dt^2$ jump reaches $2\times10^{-9}$. $C^2$, as expected since $d_B$ is $C^1$ across an edge-to-own-endpoint wall.
+
+\emph{Medial-axis crossing.} This one fails. Where $\partial A$ crosses the medial axis of $B$, two non-incident features are equidistant and $\nabla d_B$ jumps. On a configuration in which an edge of $A$ lies along a medial axis of $B$, the one-sided jump in $dE/dt$ converges to $-0.0998, -0.09998, -0.1000$ as $h$ decreases: a finite discontinuity in the \emph{force}, not a vanishing artifact. A generic transversal crossing is milder, giving continuous force with a jump in the stiffness, because the integrand kink is localized to a point that moves smoothly; the aligned case above is the worst case, and it is not exotic, parallel faces being common in a packing of similar polygons.
+
+The medial axis lies at a distance of order the local inradius from $\partial B$, so the failure is confined to deep overlap. This converts what would otherwise be a soft preference into a hard limit:
+\begin{equation}
+\boxed{\;\max_{\rm components} d_B \;\ll\; r_{\rm in} \quad\text{is required, not merely desirable.}\;}
+\label{eq:validity}
+\end{equation}
+A configuration scan confirms the split: over a shallow sweep the largest change in $d^2E/dt^2$ between adjacent samples is $5.0\times10^{-3}$, attributable to smooth variation and contact loss, whereas over a deep sweep crossing the medial axis it is $9.2\times10^{-1}$. Assert \eqref{eq:validity} per overlap component at run time and treat a violation as a failed step rather than a tolerable inaccuracy.
+
+\paragraph{This limit binds hardest exactly where nonconvexity matters.} For a thin-limbed shape the relevant inradius is the limb half-width, not the particle size, so nonconvex shape families must be chosen, and $k$ set, so that equilibrium penetrations stay an order of magnitude below $w_{\rm limb}/2$.
+
+An earlier draft cited a relaxation of four twelve-vertex crosses that ended at $d_{\max}/r_{\rm in} = 0.97$ as evidence for how hard this binds. That attribution was wrong twice over, and both corrections are instructive.
+
+First, the state was inherited, not produced. Auditing it per contact gives every contact between $0.11$ and $0.46$ except one at $0.995$, and evaluating the \emph{initial} condition gives $d_{\max}/r_{\rm in} = 1.000$ before the first force evaluation. The cause was arithmetic in the setup: a cross of arm length $0.55$ reaches $0.55$ from its centre, so two centres must exceed $1.10$ apart to start disjoint, and the initial centres were $0.800$ apart.
+
+Second, the mechanism was misdescribed. That draft called the state \emph{threaded}, meaning limbs passing through one another, and argued that a local minimiser cannot undo such an interlock. Neither claim holds. Zooming on the offending pair shows an arm tip driven into a limb until the intruding \emph{boundary} reached the limb's centreline: the deepest point lies at $d = 0.15995$ with two of the host's edges tied at $0.15995$ and $0.16005$, a difference of $0.006\%$. Two equidistant non-incident features is the definition of the medial axis, so the contact is sitting exactly on it, and the overlap is $10.8\%$ of a body's area. Nothing has traversed anything. The correct description is \emph{maximal-depth penetration}: one boundary has reached the other's medial axis, which is the deepest a point can be from a boundary and precisely the locus at which this section's regularity argument fails. The run therefore converged to a legitimate minimum of $E$ evaluated where the formulation is invalid, and its residual stall near $10^{-5}$ had a second, independent cause identified in Section~\ref{sec:numerics}.
+
+Genuine threading, in the sense of interlocked limbs, does occur as a distinct hazard and is discussed below, but it was not what happened here.
+
+\paragraph{Initialization and compression protocol.} Nonconvex configurations must be \emph{generated} disjoint and compressed quasistatically, never placed at target density. Placing bodies on a lattice of spacing exceeding twice the circumradius certifies disjointness exactly: for the cross above, $R_c = 0.5728$, so a spacing of $1.25$ gives $E = 0$ and $d_{\max} = 0$ identically.
+
+Disjoint initialization is necessary but \emph{not} sufficient. Compressing that certified-disjoint lattice in a single large step, from container half-size $1.218$ to $0.90$, reproduced $d_{\max}/r_{\rm in} = 1.0000$: the relaxation walked a boundary onto a medial axis within one step. Compression must therefore be incremental with a rejection test. Halving the step whenever $d_{\max}/r_{\rm in}$ exceeds $0.35$ after a step, the same system compresses from $\phi = 0.42$ to $0.61$ with the monitor never exceeding $0.20$ and the force residual reaching $1.7\times10^{-14}$, i.e.\ machine precision on a configuration comfortably inside validity.
+
+A second, distinct hazard is genuine threading --- limbs interlocked by passing through one another. Soft particles have no topological barrier against it, and for two perpendicular bars fully crossing both the overlap area and the depth energy are \emph{exactly} independent of either translation, so neither potential supplies a gradient to escape. That degeneracy cannot be minimized away and must be avoided by construction, which is what disjoint initialization plus incremental compression achieves. An overlap-area pre-relaxation is a useful repair when a configuration is already bad --- from the maximal-depth state above, minimizing $\tfrac12 k_A(\text{overlap area})^2$ drove the energy to exactly zero in about $120$ iterations, leaving the bodies interdigitated at centre separations as small as $0.90$, well inside the circumradius sum --- and it succeeds where the depth potential does not, since at equal stiffness the depth potential instead lowered its own energy by making overlaps shallower and wider while the overlap area \emph{increased}. Note that interdigitation is not threading: bodies whose convex hulls interpenetrate while the bodies themselves are disjoint are perfectly valid, and are the natural dense state for nonconvex shapes. In the compression run above the crosses spontaneously rotated into such a state, the energy collapsing from $1.6\times10^{-6}$ back to $10^{-19}$ between $\phi = 0.53$ and $0.55$.
+
+In all cases assert $d_{\max}/r_{\rm in}$ per overlap component at step zero and after every step, rather than discovering the problem after a thousand relaxation iterations.
+
+\section{Corner scaling}
+\label{sec:corners}
+
+Because the energy is (energy density)$\times$(chord), the depth scaling of a contact is inherited from the chord. The exponents are clean power laws, measured on a flat wall to three digits with no drift over four decades in $\delta$:
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+contact & chord & $E$ & stiffness $\partial^2E/\partial\delta^2$\\
+\hline
+face-on-face, chord $L$ & $L$ & $\propto kL\delta^3$ \ (exp.\ $3.000$) & $\propto kL\delta$\\
+sharp corner & $\propto\delta$ & $\propto k\delta^4$ \ (exp.\ $4.000$) & $\propto k\delta^2$\\
+corner rounded at radius $R$ & $\propto\sqrt{R\delta}$ & $\propto kR^{1/2}\delta^{7/2}$ \ (exp.\ $3.500$) & $\propto kR^{1/2}\delta^{3/2}$\\
+\hline
+\end{tabular}
+\end{center}
+Corner contacts are thus softer than face contacts by $\delta/L$ when sharp and by $\sqrt{R\delta}/L$ when rounded; the sharp ratio was confirmed as $8.8\times10^{-4}$, $8.9\times10^{-3}$, $9.8\times10^{-2}$ at $\delta = 10^{-3},10^{-2},10^{-1}$, i.e.\ linear in $\delta$. This two-branch hierarchy is real physics of polygonal grains, not a numerical defect, but it means jamming scaling analyses that assume a single contact law do not transfer directly.
+
+For comparison, an energy built on overlap \emph{area} is one full power of $\delta$ worse: area goes as $L\delta$ for a face and $\delta^2$ for a sharp corner, so $E\sim kA^2$ gives a stiffness ratio $\delta^2/L^2$. At $\delta = 10^{-3}$ that is the difference between $10^{-6}$ and $10^{-3}$ --- between a Hessian one can factor and one one cannot. That, together with the fact that an interfacial energy cannot be represented by an area at all, is why the boundary formulation is preferred.
+
+\section{Why convex decomposition is not an option}
+\label{sec:nodecomp}
+
+A decomposition introduces internal boundaries, and the distance to a piece's boundary is not the distance to the body's boundary. Near an internal diagonal the former is near zero while $d_B$ is of order the local feature size, so summing \eqref{eq:master} over piece pairs \emph{under}-counts; the domains $\partial A\cap T_k$ partition $\partial A\cap B$ correctly, so no double counting compensates.
+
+Measured on a convex control case where the exact single-body answer is available: a unit square deeply overlapping a unit square gives $2.544\times10^{-2}$ evaluated against the full $\partial B$, and $1.365\times10^{-3}$ summed over $B$'s two triangles --- low by a factor of $19$. A shallower face-on-face configuration gives ratio $0.82$; an L-shaped hexagon against a twelve-pointed star gives $0.054$, and the reverse ordering $0.35$.
+
+The same objection defeats the R-function union $h = +\epsilon\log\sum_k e^{h^{(k)}/\epsilon}$ as a nonconvex depth field. At a point on an internal seam every containing piece reports depth near zero, so the softmax of small quantities is small while the true depth is $O(1)$. On the same L-shaped hexagon with a four-triangle ear clipping at $\epsilon = 2\times10^{-3}$, the error along the longest diagonal runs $-0.15$ to $-0.50$; restricted to the shallow band $d_B<0.05$ where contact actually occurs it is $4\times10^{-2}$ at $\epsilon = 2\times10^{-3}$ and remains $4\times10^{-2}$ at $\epsilon = 2\times10^{-4}$, i.e.\ $200\epsilon$. It does not scale with $\epsilon$ because it is geometric in origin, set by where the diagonals terminate on the boundary; no choice of $\epsilon$ repairs it. The union's zero set and sign are correct, but its magnitude --- which the energy consumes --- is not.
+
+Sections~\ref{sec:spans}--\ref{sec:features} avoid all of this by never decomposing: parity gives membership, and the minimum over edge and vertex candidates gives $d_B$, both exact for arbitrary simple polygons.
+
+\section{Rejected alternatives}
+\label{sec:rejected}
+
+Each of these is a natural first attempt, and three of the four fail silently.
+
+\paragraph{Vertex-only features are impossible, not merely inaccurate.} For two crossed rectangular bars overlapping in a central square, \emph{every vertex of each body lies outside the other}. The vector of vertex penetration depths is identically zero, so any function of it --- softmin, softmax, sum, $p$-norm --- returns what it returns for a separated pair, namely zero: zero energy and zero force on an overlap of $4\%$ of each bar's area, in a configuration that is stable, so nothing prevents the bars from passing through one another. The vertex set does not determine overlap; edge features are necessary, not an optimization. Crossed bars are moreover the generic shallow contact between elongated or reflex features, i.e.\ the common case for exactly the nonconvex shapes such a scheme would be introduced to serve. Softmin is additionally worse than softmax where vertices do enter, since it reports the shallowest, so a single grazing corner switches off an entire buried face.
+
+\paragraph{Vertex-sampled quadrature.} Evaluating the integrand at the vertices of $A$ --- the one-panel trapezoid rule --- is blind to the generic shallow face-on-face contact, where the buried portion lies strictly inside an edge and both nodes fall outside it. On a unit square against a straddling slab the true buried arclength is $0.400$ and the rule returns $6.2\times10^{-4}$. Worse, the true face-on-face to vertex-on-face ratio is $2.00$ and the rule reports $0.001$, so (R2) is inverted in sign rather than degraded. Higher order does not help, because the defect is the domain: eight-point Gauss--Legendre over the full edge returns $0.364$ against $0.400$ at $40\%$ buried fraction, and $0.0055$ against $0.101$ at $10\%$.
+
+\paragraph{Smoothed minimum-translation distance.} A single scalar depth per pair is available in closed form for convex bodies and needs no integration. Applying a log-sum-exp softmin to the Minkowski difference $D = A\oplus(-B)$ at the origin, with $\ell_j(0) = h_A(n_j)+h_B(-n_j)$ over the union of both bodies' facet normals, reproduces the separating-axis theorem exactly and smooths it. It fails three ways. It overestimates for interlocking shapes, reporting $0.600$ for the crossed bars whose interpenetration is $0.2$ deep, because minimum translation is constrained by bar length rather than contact geometry. Its gradient can vanish identically: for the symmetric crossed bars eight axes are active, the weighted mean normal cancels exactly, and the force is zero at depth $0.600$ --- the origin sits on $D$'s medial axis. And fatally it reports depth $0.100$ for both a face-on-face and a vertex-on-face configuration, a contrast ratio of $1.00$ where \eqref{eq:master} gives $9.75$ at equal depth. Any single-scalar-per-pair depth suffers the last defect structurally: one number cannot encode the extent of an interface. This is also the clearest illustration of why the pair is the wrong contact unit (Section~\ref{sec:levels}).
+
+\paragraph{Disks distributed along the boundary.} A spheropolygon or multi-sphere representation removes almost every difficulty above --- no crossings, no feature partition, no medial-axis jump, no decomposition, corners rounded automatically to a single scaling, and no integrals at all --- and it is the correct generalization of the vertex instinct, since disks on the \emph{edges} do determine overlap. It fails (R7). Sliding two decorated faces past each other by one disk spacing corrugates the energy and produces a spurious tangential force. Expressed as an artificial friction coefficient $|F_t|/|F_n|$: $0.38$ at $r/s = 1$, $0.043$ at $2$, $7.5\times10^{-3}$ at $4$, $1.8\times10^{-3}$ at $8$ --- decaying roughly as $(s/r)^2$ and never reaching zero. Reaching $10^{-4}$ requires $r/s\approx25$, at which point it is not simpler than the integral. Equation~\eqref{eq:master} is exactly translation invariant along a flat face by construction rather than by convergence, and Section~\ref{sec:adhesion} explains why that matters more than it might appear.
+
+\section{Linear scaling in the vertex count}
+\label{sec:scaling}
+
+The construction as described has one superlinear step, and removing it makes the whole evaluation $O(M)$ in the total vertex count. This matters because the interesting regime is large $M$: a finely resolved deformable polygon.
+
+\paragraph{The output is already linear.} A span lives inside a single edge of $A$, whose length falls as $P/M$ at fixed shape, so as $M$ grows each span crosses fewer of $B$'s nearest-feature cells. Measured on a five-lobed flower against a displaced copy of itself, with $M$ from $24$ to $384$: span count grows $8\to16\to30\to59\to117$, i.e.\ linearly, while sub-stretches per span \emph{fall} from $2.25$ to $1.66$, heading toward $1$. Total sub-stretch count is therefore $O(M)$, which is optimal since it is the size of the answer, and the output-sensitive march of Section~\ref{sec:features} does less work per span as the mesh refines rather than more.
+
+\paragraph{One grid, three jobs.} The superlinear step is candidate enumeration: testing every edge of $A$ against every edge of $B$ is $O(M_AM_B)$. Bin all edges of all bodies into a single uniform grid with cell size of order twice the mean edge length --- the same cell-list machinery as a particle neighbour list, with edges as the entries, built in one counting pass. Measured mean candidate edges returned per query, for the same flower pair: $1.67$, $0.73$, $0.21$, $0.05$, $0.04$, $0.02$ as $M$ runs $24\to768$, with the maximum never exceeding $6$. Flat in $M$, in fact falling, because at fixed shape the edges shrink faster than the cells need to.
+
+That one grid serves all three geometric queries, so there is no second structure to build or maintain:
+\begin{enumerate}\itemsep2pt
+\item \emph{Crossings.} For each edge of $A$, query the cells it overlaps and test only the returned edges of $B$ by the two-line determinant of Section~\ref{sec:spans}. $O(1)$ candidates per edge.
+\item \emph{Nearest feature.} For a point, query its cell and expand outward, terminating when the current best distance is smaller than the distance to the unexamined ring. Since $d_B\ll r_{\rm in}$ by \eqref{eq:validity}, this terminates in the first ring.
+\item \emph{Membership.} Free, given (2) --- see below.
+\end{enumerate}
+A coarse particle-level list remains useful as a cheap prefilter and for grouping results into overlap components, but it is a convenience rather than a second neighbour list: which body an edge belongs to is a per-edge attribute, so pair identity is recovered from the edge-level output.
+
+\paragraph{Membership without a global pass.} The obvious way to decide whether a span midpoint lies inside $B$ is a ray-cast parity test, but that touches every edge of $B$ and reintroduces $O(M_AM_B)$. It is unnecessary. The nearest boundary point determines which side of $\partial B$ a point lies on, so the nearest-feature query of (2) already carries the answer:
+\begin{equation}
+\boxed{\;
+\begin{aligned}
+\text{nearest feature is edge } j &\;\Longrightarrow\; x\in B \iff n_j\cdot(b_j-x) > 0,\\
+\text{nearest feature is vertex } j &\;\Longrightarrow\; x\in B \iff b_j \text{ is a reflex vertex.}
+\end{aligned}\;}
+\label{eq:membership}
+\end{equation}
+The second line holds because the exterior normal cone at a reflex vertex is empty: an exterior point near a reflex corner has one of the two incident edges as its nearest feature, never the vertex itself, whereas an interior point can be nearest to the vertex. Conversely a convex vertex is nearest only to exterior points. Verified against ray-casting parity on $4000$ random samples for each of a square, an L-shape, a twelve-vertex cross, a forty-vertex flower and a spiky heptagram: zero mismatches, with vertex-nearest hits accounting for $14$--$48\%$ of samples. Reflex flags are a per-vertex sign of a cross product, computed once per configuration in $O(M)$.
+
+Membership therefore costs nothing beyond the query already required for the integrand, and no parity walk, ray cast, or global pass over $\partial B$ appears anywhere in the evaluation.
+
+\paragraph{Resolution independence.} The energy converges as the mesh refines, since \eqref{eq:master} is an integral over the boundary rather than a sum over discrete features. On the same flower pair the relative change per doubling of $M$ falls $7.1\times10^{-2}\to2.6\times10^{-2}\to6.0\times10^{-3}\to1.6\times10^{-3}\to3.8\times10^{-4}$, approximately second order. Consequently $k$ --- and $\gamma$, when adhesion is added --- are genuine material constants, per unit area and per unit length respectively, requiring no recalibration as $M$ changes. A boundary decorated with disks does not have this property: its effective surface energy is proportional to the disk spacing, so every refinement alters the physics being simulated.
+
+\subsection{Neighbour maintenance}
+\label{sec:neighbours}
+
+The grid is a candidate index only: it supplies which edges to test, and the geometry is recomputed from scratch each step regardless. That gives an \emph{exact} maintenance criterion, in place of the conservative displacement bound a truncated pair list would force.
+
+\paragraph{The footprint gate.} If no edge has changed the set of cells it overlaps, the cell-to-edge map is identical to what a full rebuild would produce, so every crossing query and every nearest-feature query returns exactly the rebuilt answer. This is a necessary and sufficient condition, not a bound, and it costs one integer comparison per edge, computed from its two vertices' floor-divided cell indices:
+\begin{equation}
+\boxed{\;\text{rebuild required} \iff \exists\,\text{edge } (a_i,a_{i+1}) \ \text{whose cell footprint has changed.}\;}
+\label{eq:footprint}
+\end{equation}
+Reduce it to a single boolean in the same pass as the force convergence reduction already performed by the relaxer. Measured on nine forty-eight-vertex bodies under a localized displacement: at $u_{\max}/h = 0.031$ no edge requires rebinning, at $0.12$ it is $2.3\%$ of edges, and at $0.65$ it is $5.1\%$. On the elastic branch the gate returns false and an $O(M)$ kernel is skipped outright; during a plastic event it reports exactly how much work is needed.
+
+The cell size $h$ now plays the role a skin thickness would: larger cells give more slack before a footprint changes, at the cost of more candidates per query. The tradeoff is the same one, with an exact trigger instead of a conservative one.
+
+\paragraph{Per-body budgets, if a pair list is kept anyway.} A pair list discards its excluded pairs, so it cannot be gated exactly and needs a displacement bound. The bound itself is elementary: a boundary point is a convex combination of its two vertices, so it moves no further than the larger vertex displacement, and a segment--segment distance therefore changes by at most $2u_{\max}$. Verified over $4000$ random moves, $\max|\Delta D|/(2u_{\max}) = 0.904 \le 1$. The list must serve the nearest-feature query as well as crossings, and a point at depth $d_B$ needs its nearest feature's edge present, so the skin must exceed $d_{\max}$ strictly. What matters is to apply the budget \emph{per body pair} rather than globally,
+\begin{equation}
+\text{pair } (A,B) \text{ unsafe} \iff u_A + u_B \;\ge\; \delta_{\rm skin} - d_{\max}, \qquad
+u_A = \max_{v\in A}\big|x_v(t)-x_v(t_{\rm build})\big|,
+\label{eq:skin}
+\end{equation}
+so that one avalanching body does not invalidate the whole system. In a test where one body moved $0.70h$ while the median body moved $0.012h$, a global criterion rebuilds all $36$ body pairs and \eqref{eq:skin} flags $8$. This matters for athermal quasistatic driving specifically, where plasticity is spatially localized and most of the system is untouched at every event.
+
+\paragraph{The relaxation, not the strain step, is the dangerous interval.} With lattice vectors the affine part of a strain increment is exact and small, so rebuilding once per strain step is safe on the elastic branch. It is not safe during the relaxation that follows: vertex motion in an avalanche is unbounded and can reach an appreciable fraction of a particle. Evaluate \eqref{eq:footprint} inside the relaxation loop, not only between strain steps. The cost is one extra reduction on a pass already being made; the failure mode if it is omitted is a missed crossing during an avalanche, which corrupts the span set and hence the energy, silently, and only on the trajectories of interest.
+
+\paragraph{Never cache per-vertex geometric predicates.} Pair candidacy may be cached with the list; reflex flags may not. The membership rule \eqref{eq:membership} depends on whether a vertex is reflex, and a deforming body can flip a vertex from reflex to convex. Constructed case: a vertex whose two neighbours lie at $y = 1.4$, driven from $y = 1.2$ to $y = 1.65$, flips at $y = 1.4$; a probe point $0.05$ outside, in that vertex's normal cone, is nearest to the vertex itself. With current flags \eqref{eq:membership} correctly reports \emph{outside}; with flags cached from before the flip it reports \emph{inside}. That is a sign error in $d_B$, hence in the energy, on a genuinely exterior point, with no crossing involved and nothing raised. Recompute reflex flags every step --- one cross-product sign per vertex, $O(M)$, fully parallel, negligible against everything else.
+
+\paragraph{Periodic images: never wrap individual vertices.} Wrapping vertex by vertex gives a body straddling a boundary edges that span the box, after which the crossing test, the parity relation and the nearest-feature query all return nonsense on a perfectly well-formed body. Store each body's vertices unwrapped relative to a reference point, wrap only the reference point, and apply the minimum image at the \emph{body-pair} level, fetching $B$'s vertices into the image nearest $A$ before any geometry runs. The grid may live in fractional coordinates so its cells deform with the lattice, but \eqref{eq:skin} must be evaluated in real-space distance, converted through the current lattice matrix, since a fractional displacement means different things at different strains. Bin an edge into every fractional cell it overlaps with wraparound rather than assigning it one cell, or candidate pairs are lost across the periodic seam --- the one place where a missed crossing is systematic rather than random.
+
+\paragraph{A free diagnostic.} Because the grid holds all edges globally, same-body pairs appear as candidates too. Monitoring those for vanishing separation detects impending self-intersection at no additional cost, which is worth having: Lemma~\ref{lem:spans} and the membership rule both assume simple polygons, and a self-intersecting deformable polygon breaks the construction rather than degrading it.
+
+\section{Numerics, parameters, validation}
+\label{sec:numerics}
+
+\paragraph{Degeneracies.} Collinear overlapping edges make the crossing determinant vanish with the lines coincident, violating the finiteness assumption of Lemma~\ref{lem:spans}; detect via $|\det|<\tau$ together with $|\ell|<\tau$ and treat the shared stretch as a single span with $d_B = 0$, contributing nothing. Near-parallel non-coincident edges require no branch at all, by \eqref{eq:Iedge}. A vertex of $A$ lying exactly on $\partial B$ makes endpoint classification ambiguous, but $d_B = 0$ there, so both classifications agree to the order of the integrand and no tie-break is needed.
+
+\paragraph{Parameters.} The repulsive law carries only $k$, which sets the stress unit. There is no regularization length: the $\epsilon$ of an earlier pointwise formulation existed to smooth a minimum and has no role once the energy is an integral, since the $C^1$ kinks of $d_B$ sit under $\int d\ell$ rather than in the force. Corner rounding, if wanted as physics, should be an explicit geometric offset of the polygon, in which case Section~\ref{sec:corners} gives its consequence.
+
+Two constraints appearing in earlier drafts are withdrawn, because both were inherited from the superseded pointwise formulation and both would have capped the vertex count. A minimum edge length was required there because a softmin over supporting lines produces large nearly cancelling vertex forces when an edge is short; the present construction has no such term, its foot parameters satisfy $\sigma_j\in[0,1]$ by construction, and short edges are harmless --- indeed Section~\ref{sec:scaling} shows the work per span \emph{falls} as edges shorten. And the adhesive range was constrained by $\lambda\ll\min_j|e_j|$, justified as preserving the face-versus-vertex distinction; that reasoning was wrong. As $M$ grows the polygon approximates a smooth curve and the meaningful distinction becomes one of local curvature, not of discrete features, so the correct requirement is that $\lambda$ be small against the geometric feature size --- the local radius of curvature, or the length of a genuinely flat stretch. That is a property of the shape being represented, independent of how finely it is discretized. Had the original form been kept it would have forced $M\lesssim P/\lambda$.
+
+The one hard constraint that survives is \eqref{eq:validity}, which for thin-limbed nonconvex shapes means keeping equilibrium penetrations an order of magnitude below $w_{\rm limb}/2$, and which is unaffected by $M$ since $r_{\rm in}$ is a property of the shape.
+
+\paragraph{Validation.} As a discipline, each check should be run against a deliberately broken implementation that must fail it; a suite that passes both ways is not testing the thing that matters.
+\begin{enumerate}\itemsep2pt
+\item Span arclength against a $\ge10^5$-node reference on a pair overlapping with \emph{no vertex of $A$ inside $B$} --- a unit square against a straddling slab. Not optional: any vertex-based rule returns zero here while the truth is $O(1)$, and no test built from vertex-on-face configurations detects it.
+\item Overlap-component count against a grid flood fill, on a nonconvex pair known to produce two lobes (two crosses at $45^\circ$). A pair-level tally reports one contact where there are two.
+\item Face-on-face to vertex-on-face energy ratio at equal depth: must be $O(1)$ and greater than one. Equation \eqref{eq:master} gives $9.75$; a single-scalar depth gives $1.00$.
+\item Antiderivatives \eqref{eq:Iedge}, \eqref{eq:Ivert}, \eqref{eq:vecints} against high-precision quadrature, including the $r\to0$ limit. Test the edge-nearest form on an \emph{exactly} face-parallel configuration and on one perturbed off parallel by $10^{-8}$; a $1/m$ antiderivative passes the first and fails the second.
+\item Assembled energy against a dense reference on convex \emph{and} nonconvex pairs in both orderings.
+\item Exact frictionlessness: slide two flat interfaces past one another and confirm $|F_t|$ is at machine precision, not merely small.
+\item Medial-axis crossing: confirm the expected $O(1)$ force jump, so the validity assertion \eqref{eq:validity} is exercised rather than presumed absent. Report $d_{\max}/r_{\rm in}$ per overlap component for every relaxed state.
+\item The analytic gradient against central finite differences, on a contacting edge of non-unit length, on a face-parallel pair, and on nonconvex pairs in both orderings, sweeping $h$ to confirm the error is finite-difference-limited. Conservation alone is insufficient: it holds structurally and passes even when the integrand terms are badly wrong.
+\item Corner exponents $3$, $4$, $7/2$ over at least three decades in $\delta$.
+\item Membership rule \eqref{eq:membership} against ray-casting parity on random samples, for a convex shape, a reflex shape, and a spiky shape with many reflex vertices. The reflex clause is the whole content of the rule, so a convex-only test passes trivially and proves nothing.
+\item Scaling: span count, total sub-stretch count, and mean grid candidates per query as $M$ doubles over at least four doublings. The first two must grow linearly, the third must stay flat.
+\item Resolution independence: the assembled energy for a fixed pair of shapes as $M$ doubles, confirming convergence rather than drift.
+\item The footprint gate \eqref{eq:footprint}: after a displacement that changes no footprint, the candidate sets must be bit-identical to a full rebuild; after one that does, they must differ only for the flagged edges.
+\item Reflex-flag staleness: drive a vertex through a reflex-to-convex transition and confirm that \eqref{eq:membership} with cached flags gives the wrong side while current flags give the right one. A code that passes this only because it happens to recompute flags should be tested with them deliberately frozen.
+\item Periodic straddling: a body positioned across a boundary must give the same energy as the same body translated to the box interior, to machine precision.
+\end{enumerate}
+
+\paragraph{Status.} Verified: the span construction, the closed forms, the analytic gradient, the corner exponents, the regularity classification including the medial-axis failure, the overlap-component multiplicity, the reflex-vertex origin of vertex-nearest stretches, the membership rule \eqref{eq:membership}, the linear scaling of span and sub-stretch counts, the flatness of the grid candidate count in $M$, the energy's resolution independence, the exactness of the footprint gate \eqref{eq:footprint}, the $2u_{\max}$ displacement bound, the reflex-flag staleness failure, and all four rejected alternatives. Not yet done: a relaxation to tight force balance \emph{within} the validity limit \eqref{eq:validity}. Machine-precision force balance has now been demonstrated on valid configurations: from a certified-disjoint lattice, incremental compression with the rejection test reaches $|F|_\infty = 1.7\times10^{-14}$ at $d_{\max}/r_{\rm in} = 2\times10^{-4}$. What remains open is force balance at machine precision on a valid \emph{and stressed} state. In the same run the two configurations carrying real contacts reached only $8.6\times10^{-9}$, with the L-BFGS iteration cap binding rather than the tolerance, and by $\phi = 0.61$ the crosses had interdigitated into an unstressed state. Reaching a genuinely jammed configuration for this shape family requires substantially more compression than was run. Separately, the minimiser matters more than expected: with the identical finite-difference gradient and a $10^{-4}$ perturbation of a minimum, L-BFGS reached $9.8\times10^{-11}$ in $41$ iterations where FIRE stalled at $5.5\times10^{-6}$ after $150$, so the earlier residual stall had two independent causes --- an invalid configuration and an inadequate minimiser --- and only the first was originally diagnosed.
+
+\section{Adhesion: why it is admissible here}
+\label{sec:adhesion}
+
+The intended application is the reversible-to-irreversible transition under cyclic shear, with adhesive bonds as the hysterons. That programme requires being able to attribute observed hysteresis to the adhesion and nothing else, and the construction above is what makes the attribution possible.
+
+Adhesion enters as an interfacial energy, an energy per unit length of shared interface, integrated over the same geometry: $-\gamma\int\chi_\lambda$ with $\chi_\lambda$ a mollified indicator of \emph{signed} distance integrated over the whole of $\partial P$ rather than over the buried portion. The distinction matters --- clipping the adhesive domain leaves a surviving boundary term and a force discontinuity of magnitude $\gamma$ at every crossing-through-vertex event, while the sharp indicator gives $2\gamma$ --- but the details belong in a separate document. The single mollification length $\lambda$ is then an adhesive range and a physical parameter, and the one dimensionless group $\mu = \gamma/2k\lambda^3$ plays the role of a Tabor parameter, interpolating between weakly cohesive and strongly cohesive contacts. The threshold for a bond to be a genuine two-state hysteron is $\gamma/\lambda^2$ up to the factor $24/25\sqrt5$, so short-ranged strong adhesion is hysteretic where long-ranged adhesion of equal work is not.
+
+What makes this a clean experiment rather than a confounded one is the absence of friction, and specifically its \emph{exact} absence. In a frictional packing, contacts are hysteretic whether or not they are adhesive: stick--slip supplies tangential memory, and the hysterons of the system are frictional contacts. Any adhesive signal would then be superimposed on a much larger frictional one, and disentangling the two would require the very mechanism-level control the study is trying to establish. Working frictionless removes that competing channel entirely, so the only source of contact-level hysteresis left is the adhesive normal barrier: a bond that must be pulled through the fold in $\varphi_{\rm rep} - \gamma\chi_\lambda$ to break and pushed back through it to reform. The hysteron is then the overlap component of Section~\ref{sec:levels}, and its threshold is a computable property of $\gamma$, $\lambda$ and the local network stiffness rather than an empirical friction coefficient.
+
+This is also where the exact translation invariance of \eqref{eq:master} earns its keep, and where the construction differs from the deformable-particle models of O'Hern's group, which are frictionless but purely repulsive, and from discrete-element treatments that reach nonconvex shapes by decorating boundaries with disks. The latter are frictionless only in the sense that no friction law is imposed; the geometry itself supplies a corrugation-driven tangential force of $10^{-3}$ relative to the normal load even at fine discretization (Section~\ref{sec:rejected}), which pins sliding at the disk spacing and manufactures hysterons at the mesh scale. Those are indistinguishable, in aggregate statistics, from the adhesive hysterons one is trying to count. Equation~\eqref{eq:master} has no such term at any resolution, so the adhesive contribution is the only one present and the mechanism claim is falsifiable: setting $\gamma = 0$ must eliminate the hysteresis entirely, and that is a check the model can be asked to pass.
+
+\end{document}

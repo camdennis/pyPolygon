@@ -14,3 +14,14 @@ __pycache__/
 *.toc
 *.fls
 *.fdb_latexmk
+scrap/
+movies/
+data/failure-*.npz
+
+# Compiled CUDA test binaries -- rebuild with cuda/Makefile, never store the output
+cuda/testPlummer
+cuda/testPlummerGrad
+cuda/testPlummerPair
+cuda/testRoundedContact
+cuda/testSharpPacking
+cuda/vectors/

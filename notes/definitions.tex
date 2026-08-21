@@ -1,0 +1,875 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\numberwithin{equation}{section}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\half}{\tfrac{1}{2}}
+\DeclareMathOperator{\arcsinh}{arcsinh}
+\newcommand{\cam}[1]{\textcolor{blue}{#1}}
+
+\title{Definitions (straight-edged polygons)}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\cam{\small A 1-1 transcription of Cam's handwritten \texttt{definitions} (no-rounding / sharp
+polygons). Everything in black is his; \textcolor{blue}{everything in blue is my own note}. Vertices
+are lowercase $\vv v_k$ (matching the handwriting); $z(k)$/$z'(k)$ are the next/previous vertices CCW
+and $\eps_{\alpha\beta}$ is the 2D Levi-Civita symbol with $\eps_{12}=+1$.}
+
+\section{Definitions}
+
+Our polygons have vertices $\vv v_k$ for $k\in[0,N_v)$, where $N_v$ is the total number of vertices
+across all polygons in the packing. Let there be $N$ polygons so that polygon $K$ has $n_K$
+vertices; then $N_v=\sum_{K=1}^{N}n_K$. Let
+\begin{equation}
+  \vv e_k\equiv\vv v_{z(k)}-\vv v_k,
+\end{equation}
+\begin{equation}
+  \vv b_k\equiv\vv v_{z(k)}-\vv v_{z'(k)},
+\end{equation}
+and also (area of \emph{a} polygon)
+\begin{equation}
+  A=\half\sum_{k=0}^{n-1}e_{z(k)}^{\alpha}\,\eps_{\alpha\beta}\,e_k^{\beta}.
+\end{equation}
+\cam{This is written with \emph{edge} vectors $\vv e$, but $\half\sum_k \vv e_{z(k)}\times\vv e_k$ is
+not the polygon area -- it overcounts (e.g.\ it gives $2$ for the unit square, whose area is $1$). The
+area is the \emph{vertex} shoelace $A=\half\sum_k v_k^{\alpha}\eps_{\alpha\beta}v_{z(k)}^{\beta}$
+(CCW-positive), which is what \texttt{updateOverlapArea} uses.} The perimeter is
+\begin{equation}
+  P=\sum_{k=0}^{n-1}|\vv e_k|.
+\end{equation}
+Let us also be very clear that the vertices are ordered CCW.
+
+\section{Intersections}
+
+Obviously $\vv v_k+\vv e_k=\vv v_{z(k)}$ by definition, so
+\begin{equation}
+  \vv P_k(s)\equiv\vv v_k+s\,\vv e_k \qquad\text{for }s\in[0,1]
+\end{equation}
+interpolates linearly between the two points. For two edges $i$ and $j$ which intersect, there exist
+$s,t\in[0,1]$ with $\vv P_i(s)=\vv P_j(t)$. Rearranging gives $v_i^\alpha-v_j^\alpha+s\,e_i^\alpha-t\,e_j^\alpha=0$,
+and eliminating $t$,
+\[
+  \frac{v_i^x-v_j^x+s\,e_i^x}{e_j^x}-\frac{v_i^y-v_j^y+s\,e_i^y}{e_j^y}=0,
+\]
+\[
+  s\Big(\tfrac{e_i^x}{e_j^x}-\tfrac{e_i^y}{e_j^y}\Big)=-\tfrac{v_i^x-v_j^x}{e_j^x}+\tfrac{v_i^y-v_j^y}{e_j^y},
+\]
+\[
+  s\big(e_i^x e_j^y-e_j^x e_i^y\big)=-\big[(v_i^x-v_j^x)e_j^y-(v_i^y-v_j^y)e_j^x\big],
+\]
+i.e.\ $s\,e_i^\alpha\eps_{\alpha\beta}e_j^\beta=(\vv v_j-\vv v_i)^\alpha\eps_{\alpha\beta}e_j^\beta$, so
+\begin{equation}
+  s=\frac{(\vv v_j-\vv v_i)^\alpha\eps_{\alpha\beta}e_j^\beta}{e_i^\alpha\eps_{\alpha\beta}e_j^\beta},
+\end{equation}
+and by symmetry
+\begin{equation}
+  t=\frac{(\vv v_i-\vv v_j)^\alpha\eps_{\alpha\beta}e_i^\beta}{e_j^\alpha\eps_{\alpha\beta}e_i^\beta}.
+\end{equation}
+\cam{These now match the handwriting $(2.2)/(2.3)$ and the sign \texttt{polygonPairIntersections} uses
+($s=s_A$, $t=s_B$); an earlier transcription here dropped the leading minus on the
+``$s(\cdots)=\cdots$'' line. A genuine intersection needs $s,t\in(0,1)$.}
+
+\section{Area of overlap}
+
+Let there be two intersecting polygons $A$ and $B$. The area of intersection between $A$ and $B$ is
+defined as
+\begin{equation}
+  |A\cap B|\equiv\half\eps_{\alpha\beta}\oint_{\partial(A\cap B)}X^\alpha\,dX^\beta
+\end{equation}
+for the boundary of the polygon formed by the overlaps, $\partial(A\cap B)$. As you traverse the
+shape formed by this overlap, the vertices come in 4 flavors:
+\begin{enumerate}
+\item $\vv v_k\notin\partial(A\cap B),\ \vv v_{z'(k)}\notin\partial(A\cap B)$
+\item $\vv v_k\notin\partial(A\cap B),\ \vv v_{z'(k)}\in\partial(A\cap B)$
+\item $\vv v_k\in\partial(A\cap B),\ \vv v_{z'(k)}\notin\partial(A\cap B)$
+\item $\vv v_k\in\partial(A\cap B),\ \vv v_{z'(k)}\in\partial(A\cap B)$
+\end{enumerate}
+We may have the case where the number of vertices on the boundary $\partial(A\cap B)$ is very large.
+There is a way to combat this, but first we consider an intersection between edges $i$ and $j$,
+denoted $\{i,j\}$, where there exist $s,t$ such that the point $\vv v_i+s\vv e_i\in\partial(A\cap B)$
+but $\vv v_i+t\vv e_i\notin\partial(A\cap B)$ for $s>t$, and similarly for $j$ except $s<t$. If you
+follow the boundary starting at the intersection and following the boundary of the polygon
+associated with edge $i$, then eventually you will reach another intersection $\{k,l\}$ where $k$
+follows $j$ and $l$ follows $i$. Denote this intersection pair as $\{i,j;k,l\}$.
+
+For an edge from $\vv P$ to $\vv Q$ we define the area contribution as
+\begin{equation}
+  h(\vv P,\vv Q)\equiv\half(P^\alpha-R^\alpha)\eps_{\alpha\beta}(Q^\beta-R^\beta),
+\end{equation}
+where $\vv R$ is a reference point. We usually use the lowest indexed vertex in the lower indexed
+polygon between $A$ and $B$. Note that there are exactly as many pairs of intersections as
+intersections: every intersection has a follower.
+
+Our \emph{total} overlap area is then
+\begin{equation}
+\begin{aligned}
+  U=\sum_{\{i,j;k,l\}}\Big\{\ &\delta_{il}\,h(\vv f_{ij},\vv f_{kl})\\
+  +\ &(1-\delta_{il})\Big[h(\vv f_{ij},\vv v_{z(i)})+h(\vv v_l,\vv f_{kl})
+  +\sum_{m=z(i)}^{z'(l)}h(\vv v_m,\vv v_{z(m)})\Big]\Big\},
+\end{aligned}
+\end{equation}
+\cam{$\vv f_{ij}$ is the intersection point of edges $i,j$. Same boundary walk as
+\texttt{polygonPairOverlapArea}, and the same shape as the rounded master's eq (4.6).}
+
+We can clean this up a little by defining a coordinate with a fractional or continuous index. Let $i$
+have a fractional part corresponding to the portion of the edge which has been traversed. Then $\vv
+q_i=\vv v_{i^-}+(i-i^-)\vv e_{i^-}$ (with $i^-$ the integer part) and
+\begin{equation}
+\begin{aligned}
+  U=\sum_{\{i,j;k,l\}}\Big\{\ &\delta_{il}\,h(\vv q_i,\vv q_l)\\
+  +\ &(1-\delta_{il})\Big[h(\vv q_i,\vv v_{z(i^-)})+h(\vv v_{l^-},\vv q_l)
+  +\sum_{m=z(i^-)}^{z'(l^-)}h(\vv v_m,\vv v_{z(m)})\Big]\Big\}.
+\end{aligned}
+\end{equation}
+Let the intersections be $\{s_{i^-},s_{j^-},j,i\}$ in sorted form from left to right for shapes
+$s_{i^-}$ and $s_{j^-}$. We then search for $\{s_{j^-},s_{i^-},l,k\}$ via binary search to find the
+corresponding ``next'' intersection. We can just save that intersection's index instead of keeping
+another huge list. We can then define $\delta_{mp}=1$ when an edge $m$ is fully between
+intersections $\{i,j\}$ and $\{k,l\}$ for $p=\{i,j;k,l\}$, and $\delta_{mp}=0$ otherwise; all $p$
+with $\delta_{mp}=1$ can be found by binary (or linear) search. We then have
+\begin{equation}
+\begin{aligned}
+  U_{\text{ex}}&=\sum_{\{i,j;k,l\}}\Big\{\delta_{il}\,h(\vv q_i,\vv q_l)
+  +(1-\delta_{il})\big[h(\vv q_i,\vv v_{z(i^-)})+h(\vv v_{l^-},\vv q_l)\big]\Big\},\\
+  U_{\text{int}}&=\sum_{m=0}^{N_v-1}\ \sum_{p=\{i,j;k,l\}}\delta_{pm}\,h(\vv v_m,\vv v_{z(m)}),\\
+  U&=U_{\text{int}}+U_{\text{ex}}.
+\end{aligned}
+\end{equation}
+\cam{The external/internal split for parallelization -- end-cap pieces ($U_{\text{ex}}$) vs whole
+interior edges ($U_{\text{int}}$) -- matching the rounded master's eq (4.7)/(4.8).}
+
+\section{Forces on the boundary}\label{sec:sharpforce}
+
+Differentiating the integral over the boundary has a trick associated with it related to the
+Hadamard structure theorem: we can get out of computing the derivative of the intersection point
+(thank God). Take $A_\cap=\half\oint_{\partial\Omega}X^\alpha\eps_{\alpha\beta}dX^\beta$ for the
+boundary $\Omega$ and consider perturbing $\vv X\mapsto\vv X+\delta\vv X$, so that
+\[
+  \delta A_\cap=\half\oint_{\partial\Omega}\delta X^\alpha\eps_{\alpha\beta}dX^\beta
+  +\half\oint_{\partial\Omega}X^\alpha\eps_{\alpha\beta}\,d\delta X^\beta.
+\]
+Using integration by parts on the second term (the boundary term
+$\half X^\alpha\eps_{\alpha\beta}\delta X^\beta\big|_{\Omega^-}^{\Omega^+}$ vanishes on the closed
+loop) and $\eps_{\alpha\beta}=-\eps_{\beta\alpha}$,
+\begin{equation}\label{eq:dAsharp}
+  \delta A_\cap=\oint_{\partial\Omega}\delta X^\alpha\,\eps_{\alpha\beta}\,dX^\beta.
+\end{equation}
+We then let $\vv X_m(\lambda)=\vv v_m+\lambda\vv e_m$ for a point on edge $m$, so
+$\delta\vv X_m(\lambda)=(1-\lambda)\delta\vv v_m+\lambda\,\delta\vv v_{z(m)}$ and $d\vv X_m=\vv
+e_m\,d\lambda$. Then for the segments,
+\begin{align*}
+  \delta A_\cap
+  &=\sum_m\sum_\alpha\int_{\lambda_0^m}^{\lambda_f^m}\big[(1-\lambda)\delta v_m^\alpha
+    +\lambda\,\delta v_{z(m)}^\alpha\big]\eps_{\alpha\beta}e_m^\beta\,d\lambda\\
+  &=\sum_m\sum_\alpha\Big\{\big[(\lambda_f-\lambda_0)-\half(\lambda_f^2-\lambda_0^2)\big]\delta v_m^\alpha
+    +\half(\lambda_f^2-\lambda_0^2)\,\delta v_{z(m)}^\alpha\Big\}\eps_{\alpha\beta}e_m^\beta.
+\end{align*}
+Let $\bar s_m=\half(\lambda_f+\lambda_0)$ and $\Delta s_m=\lambda_f-\lambda_0$ (so
+$\half(\lambda_f^2-\lambda_0^2)=\bar s_m\Delta s_m$), giving
+\begin{equation}
+  \delta A_\cap=\sum_\alpha\sum_m\big[(1-\bar s)\,\delta v_m^\alpha+\bar s\,\delta v_{z(m)}^\alpha\big]
+  \eps_{\alpha\beta}\,\Delta s_m\,e_m^\beta.
+\end{equation}
+Writing this with Kronecker deltas,
+$\delta A_\cap=\sum_k\sum_\alpha\big[\sum_m\big((1-\bar s_m)\delta_{mk}+\bar s_m\delta_{z(m)k}\big)
+\Delta s_m\,\eps_{\alpha\beta}e_m^\beta\big]\delta v_k^\alpha$, and since $\delta
+A_\cap=\sum_k\sum_\alpha(\partial A_\cap/\partial v_k^\alpha)\delta v_k^\alpha$, we conclude
+\begin{equation}\label{eq:gradAsharp}
+  \frac{\partial A_\cap}{\partial v_k^\alpha}
+  =\sum_m\big[(1-\bar s_m)\delta_{mk}+\bar s_m\delta_{z(m)k}\big]\Delta s_m\,\eps_{\alpha\beta}e_m^\beta.
+\end{equation}
+\cam{This is the overlap force for the sharp model (function 4 to come). It is the rounded master's
+eq (7.6) with the kiss-point Jacobians $\partial a^\pm/\partial v$ collapsed to plain vertices: an
+edge piece spanning $[\lambda_0,\lambda_f]$ deposits $(1-\bar s)\Delta s$ of its cross term on
+$\vv v_m$ and $\bar s\,\Delta s$ on $\vv v_{z(m)}$. A full interior edge has $\bar s=\half$,
+$\Delta s=1$.}
+
+\section{Intersections \cam{(pairing and ordering)}}
+
+\cam{A second section titled ``Intersections'' in the handwriting -- the ordering/pairing algorithm
+that supplies the $\{i,j;k,l\}$ pairs and the $\delta_{pm}$ above.}
+
+Consider an intersection $\{i,j\}$ which intersect at point $\vv v_i+s_i\vv e_i=\vv v_j+s_j\vv e_j$.
+Let us also consider the polygon index $\rho_i,\rho_j\in[0,N)$. WLOG, $\vv v_i+(s_i+\eps)\vv e_i$ is
+on the overlap boundary for some $\eps>0$. Sort all of the intersections by
+$\{\rho_i,\rho_j,j,s_j,i,s_i\}$.
+
+Then we find the intersection pair. For intersection $I_\alpha=\{\rho_i,\rho_j,j,s_j,i,s_i\}$ we want
+to find intersection $I_\beta=\{\rho_k,\rho_l,l,s_l,k,s_k\}$. We want $\rho_k=\rho_j$ and
+$\rho_i=\rho_l$, which should be a short list, and we can find its boundaries with binary search (in
+general it has 2 entries). We then choose $\beta$ so that $|i+s_i-(l+s_l)|$ is minimal over all
+polygons.
+
+Next we loop over \emph{all} vertices and check all intersections of that shape to see if vertex
+$\vv v$ is between $i+s_i$ and $l+s_l$, where $v\neq l$. If it is, you can compute the components
+necessary for its gradient and energy.
+
+\section{Mollification}
+
+Unfortunately, this alone doesn't work. FIRE chokes and may or may not reach the basin. It certainly
+doesn't reach the minimum. We can't use a higher-order method because the forces aren't continuous,
+meaning the Hessian is ill-defined. We can resolve both issues by mollifying the boundaries.
+
+Consider the area of overlap,
+\begin{equation}\label{eq:Acap-sharp}
+  A_\cap=\int_{\mathbb R^2}\mathbf 1_A\,\mathbf 1_B\,\,d^2x.
+\end{equation}
+We can consider a kernel $K_\sigma$ which smooths out the edges, so that instead of a step boundary we
+have a smooth boundary. Applying this to \emph{one} of the polygons gives
+\begin{equation}\label{eq:Acap-conv}
+  A_\cap^\sigma=\int_{\mathbb R^2}\mathbf 1_A\,(K_\sigma*\mathbf 1_B)\,\,d^2x
+\end{equation}
+(we convolved with just one indicator), i.e.
+\begin{equation}\label{eq:Acap-double}
+  A_\cap^\sigma=\int\!d^2x\int\!d^2x'\;\mathbf 1_A(\vv x)\,K_\sigma(\vv x-\vv x')\,\mathbf 1_B(\vv x').
+\end{equation}
+We need to be careful what $K_\sigma$ we choose. If we choose a Gaussian, it'll be a nightmare. We know
+this is not realistic anyway, so we can just use the Plummer model.
+
+The 2D surface density (from Wikipedia) is
+\begin{equation}\label{eq:Ksig}
+  K_\sigma=\frac{\sigma^2}{\pi\,(\sigma^2+|\vv r|^2)^2},
+\end{equation}
+but of course it doesn't give the potential or anything. The vector field (ordinarily $\vv F$) is
+given by
+\begin{equation}\label{eq:divE}
+  \nabla\cdot\vv E_\sigma=K_\sigma
+\end{equation}
+and
+\begin{equation}\label{eq:gradPhi}
+  \nabla\Phi_\sigma=\vv E_\sigma.
+\end{equation}
+Let
+\begin{equation}\label{eq:PsiB-def}
+  \Psi_B^\sigma(\vv x)\equiv(K_\sigma*\mathbf 1_B)(\vv x),
+\end{equation}
+or
+\[
+  \Psi_B^\sigma(\vv x)=\int\!d^2y\;K_\sigma(\vv y-\vv x)\,\mathbf 1_B(\vv y)
+  =\int\!d^2y\;(\nabla\cdot\vv E_\sigma)(\vv y-\vv x)\,\mathbf 1_B(\vv y).
+\]
+So from Gauss's theorem,
+\begin{equation}\label{eq:PsiB-gauss}
+  \Psi_B^\sigma(\vv x)=\oint_{\partial B}\vv E_\sigma(\vv y-\vv x)\cdot\hat n_B(\vv y)\,\,d\ell_y.
+\end{equation}
+Since $\vv E_\sigma=\nabla\Phi_\sigma$, we have
+\begin{equation}\label{eq:PsiB-phi}
+  \Psi_B^\sigma(\vv x)=\oint_{\partial B}(\nabla_{\!\vv x}\Phi_\sigma)(\vv y-\vv x)\cdot\hat n_B(\vv y)\,\,d\ell_y.
+\end{equation}
+And again, from Wikipedia, the gradient theorem is
+$\int_\Omega\nabla u\,\,dV=\int_{\partial\Omega}u\,\vv\nu\,\,dS$, where $\vv\nu$ is the outward-pointing
+unit normal to $\partial\Omega$. Now
+\[
+  A_\cap^\sigma=\int\!d^2x\;\Psi_B^\sigma(\vv x)
+  =\int\!d^2x\oint_{\partial B}(\nabla_{\!\vv x}\Phi_\sigma)(\vv y-\vv x)\cdot\hat n_B(\vv y)\,\,d\ell_y,
+\]
+and using the gradient theorem,
+\begin{equation}\label{eq:Acap-boundary}
+  A_\cap^\sigma=\oint_{\partial A}\!d\ell_x\oint_{\partial B}\!d\ell_y\,\big[-\Phi_\sigma(|\vv y-\vv x|)\big]\,
+  \hat n_A(\vv x)\cdot\hat n_B(\vv y).
+\end{equation}
+\cam{Sections \S6--\S7 re-derive, from scratch, the Plummer mollification the code uses;
+\eqref{eq:Acap-boundary} is exactly the double-boundary reduction in \texttt{plummerOverlap.tex}
+(its eq.~(6)). I silently tidied a few integration-variable slips (e.g.\ $\mathbf 1_B(\vv x)\to\mathbf
+1_B(\vv y)$, and the second measure $d^2y\to d^2x'$).}
+
+\section{Getting $\Phi_\sigma(r)$}
+
+We noted $\nabla\cdot\vv E=K_\sigma$, which means
+\begin{equation}\label{eq:E-form}
+  \vv E_\sigma(\vv r)=C\,\frac{\vv r}{\sigma^2+|\vv r|^2}.
+\end{equation}
+Quick check:
+\[
+  \frac{\partial}{\partial x}\Big(C\,\frac{x}{\sigma^2+|\vv r|^2}\Big)
+  =C\,\frac{\sigma^2+y^2-x^2}{(\sigma^2+|\vv r|^2)^2},
+\]
+so by symmetry
+\[
+  \nabla\cdot\vv E_\sigma
+  =C\,\frac{(\sigma^2+y^2-x^2)+(\sigma^2+x^2-y^2)}{(\sigma^2+|\vv r|^2)^2}
+  =2\pi C\,\frac{\sigma^2}{\pi(\sigma^2+|\vv r|^2)^2}=2\pi C\,K_\sigma,
+\]
+and $\nabla\cdot\vv E_\sigma=K_\sigma$ forces $C=\tfrac{1}{2\pi}$. Therefore
+\begin{equation}\label{eq:E-final}
+  \vv E_\sigma(\vv r)=\frac{\vv r}{2\pi(|\vv r|^2+\sigma^2)}.
+\end{equation}
+Next, $\nabla\Phi_\sigma=\vv E_\sigma(\vv r)$, so trying $\Phi_\sigma=C\ln(r^2+\sigma^2)$ gives
+$\nabla\Phi_\sigma=\big(C\tfrac{2x}{r^2+\sigma^2},\,C\tfrac{2y}{r^2+\sigma^2}\big)
+=2C\,\dfrac{\vv r}{r^2+\sigma^2}$; matching \eqref{eq:E-final} needs $2C=\tfrac{1}{2\pi}$, i.e.\
+$C=\tfrac{1}{4\pi}$, and
+\begin{equation}\label{eq:Phi-final}
+  \Phi_\sigma(r)=\frac{1}{4\pi}\ln(r^2+\sigma^2).
+\end{equation}
+Combining \eqref{eq:Acap-boundary} and \eqref{eq:Phi-final} gives
+\begin{equation}\label{eq:Acap-log}
+  A_\cap^\sigma=-\frac{1}{4\pi}\oint_{\partial A}\!d\ell_x\oint_{\partial B}\!d\ell_y\,
+  \ln(|\vv x-\vv y|^2+\sigma^2)\,\hat n_A\cdot\hat n_B.
+\end{equation}
+\cam{The handwriting still cites this as ``combining $6.10$ and $6.13$''; with \S7 now renumbered, the
+potential \eqref{eq:Phi-final} is $7.3$, so I reference it by label.}
+We can apply this to our polygons to get
+\begin{equation}\label{eq:Acap-edgesum}
+  A_\cap^\sigma=-\frac{1}{4\pi}\sum_{\alpha\in\partial A}\sum_{\beta\in\partial B}(\hat n_\alpha\cdot\hat n_\beta)
+  \int_{e_\alpha}\!d\ell_x\int_{e_\beta}\!d\ell_y\,\ln(|\vv x-\vv y|^2+\sigma^2).
+\end{equation}
+Now what is $\int_{e_\alpha}d\ell_x\,\ln(|\vv x-\vv y|^2+\sigma^2)$? With $d\ell_x=|\vv e_\alpha|\,dt$
+and $\vv x=\vv v_\alpha+t\,\vv e_\alpha$ this is
+\[
+  |\vv e_\alpha|\int_0^1 dt\,\ln\!\big(|\vv v_\alpha-\vv y|^2+\sigma^2+2(\vv v_\alpha-\vv y)\cdot\vv e_\alpha\,t+|\vv e_\alpha|^2t^2\big).
+\]
+Let
+\begin{equation}\label{eq:abc}
+  a=|\vv e_\alpha|^2,\qquad b=2(\vv v_\alpha-\vv y)\cdot\vv e_\alpha,\qquad c=|\vv v_\alpha-\vv y|^2+\sigma^2,
+\end{equation}
+so $I=\int_0^1 dt\,\ln(at^2+bt+c)$. With $u=\ln(at^2+bt+c)$ and $dv=dt$,
+\[
+  I=t\ln(at^2+bt+c)\Big|_0^1-\int_0^1 dt\,\frac{2at^2+bt}{at^2+bt+c}
+   =\ln(a+b+c)-\int_0^1 dt\,\Big[2-\frac{bt+2c}{at^2+bt+c}\Big].
+\]
+We want to isolate the $2at+b$ term.
+
+Now we get rid of the $bt$ by splitting $bt+2c=\tfrac{b}{2a}(2at+b)+\big(2c-\tfrac{b^2}{2a}\big)$
+against $q'=2at+b$, so that $\int_0^1\tfrac{2at+b}{q}\,dt=\ln\tfrac{a+b+c}{c}$, giving
+\[
+  I=\ln(a+b+c)-2+\frac{b}{2a}\ln(a+b+c)-\frac{b}{2a}\ln c
+   +\Big(2c-\frac{b^2}{2a}\Big)\int_0^1\frac{dt}{at^2+bt+c}.
+\]
+Let
+\begin{equation}\label{eq:Ddef}
+  D\equiv\sqrt{4ac-b^2}.
+\end{equation}
+We also let
+\begin{equation}\label{eq:wdef}
+  \vv w\equiv\vv v_\alpha-\vv y,
+\end{equation}
+so that $4ac-b^2=4|\vv e_\alpha|^2(|\vv w|^2+\sigma^2)-4(\vv w\cdot\vv e_\alpha)^2
+=4|\vv e_\alpha\times\vv w|^2+4|\vv e_\alpha|^2\sigma^2$, which means $D$ is always
+real, and
+\begin{equation}\label{eq:Ipanel}
+  I=\Big(1+\frac{b}{2a}\Big)\ln(a+b+c)-2-\frac{b}{2a}\ln c
+    +\frac{D}{a}\Big[\arctan\frac{2a+b}{D}-\arctan\frac{b}{D}\Big].
+\end{equation}
+\cam{Now matching the handwritten 7.9: the arctangent coefficient is $\tfrac{D}{a}$. The bracket is
+$\int_0^1\!\tfrac{dt}{q}=\tfrac{2}{D}\big[\arctan\tfrac{2a+b}{D}-\arctan\tfrac{b}{D}\big]$, and its
+prefactor $2c-\tfrac{b^2}{2a}=\tfrac{D^2}{2a}$ combines to
+$\tfrac{D^2}{2a}\cdot\tfrac{2}{D}=\tfrac{D}{a}$ -- the verified panel in \texttt{plummerOverlap.tex}.}
+
+The whole overlap is then
+\[
+  A_\cap^\sigma=-\frac{1}{4\pi}\sum_{\alpha\in\partial A}\sum_{\beta\in\partial B}
+  (\hat n_\alpha\cdot\hat n_\beta)\,|\vv e_\alpha|\int_{e_\beta}\!d\ell_y\;I(\vv y) ,
+\]
+and we integrate over $\vv y(s)=\vv v_\beta+\vv e_\beta\,s$, so that with $\vv\Delta\equiv\vv v_\alpha-\vv v_\beta$
+and $\vv w(s)=\vv\Delta-s\,\vv e_\beta$,
+\begin{equation}\label{eq:bcs}
+\begin{aligned}
+  b(s)&=2\,\vv\Delta\cdot\vv e_\alpha-2\,\vv e_\alpha\cdot\vv e_\beta\,s,\\
+  c(s)&=|\vv\Delta|^2-2s\,\vv\Delta\cdot\vv e_\beta+s^2|\vv e_\beta|^2+\sigma^2 .
+\end{aligned}
+\end{equation}
+Then
+\begin{equation}\label{eq:Ds}
+  D(s)=2\sqrt{D_a s^2+D_b s+D_c}\,,
+\end{equation}
+and, with $I_2=\int_{e_\beta}d\ell_y\,I(\vv y)$,
+\begin{equation}\label{eq:I2}
+\begin{aligned}
+  \frac{I_2}{|\vv e_\beta|}=\int_0^1\!ds\Big(1+\frac{b(s)}{2a}\Big)\ln\!\big(a+b(s)+c(s)\big)-2
+  &-\int_0^1\!ds\,\frac{b(s)}{2a}\ln c(s)\\
+  &+\int_0^1\!ds\,\frac{D(s)}{a}\Big[\arctan\frac{2a+b(s)}{D(s)}-\arctan\frac{b(s)}{D(s)}\Big].
+\end{aligned}
+\end{equation}
+\cam{Arctangent coefficient corrected to $\tfrac{D(s)}{a}$ as above, and the outer Jacobian
+$L_\beta=|\vv e_\beta|$ (from $d\ell_y=|\vv e_\beta|\,ds$) is now carried by writing
+$I_2/|\vv e_\beta|$ on the left; the inner $|\vv e_\alpha|$ was restored earlier.}
+
+Carrying the outer Jacobian (recall $a=|\vv e_\alpha|^2$ is constant in $s$), the handwriting (its 7.13)
+splits this into
+\begin{equation}\label{eq:I2split}
+  \frac{I_2}{|\vv e_\beta|}=I_a-2-I_b+I_c-I_d,
+\end{equation}
+with
+\[
+  \begin{aligned}
+    I_a&=\int_0^1\!\Big(1+\tfrac{b(s)}{2a}\Big)\ln\big(a+b(s)+c(s)\big)\,ds, &\qquad
+    I_c&=\int_0^1\!\tfrac{D(s)}{a}\arctan\tfrac{2a+b(s)}{D(s)}\,ds,\\
+    I_b&=\int_0^1\!\tfrac{b(s)}{2a}\ln c(s)\,ds, &\qquad
+    I_d&=\int_0^1\!\tfrac{D(s)}{a}\arctan\tfrac{b(s)}{D(s)}\,ds.
+  \end{aligned}
+\]
+The four pieces need only the handwritten assumptions $|\vv e_\alpha|>0$, $\sigma>0$, and
+$e_\beta^x,e_\beta^y,\Delta^x,\Delta^y,s,t\in\mathbb R$ ($\sigma>0$ alone keeps every logarithm argument
+and radicand positive, so no sign conditions are needed).
+
+To evaluate them we rotate the frame so that $\vv e_\alpha=(|\vv e_\alpha|,0)$. Then, with $\vv\Delta=\vv
+v_\alpha-\vv v_\beta$,
+\begin{equation}\label{eq:rotframe}
+  b(s)=2|\vv e_\alpha|(\Delta^x-e_\beta^x s),\quad
+  c(s)=|\vv\Delta-\vv e_\beta s|^2+\sigma^2,\quad
+  D(s)=2|\vv e_\alpha|\sqrt{(\Delta^y-e_\beta^y s)^2+\sigma^2},
+\end{equation}
+and the log argument completes the square in $x$,
+\[
+  a+b(s)+c(s)=\big(|\vv e_\alpha|+\Delta^x-e_\beta^x s\big)^2+(\Delta^y-e_\beta^y s)^2+\sigma^2 ,
+\]
+which is $c(s)$ with $\Delta^x\!\to\!|\vv e_\alpha|+\Delta^x$; likewise $1+\tfrac{b}{2a}
+=(|\vv e_\alpha|+\Delta^x-e_\beta^x s)/|\vv e_\alpha|$ and $\tfrac{b}{2a}=(\Delta^x-e_\beta^x s)/|\vv
+e_\alpha|$ differ only by that shift. This exposes a common structure: with
+\begin{equation}\label{eq:J1def}
+  J_1(p,s)\equiv\frac{p-e_\beta^x s}{|\vv e_\alpha|}\,
+  \ln\!\big[(p-e_\beta^x s)^2+(\Delta^y-e_\beta^y s)^2+\sigma^2\big],
+\end{equation}
+we have $\int_0^1 J_1(|\vv e_\alpha|+\Delta^x,s)\,ds=I_a$ and $\int_0^1 J_1(\Delta^x,s)\,ds=I_b$, and with
+\begin{equation}\label{eq:J2def}
+  J_2(p,s)\equiv\frac{D(s)}{|\vv e_\alpha|^2}\,\arctan\!\frac{2|\vv e_\alpha|(p-e_\beta^x s)}{D(s)},
+\end{equation}
+we have $\int_0^1 J_2(|\vv e_\alpha|+\Delta^x,s)\,ds=I_c$ and $\int_0^1 J_2(\Delta^x,s)\,ds=I_d$.
+
+Now change variables to normalize the softening: let
+\begin{equation}\label{eq:Xsub}
+  X\equiv\tfrac{1}{\sigma}(\Delta^y-e_\beta^y s),\qquad
+  s=\tfrac{1}{e_\beta^y}(\Delta^y-\sigma X),\qquad ds=-\tfrac{\sigma}{e_\beta^y}\,dX ,
+\end{equation}
+and define the slope
+\begin{equation}
+  m\equiv\frac{e_\beta^x}{e_\beta^y}
+\end{equation}
+and scaled intercept
+\begin{equation}\label{eq:mnu}
+  \nu\equiv\tfrac{1}{\sigma}(p-m\,\Delta^y),
+\end{equation}
+so that $p-e_\beta^x s=\sigma(\nu+mX)$. The $J_1$ argument becomes $\sigma^2[(\nu+mX)^2+X^2+1]$, giving
+\begin{equation}\label{eq:J1X}
+  J_1(\nu,X)=\frac{2\sigma(\nu+mX)}{|\vv e_\alpha|}\ln\sigma
+  +\frac{\sigma(\nu+mX)}{|\vv e_\alpha|}\ln F(X),\qquad F(X)\equiv(1+m^2)X^2+2m\nu X+(1+\nu^2).
+\end{equation}
+With $X_0\equiv\Delta^y/\sigma$ and $X_1\equiv\tfrac1\sigma(\Delta^y-e_\beta^y)$ (the images of $s=0,1$),
+the log integral is
+\begin{equation}\label{eq:Jlog}
+  J_{\log}(\nu)=-\frac{\sigma}{e_\beta^y}\int_{X_0}^{X_1}\!\Big[\frac{2\sigma\ln\sigma}{|\vv e_\alpha|}
+  +\frac{\sigma}{|\vv e_\alpha|}\ln F(X)\Big](\nu+mX)\,dX ,
+\end{equation}
+with $I_a=J_{\log}(\nu)$ at $\nu=\tfrac1\sigma(|\vv e_\alpha|+\Delta^x-m\Delta^y)$ and $I_b=J_{\log}(\nu)$
+at $\nu=\tfrac1\sigma(\Delta^x-m\Delta^y)$.
+\cam{The handwritten 7.21 now carries the Jacobian $-\sigma/e_\beta^y$ on \emph{both} terms (an earlier
+draft dropped the sign on the second). I verified \eqref{eq:rotframe}--\eqref{eq:Jlog} against the direct
+$\int_0^1(1+\tfrac b{2a})\ln(a{+}b{+}c)\,ds$ and $\int_0^1\tfrac b{2a}\ln c\,ds$ to $\sim10^{-13}$. The
+payoff: with $A=1+m^2$, $B=2m\nu$, $C=1+\nu^2$ the discriminant $4AC-B^2=4(1+m^2+\nu^2)>0$ \emph{always},
+so the antiderivative is a real $\arctan$ -- no branch conditions, unlike the direct attack on
+\eqref{eq:I2split}.}
+
+Doing the elementary $\ln\sigma$ integral, $\int_{X_0}^{X_1}(\nu+mX)\,dX
+=\nu(X_1{-}X_0)+\tfrac m2(X_1^2{-}X_0^2)$, the handwriting (7.22) writes
+% UNVERIFIED(Cam)
+\begin{equation}\label{eq:Jlog7p22}
+  J_{\log}(\nu)=-\frac{\sigma^2}{|\vv e_\alpha|e_\beta^y}\bigg\{
+  \big[\nu(X_1{-}X_0)+\tfrac m2(X_1^2{-}X_0^2)\big]\ln\sigma^2
+  +\int_{X_0}^{X_1}(\nu+mX)\ln(AX^2{+}BX{+}C)\,dX\bigg\}.
+\end{equation}
+\cam{Sign of the handwritten 7.22: the overall factor must stay $-\sigma^2/(|\vv e_\alpha|e_\beta^y)$
+(the latest draft flipped it to $+$, with both brace terms $+$). Only the minus matches the direct
+$I_a,I_b$ (to $\sim10^{-13}$; the plus misses by $O(10)$).}
+
+\cam{\textbf{Closing $I_a,I_b$ (my color).} The remaining integral is elementary and
+real for $4AC-B^2>0$: with the primitives $\Lambda_0^F=\int\ln F\,dX$, $\Lambda_1^F=\int X\ln F\,dX$,
+\begin{align*}
+  \Lambda_0^F(X)&=\Big(X+\tfrac{B}{2A}\Big)\ln F-2X+\tfrac{\sqrt{4AC-B^2}}{A}\arctan\tfrac{2AX+B}{\sqrt{4AC-B^2}},\\
+  \Lambda_1^F(X)&=\Big(\tfrac{X^2}{2}-\tfrac{B^2-2AC}{4A^2}\Big)\ln F-\tfrac{X^2}{2}+\tfrac{BX}{2A}
+    -\tfrac{B\sqrt{4AC-B^2}}{2A^2}\arctan\tfrac{2AX+B}{\sqrt{4AC-B^2}},
+\end{align*}
+one has $\int_{X_0}^{X_1}(\nu+mX)\ln F\,dX=\big[\nu\Lambda_0^F+m\Lambda_1^F\big]_{X_0}^{X_1}$; substituted
+into \eqref{eq:Jlog7p22} this gives $I_a$ ($\nu=\tfrac1\sigma(|\vv e_\alpha|+\Delta^x-m\Delta^y)$) and
+$I_b$ ($\nu=\tfrac1\sigma(\Delta^x-m\Delta^y)$), checked to $\sim3\times10^{-13}$. (Mathematica returns
+the same in the $\operatorname{ArcTanh}$ branch; it is real because $\sqrt{B^2-4AC}=i\sqrt{4AC-B^2}$ and
+$\operatorname{ArcTanh}(iz)=i\arctan z$, so the $i$'s cancel.)}
+
+For $J_2$ the substitution \eqref{eq:Xsub} gives
+\begin{equation}\label{eq:Dx}
+  D(X)=2|\vv e_\alpha|\sigma\sqrt{X^2+1},
+\end{equation}
+and $p-e_\beta^x s=\sigma(\nu+mX)$, so $J_2(p,X)=\dfrac{2\sigma}{|\vv e_\alpha|}
+\sqrt{X^2+1}\,\arctan\dfrac{\nu+mX}{\sqrt{X^2+1}}$ and
+\begin{equation}\label{eq:J2red}
+  I_{\tan}(p)=-\frac{2\sigma^2}{|\vv e_\alpha|e_\beta^y}\int_{X_0}^{X_1}\!\sqrt{X^2+1}\,
+  \arctan\frac{\nu+mX}{\sqrt{X^2+1}}\,dX ,
+\end{equation}
+with $I_c=I_{\tan}(|\vv e_\alpha|+\Delta^x)$ and $I_d=I_{\tan}(\Delta^x)$ (checked to $\sim10^{-14}$).
+Integrating by parts with $u=\arctan\frac{\nu+mX}{\sqrt{X^2+1}}$ ($du=\frac{m-\nu X}{(AX^2+BX+C)
+\sqrt{X^2+1}}\,dX$) and $dV=\sqrt{X^2+1}\,dX$,
+\begin{equation}\label{eq:J2ibp-raw}
+\begin{aligned}
+  I_{\tan}(p)=-\frac{2\sigma^2}{|\vv e_\alpha|e_\beta^y}\bigg\{&
+  \arctan\tfrac{\nu+mX}{\sqrt{X^2+1}}\!\int\!\sqrt{X^2+1}\,dX\,\Big|_{X_0}^{X_1}\\
+  &-\int_{X_0}^{X_1}\!\Big(\!\int\!\sqrt{X^2+1}\,dX\Big)\frac{m-\nu X}{\sqrt{X^2+1}\,(AX^2+BX+C)}\,dX\bigg\},
+\end{aligned}
+\end{equation}
+with $\int\sqrt{X^2+1}\,dX=\tfrac12(X\sqrt{X^2+1}+\arcsinh X)$; since $X\sqrt{X^2+1}/\sqrt{X^2+1}=X$
+collapses the first inner integral to a rational integrand, this becomes (handwriting 7.26)
+% UNVERIFIED(Cam)
+\begin{equation}\label{eq:J2ibp}
+\begin{aligned}
+  I_{\tan}(p)=-\frac{2\sigma^2}{|\vv e_\alpha|e_\beta^y}\bigg\{&
+  \Big[\tfrac12\arctan\tfrac{\nu+mX}{\sqrt{X^2+1}}\big(X\sqrt{X^2+1}+\operatorname{arcsinh}X\big)\Big]_{X_0}^{X_1}\\
+  &+\tfrac12\!\int_{X_0}^{X_1}\!\frac{\nu X^2-mX}{AX^2+BX+C}\,dX\\
+  &+\tfrac12\!\int_{X_0}^{X_1}\!\frac{\operatorname{arcsinh}X}{\sqrt{X^2+1}}\,
+  \frac{\nu X-m}{AX^2+BX+C}\,dX\bigg\}.
+\end{aligned}
+\end{equation}
+\cam{\textbf{Finishing $I_{\tan}$ (my color).} The boundary term is explicit; the rational (middle)
+integral of \eqref{eq:J2ibp} is elementary (polynomial division leaves a $\ln(AX^2{+}BX{+}C)$ plus an
+$\arctan\frac{2AX+B}{\sqrt{4AC-B^2}}$, real since $4AC-B^2=4(1+m^2+\nu^2)$). The last, arcsinh, integral
+$J_{\arcsinh}\equiv\half\!\int_{X_0}^{X_1}\tfrac{\arcsinh X}{\sqrt{X^2+1}}\,\tfrac{\nu X-m}{AX^2+BX+C}\,dX$
+is the remaining dilog piece.}
+
+\cam{\textbf{Evaluating $J_{\arcsinh}$: the fully-real route (my derivation).} No trick removes the
+dilogarithm -- $4AC-B^2=4(1+m^2+\nu^2)>0$, so $AX^2+BX+C$ has a complex-conjugate root pair for all
+$m,\nu$ and the integral is genuinely dilog-level. The cleanest path keeps everything manifestly real.
+With $X=\sinh t$ ($t_0=\arcsinh X_0$, $t_1=\arcsinh X_1$, so $\arcsinh X=t$ and $dX/\sqrt{X^2+1}=dt$),}
+\begin{equation}\label{eq:Jarcsinh-t}
+  J_{\arcsinh}=\half\int_{t_0}^{t_1}t\,\frac{\nu\sinh t-m}{A\sinh^2 t+B\sinh t+C}\,dt .
+\end{equation}
+\cam{Integrate by parts with $u=t$, $dv=(\nu\sinh t-m)/Q\,dt$, where $Q\equiv A\sinh^2 t+B\sinh t+C$ and
+$V(t)\equiv\int(\nu\sinh t-m)/Q\,dt$:}
+\begin{equation}\label{eq:Jarcsinh-ibp}
+  J_{\arcsinh}=\half\big[t\,V(t)\big]_{t_0}^{t_1}-\half\int_{t_0}^{t_1}V(t)\,dt .
+\end{equation}
+\cam{\emph{The poles $\beta_k$.} Substitute $y=e^t$ in the integrand of \eqref{eq:Jarcsinh-t}: with
+$\sinh t=\tfrac12(y-1/y)$ and $dt=dy/y$ one has $\nu\sinh t-m=N(y)/(2y)$ and $Q=D(y)/(4y^2)$, so}
+\begin{equation}\label{eq:Rdef}
+\begin{gathered}
+  \frac{\nu\sinh t-m}{Q}\,dt=2R(y)\,dy,\qquad R(y)\equiv\frac{N(y)}{D(y)},\\
+  N(y)=\nu(y^2-1)-2my,\qquad D(y)=A(y^4+1)+2B(y^3-y)+(4C-2A)y^2 ,
+\end{gathered}
+\end{equation}
+\cam{and $V=\int 2R\,dy$. The four \emph{poles} $\beta_k$ of $R$ are the roots of $D$: $Q=0$ means
+$\sinh t=\zeta$ with $\zeta$ a root of $A\zeta^2+B\zeta+C$, and since $B^2-4AC=-4w^2$
+($w\equiv\sqrt{1+m^2+\nu^2}$),}
+\begin{equation}\label{eq:sroots}
+  \zeta=\frac{-m\nu\pm iw}{1+m^2},\qquad w=\sqrt{1+m^2+\nu^2}.
+\end{equation}
+\cam{Each $\sinh t=\zeta$ is $y^2-2\zeta y-1=0$, i.e.\ $y=\zeta\pm\sqrt{\zeta^2+1}$, so the four roots of $D$
+are these for the two $\zeta$. For the upper root $\zeta^2+1=(mw-i\nu)^2/(1+m^2)^2$, hence
+$\sqrt{\zeta^2+1}=(mw-i\nu)/(1+m^2)$ and $\beta=\zeta\pm\sqrt{\zeta^2+1}$ collapses with no complex square
+root to the two poles with $\operatorname{Im}\beta>0$,}
+\begin{equation}\label{eq:betapm}
+  \beta_+=\frac{(w-\nu)(m+i)}{1+m^2},\qquad \beta_-=\frac{(w+\nu)(-m+i)}{1+m^2}
+\end{equation}
+\cam{the remaining two being the conjugates $\bar\beta_\pm$ (with $\operatorname{Im}<0$). Write
+$a_\pm=\operatorname{Re}\beta_\pm=\tfrac{\pm m(w\mp\nu)}{1+m^2}$ and
+$b_\pm=\operatorname{Im}\beta_\pm=\tfrac{w\mp\nu}{1+m^2}$, all real.}
+
+\cam{\emph{The residues $\alpha_k$ are $\pm\tfrac i4$.} $\alpha_k\equiv\operatorname{Res}_{y=\beta_k}R
+=N(\beta_k)/D'(\beta_k)$ is the residue of $R$ at the pole $\beta_k$. On the factored denominator
+$D=A(y^2-2\zeta_1y-1)(y^2-2\zeta_2y-1)$, a pole $\beta=\zeta_i\pm r_i$ ($r_i=\sqrt{\zeta_i^2+1}$) obeys
+$\beta^2=2\zeta_i\beta+1$, so $N(\beta)=2\beta(\nu\zeta_i-m)$ and $D'(\beta)=4A(\pm r_i)(\zeta_i-\zeta_j)\beta$,
+giving}
+\[
+  \alpha=\frac{N(\beta)}{D'(\beta)}=\frac{\nu\zeta_i-m}{2A(\pm r_i)(\zeta_i-\zeta_j)}=\pm\frac{i}{4},
+\]
+\cam{purely imaginary, because $\nu\zeta_i-m=-w\,r_i$ (the $mw-i\nu$ of $r_i$ cancels the numerator) and
+$\zeta_1-\zeta_2=2iw/(1+m^2)$.}
+\cam{Since $R$ is real, its residues come in conjugate pairs; tracking the branch in the residue above,
+the upper poles carry $\alpha(\beta_+)=+\tfrac i4$ and $\alpha(\beta_-)=-\tfrac i4$, and the lower ones the
+conjugates $\alpha(\bar\beta_\pm)=\mp\tfrac i4$. So $V=\int 2R\,dy=2\sum_{k=1}^4\alpha_k\ln(y-\beta_k)$, and
+grouping each pole with its conjugate, the $\beta_+$ pair is}
+\[
+  2\big[\tfrac i4\ln(y-\beta_+)-\tfrac i4\ln(y-\bar\beta_+)\big]=\tfrac i2\,\ln\frac{y-\beta_+}{y-\bar\beta_+}.
+\]
+\cam{For real $y$, $y-\bar\beta_+=\overline{y-\beta_+}$, so the ratio equals $(y-\beta_+)/\overline{(y-\beta_+)}
+=e^{2i\arg(y-\beta_+)}$ (unit modulus) and its log is $2i\arg(y-\beta_+)$. The $\ln|\cdot|$ parts cancel and
+the pair collapses to $\tfrac i2\cdot 2i\,\arg(y-\beta_+)=-\arg(y-\beta_+)$. The $\beta_-$ pair (residue
+$-\tfrac i4$) gives $+\arg(y-\beta_-)$ the same way, so, with $y-\beta_\pm=(y-a_\pm)-ib_\pm$ and hence
+$\arg(y-\beta_\pm)=\operatorname{atan2}(-b_\pm,\,y-a_\pm)$,}
+\begin{equation}\label{eq:Vtwoarctan}
+  V(t)=\arg(y-\beta_-)-\arg(y-\beta_+)
+  =\operatorname{atan2}(-b_-,\,y-a_-)-\operatorname{atan2}(-b_+,\,y-a_+),\qquad y=e^t .
+\end{equation}
+
+\cam{\emph{The remaining integral.} $\arg(y-\beta)=\operatorname{Im}\ln(y-\beta)$, and with $y=e^t$
+($dt=dy/y$), splitting $\ln(y-\beta)=\ln(-\beta)+\ln(1-y/\beta)$ gives $\int\ln(y-\beta)\,dy/y
+=\ln(-\beta)\ln y-\operatorname{Li}_2(y/\beta)$, so}
+\begin{equation}\label{eq:intarg}
+\begin{aligned}
+  \int\arg(y-\beta)\,dt&=\ln y\,\arg(-\beta)-\operatorname{Im}\operatorname{Li}_2(y/\beta),\\
+  \int V\,dt&=\ln y\,\big[\arg(-\beta_-)-\arg(-\beta_+)\big]
+  -\big[\operatorname{Im}\operatorname{Li}_2(y/\beta_-)-\operatorname{Im}\operatorname{Li}_2(y/\beta_+)\big].
+\end{aligned}
+\end{equation}
+\cam{\emph{Assembly.} In \eqref{eq:Jarcsinh-ibp}, $t=\ln y$ so $t\,V=\ln y\,[\arg(y-\beta_-)
+-\arg(y-\beta_+)]$; combining $\half[t\,V]-\half\int V\,dt$ and using $\arg(y-\beta)-\arg(-\beta)
+=\arg(1-y/\beta)$ on the two $\ln y$ pieces gives the manifestly real}
+\begin{equation}\label{eq:Jarcsinh-real}
+  J_{\arcsinh}=-\half\big[\operatorname{Im}G(\beta_+)-\operatorname{Im}G(\beta_-)\big]_{Y_0}^{Y_1},\qquad
+  G(\beta)\equiv\operatorname{Li}_2\!\big(\tfrac{y}{\beta}\big)+\ln y\,\ln\!\big(1-\tfrac{y}{\beta}\big),
+\end{equation}
+\cam{with $\operatorname{Im}G(\beta)=\operatorname{Im}\operatorname{Li}_2(y/\beta)+\ln y\,\arg(1-y/\beta)$,
+$Y_0=e^{\arcsinh(X_0)}$, $Y_1=e^{\arcsinh(X_1)}$.}
+
+\cam{\emph{Making it real: Bloch--Wigner and Clausen.} The one transcendental left is
+$\operatorname{Im}\operatorname{Li}_2$. The Bloch--Wigner function $D(z)\equiv\operatorname{Im}
+\operatorname{Li}_2(z)+\arg(1-z)\ln|z|$ is real and single-valued; with $z=y/\beta$ and $\ln|z|=\ln y
+-\ln|\beta|$ the $\ln y$ cancels, leaving}
+\begin{equation}\label{eq:ImG-D}
+  \operatorname{Im}G(\beta)=D\!\big(\tfrac{y}{\beta}\big)+\ln|\beta|\,\arg\!\big(1-\tfrac{y}{\beta}\big).
+\end{equation}
+\cam{Everything is now elementary plus $D$. From \eqref{eq:betapm}, $\arg\beta_+=\psi\equiv
+\operatorname{atan2}(1,m)$, $\arg\beta_-=\pi-\psi$, and $|\beta_+|=(w-\nu)/\sqrt{1+m^2}=1/|\beta_-|$, so}
+\begin{equation}\label{eq:clausen-params}
+\begin{gathered}
+  \psi=\operatorname{atan2}(1,m),\qquad L\equiv\ln|\beta_+|=\ln(w-\nu)-\tfrac12\ln(1+m^2)=-\ln|\beta_-|,\\
+  \varphi_\pm\equiv\arg\!\big(1-\tfrac{y}{\beta_\pm}\big)=\operatorname{atan2}\big(y,\,w\mp\nu\mp my\big).
+\end{gathered}
+\end{equation}
+\cam{$D$ reduces to the Clausen function $\operatorname{Cl}_2$ by Lewin, $D(re^{i\theta})=\half
+[\operatorname{Cl}_2(2\theta)+\operatorname{Cl}_2(2\omega)-\operatorname{Cl}_2(2\theta+2\omega)]$,
+$\omega=-\arg(1-z)$; with $\theta=\arg(y/\beta_\pm)$ and $\operatorname{Cl}_2$ odd and $2\pi$-periodic,}
+\begin{equation}\label{eq:D-clausen}
+\begin{aligned}
+  D\!\big(\tfrac{y}{\beta_+}\big)&=\half\big[\operatorname{Cl}_2(2\psi+2\varphi_+)-\operatorname{Cl}_2(2\psi)
+  -\operatorname{Cl}_2(2\varphi_+)\big],\\
+  D\!\big(\tfrac{y}{\beta_-}\big)&=\half\big[\operatorname{Cl}_2(2\psi)-\operatorname{Cl}_2(2\varphi_-)
+  -\operatorname{Cl}_2(2\psi-2\varphi_-)\big].
+\end{aligned}
+\end{equation}
+\cam{Since $\operatorname{Im}G(\beta_+)=D(y/\beta_+)+L\varphi_+$ and $\operatorname{Im}G(\beta_-)
+=D(y/\beta_-)-L\varphi_-$, \eqref{eq:Jarcsinh-real} becomes the all-real recipe}
+\begin{equation}\label{eq:Jarcsinh-clausen}
+  J_{\arcsinh}=-\half\Big[D\!\big(\tfrac{y}{\beta_+}\big)-D\!\big(\tfrac{y}{\beta_-}\big)
+  +L(\varphi_++\varphi_-)\Big]_{Y_0}^{Y_1},
+\end{equation}
+\cam{the $y$-independent $\operatorname{Cl}_2(2\psi)$ canceling across $Y_0\!\to\!Y_1$ (eight
+$\operatorname{Cl}_2$ calls total). $\operatorname{Cl}_2$ is the only special function -- reduce its argument
+to $[0,\pi]$ by oddness and $2\pi$-periodicity, then sum $\theta-\theta\ln\theta+\sum_k c_k\theta^{2k+1}$
+(\texttt{energies.py} \texttt{\_tCoreReal}/\texttt{\_cl2}; coefficients in \texttt{notes/arcsinhClausen.nb}).
+Verified end to end in \texttt{notes/verify\_realroute.py}: $V$ is the antiderivative of
+$(\nu\sinh t-m)/Q$ (finite difference $\sim10^{-10}$), and \eqref{eq:Jarcsinh-ibp}--\eqref{eq:Jarcsinh-real}
+match the direct integral \eqref{eq:Jarcsinh-t} to $\sim10^{-16}$; the $\beta_\pm$, the residues
+$\pm\tfrac i4$, and the $\operatorname{Cl}_2$ recipe are checked in
+\texttt{notes/partial\_fractions\_arcsinh.py} and \texttt{notes/arcsinhClausen.nb}.}
+
+\cam{\textbf{No further collapse.} The two poles satisfy $\beta_+\beta_-=-1$, i.e.\ $\beta_-=-1/\beta_+$
+(indeed $(m+i)(-m+i)=-(1+m^2)$ and $(w-\nu)(w+\nu)=1+m^2$). This tempts one to fold
+$\operatorname{Im}G(\beta_+)-\operatorname{Im}G(\beta_-)$ into a single term through the Bloch--Wigner
+inversion $D(1/z)=-D(z)$. It fails: the inversion would need $y/\beta_-=1/(y/\beta_+)=\beta_+/y$, whereas
+$y/\beta_-=-y\beta_+$ (equal only if $-y^2=1$). Numerically $D(y/\beta_-)\neq\pm D(y/\beta_+)$ (off by
+$O(1)$), the two dilog arguments $y/\beta_+$ and $-y\beta_+$ are not a $z,-z$ duplication pair either, and
+$\arg(1-y/\beta_+)+\arg(1-y/\beta_-)$ is not constant -- so no elementary relation ties them. The two
+Bloch--Wigner terms sit at genuinely unrelated points and \eqref{eq:Jarcsinh-real} is the end of the
+line: it does not shorten. Checked in \texttt{notes/verify\_realroute.py}.}
+
+\section{Mollified gradient}
+
+This derivation repeats the work of \S\ref{sec:sharpforce} but with the new kernel. We start from
+\eqref{eq:Acap-log} in the $\Phi_\sigma$ form,
+\[
+  A_\cap^\sigma=-\oint_{\partial A}d\ell_x\oint_{\partial B}d\ell_y\,\Phi_\sigma(|\vv y-\vv x|)\,
+  \big(\hat n_A(\vv x)\!\cdot\!\hat n_B(\vv y)\big).
+\]
+Next we note that the line element is
+\begin{equation}\label{eq:nline}
+  \hat n_A^\alpha\,d\ell_x=\eps_{\alpha\beta}\,dx^\beta ,
+\end{equation}
+and
+\[
+  n_A^\alpha\,d\ell_x\,n_B^\alpha\,d\ell_y=\eps_{\alpha\beta}\,dx^\beta\,\eps_{\alpha\gamma}\,dy^\gamma
+  =\delta_{\beta\gamma}\,dx^\beta dy^\gamma=dx^\gamma dy^\gamma ,
+\]
+so that
+\begin{equation}\label{eq:Asig-dxdy}
+  A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\oint_{\partial B}dy^\alpha\,\Phi_\sigma(|\vv y-\vv x|).
+\end{equation}
+This is quite different from the situation in \S\ref{sec:sharpforce}, but we apply the same technique.
+Let $\vv x\mapsto\vv x+\delta\vv x$, so that
+\[
+  \delta A_\cap^\sigma=-\oint_{\partial B}dy^\alpha\oint_{\partial A}
+  \big(\delta\Phi_\sigma(|\vv y-\vv x|)\,dx^\alpha+\Phi_\sigma\,\delta(dx^\alpha)\big).
+\]
+We know $\delta\Phi_\sigma=\dfrac{\partial\Phi_\sigma}{\partial x^\beta}\,\delta x^\beta$, therefore
+\begin{equation}\label{eq:dAsig-raw}
+  \delta A_\cap^\sigma=-\oint_{\partial B}dy^\alpha\oint_{\partial A}
+  \Big[\frac{\partial\Phi_\sigma}{\partial x^\beta}\,\delta x^\beta\,dx^\alpha
+  +\Phi_\sigma\,d\delta x^\alpha\Big].
+\end{equation}
+As before, we integrate the second term by parts (the boundary term $\Phi_\sigma\,\delta x^\alpha$
+vanishes on the closed loop), $\oint_{\partial A}d\delta x^\alpha\,\Phi_\sigma
+=-\oint_{\partial A}\delta x^\alpha\,\dfrac{\partial\Phi_\sigma}{\partial x^\beta}\,dx^\beta$, so
+\[
+  \delta A_\cap^\sigma=-\oint_{\partial A}\oint_{\partial B}
+  \Big[\delta x^\beta\,dx^\alpha\,\frac{\partial\Phi_\sigma}{\partial x^\beta}\,dy^\alpha
+  -\delta x^\alpha\,dx^\gamma\,\frac{\partial\Phi_\sigma}{\partial x^\gamma}\,dy^\alpha\Big].
+\]
+These are all dummy indices; in the second term relabel $\alpha\to\beta$ and $\gamma\to\alpha$, giving
+\begin{equation}\label{eq:dAsig-8p4}
+  \delta A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\oint_{\partial B}
+  \Big[dy^\alpha\,\frac{\partial\Phi_\sigma}{\partial x^\beta}
+  -dy^\beta\,\frac{\partial\Phi_\sigma}{\partial x^\alpha}\Big]\delta x^\beta .
+\end{equation}
+We use \eqref{eq:nline} to put the $d\ell_y$ back in: $\eps_{\alpha\beta}\,dy^\beta=\hat n_B^\alpha(\vv
+y)\,d\ell_y$; multiplying by $\eps_{\gamma\alpha}$ gives $\eps_{\gamma\alpha}\eps_{\alpha\beta}\,dy^\beta
+=-dy^\gamma=\eps_{\alpha\gamma}\hat n_B^\alpha\,d\ell_y$. Substituting,
+\[
+  \delta A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\oint_{\partial B}
+  \Big[\eps_{\gamma\alpha}\hat n_B^\gamma\,d\ell_y\,\frac{\partial\Phi_\sigma}{\partial x^\beta}
+  -\eps_{\gamma\beta}\hat n_B^\gamma\,d\ell_y\,\frac{\partial\Phi_\sigma}{\partial x^\alpha}\Big]
+  \delta x^\beta ,
+\]
+and the bracket is antisymmetric in $\alpha\beta$, so
+\begin{equation}\label{eq:dAsig-8p5}
+  \delta A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\oint_{\partial B}d\ell_y\,\eps_{\alpha\beta}\,
+  \hat n_B^\gamma\,\frac{\partial\Phi_\sigma}{\partial x^\gamma}\,\delta x^\beta .
+\end{equation}
+From \eqref{eq:PsiB-phi} the inner integral is $\Psi_B^\sigma(\vv x)$, hence
+\begin{equation}\label{eq:dAsig-8p6}
+  \delta A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\,\delta x^\beta\,\eps_{\alpha\beta}\,
+  \Psi_B^\sigma(\vv x).
+\end{equation}
+We traverse the edges of this outer integral over $\partial A$. Parameterizing as before,
+$\vv x_k(s)=\vv v_k+s\vv e_k=(1-s)\vv v_k+s\vv v_{z(k)}$ and $dx_k^\alpha=e_k^\alpha\,ds$, so
+\[
+  \delta A_\cap^\sigma=-\sum_{k\in\partial A}\sum_\beta\int_0^1 e_k^\alpha\,ds\,
+  \big[(1-s)\delta v_k^\beta+s\,\delta v_{z(k)}^\beta\big]\eps_{\alpha\beta}\,\Psi_B^\sigma(\vv x_k(s)).
+\]
+If we let
+\begin{equation}\label{eq:W0}
+  W_k^{0}\equiv\int_0^1 ds\,(1-s)\,\Psi_B^\sigma(\vv x_k(s)),
+\end{equation}
+\begin{equation}\label{eq:W1}
+  W_k^{1}\equiv\int_0^1 ds\,s\,\Psi_B^\sigma(\vv x_k(s)),
+\end{equation}
+then $\delta A_\cap^\sigma=-\sum_{k\in\partial A}\sum_\beta\big[W_k^{0}\delta_{km}
++W_k^{1}\delta_{z(k)m}\big]\eps_{\alpha\beta}e_k^\alpha\,\delta v_m^\beta$, meaning
+\begin{equation}\label{eq:gradAsig}
+  \frac{\partial A_\cap^\sigma}{\partial v_m^\beta}
+  =\eps_{\beta\alpha}\big[W_m^{0}\,e_m^\alpha+W_{z'(m)}^{1}\,e_{z'(m)}^\alpha\big].
+\end{equation}
+
+It remains to evaluate $\Psi_B^\sigma$. Recall \eqref{eq:PsiB-gauss}, $\Psi_B^\sigma(\vv x)
+=\oint_{\partial B}\vv E_\sigma(\vv y-\vv x)\!\cdot\!\hat n_B(\vv y)\,d\ell_y$, and again use
+$\hat n_B^\alpha\,d\ell_y=\eps_{\alpha\beta}\,dy^\beta$ to write $\Psi_B^\sigma(\vv x)
+=\oint_{\partial B}E_\sigma^\alpha(\vv y-\vv x)\,\eps_{\alpha\beta}\,dy^\beta$. Parameterizing edge $k$
+of $\partial B$, with $\vv w_k=\vv x-\vv v_k$,
+\[
+  \vv y_k(s)-\vv x=\vv v_k+\vv e_k s-\vv x=-\vv w_k+\vv e_k s,\qquad d\vv y_k=\vv e_k\,ds,
+\]
+so, using $\vv E_\sigma$,
+\begin{equation}\label{eq:Psik-integral}
+  \Psi_k^\sigma(\vv x)=\int_0^1 ds\,\frac{-w_k^\alpha+e_k^\alpha s}{2\pi\big(|\vv w_k-\vv e_k s|^2
+  +\sigma^2\big)}\,\eps_{\alpha\beta}\,e_k^\beta .
+\end{equation}
+Doesn't \eqref{eq:Psik-integral} look familiar? Since $(\vv w_k-\vv e_k s)^2=|\vv w_k|^2-2\,\vv
+w_k\!\cdot\!\vv e_k\,s+|\vv e_k|^2 s^2$, and like before
+\[
+  a_k\equiv|\vv e_k|^2,\qquad b_k\equiv-2\,\vv w_k\!\cdot\!\vv e_k,\qquad c_k\equiv|\vv w_k|^2+\sigma^2 ,
+\]
+the $\vv e_k s$ piece of the numerator drops ($\vv e_k\times\vv e_k=0$), leaving $\Psi_k^\sigma(\vv x)
+=-\int_0^1 ds\,\dfrac{w_k^\alpha\eps_{\alpha\beta}e_k^\beta}{2\pi(a_k s^2+b_k s+c_k)}$. With
+$D_k=\sqrt{4a_kc_k-b_k^2}$, the $s$-integral is a single arctangent, so
+\begin{equation}\label{eq:Psik-closed}
+  \Psi_k^\sigma(\vv x)\equiv-\frac{w_k^\alpha\eps_{\alpha\beta}e_k^\beta}{\pi D_k}
+  \Big[\arctan\frac{2a_k+b_k}{D_k}-\arctan\frac{b_k}{D_k}\Big],
+\end{equation}
+and
+\begin{equation}\label{eq:PsiB-sum}
+  \Psi_B^\sigma(\vv x)=\sum_{k\in\partial B}\Psi_k^\sigma(\vv x).
+\end{equation}
+\cam{Transcribed from the handwritten \S8. The gradient \eqref{eq:gradAsig} equals the analogue of the
+sharp force \eqref{eq:gradAsharp} with weight $\Psi_B^\sigma$; I checked it against a central finite
+difference of \eqref{eq:Asig-dxdy} on two overlapping unit squares ($\sigma=0.15$) to $\sim10^{-8}$ at
+all vertices, and \eqref{eq:Psik-closed} against the direct $\oint_{\partial B}\vv E_\sigma\!\cdot\!\hat
+n_B\,d\ell_y$ to $\sim2\times10^{-8}$. As $\sigma\to0$, $\Psi_B^\sigma\to1$ inside $B$, $\tfrac12$ on an
+edge, $(\text{interior angle})/2\pi$ at a vertex, and $0$ outside -- the softened membership of $\vv x$
+in $B$.}
+
+\cam{\textbf{Closing $W^0,W^1$: the fully-real gradient (my derivation).} The moments \eqref{eq:W0},
+\eqref{eq:W1} are an outer $\int_0^1 ds$ over the edge $m\in\partial A$ of $\Psi_B^\sigma$, weighted by
+$1-s$ and $s$. Unlike the energy panel \eqref{eq:I2split} (whose inner $\partial B$ integral was the
+$\ln$-panel \eqref{eq:Ipanel}), here the inner integral is already the arctangent $\Psi_k^\sigma$
+\eqref{eq:Psik-closed}, so the outer integrand is $\arctan\times$(rational). Fix an inner edge
+$k\in\partial B$, $\hat e_k=\vv e_k/|\vv e_k|$, and resolve $\vv x_m(s)=\vv v_m+s\vv e_m$ along and across
+$\hat e_k$, defining the pair slope $\mu$ and scaled intercept $\nu$ (the \S7 $m,\nu$ for this edge pair):}
+\[
+  \begin{aligned}
+    P_0&=(\vv v_m{-}\vv v_k)\!\cdot\!\hat e_k, & P_1&=\vv e_m\!\cdot\!\hat e_k, &
+    X_0&=(\vv v_m{-}\vv v_k)\!\times\!\hat e_k, & X_1&=\vv e_m\!\times\!\hat e_k,
+  \end{aligned}\qquad
+  \mu\equiv\frac{P_1}{X_1},\ \ \nu\equiv\frac{U_0-\mu X_0}{\sigma},\ \ \xi\equiv X_0+sX_1 ,
+\]
+\cam{with $U_0=P_0$ at $\vv v_k$ and $U_0=P_0-|\vv e_k|$ at $\vv v_k+\vv e_k$. Because
+$D_k=2|\vv e_k|\sqrt{\xi^2+\sigma^2}$ and $\vv w_k\!\times\!\vv e_k=|\vv e_k|\xi$, the two arctangents of
+\eqref{eq:Psik-closed} collapse to $\Theta(\xi)\equiv\arctan\frac{\mu\xi+\sigma\nu}{\sqrt{\xi^2+\sigma^2}}$
+at the two intercepts, so $\Psi_k^\sigma(\vv x_m(s))=-\tfrac{\xi}{2\pi\sqrt{\xi^2+\sigma^2}}[\Theta]$.
+Changing $s\mapsto\xi$ ($ds=d\xi/X_1$, $1-s=(X_0{+}X_1{-}\xi)/X_1$), the moments become}
+\[
+  W_m^{1}=-\frac{[\,M_1'-X_0M_1\,]_{X_0}^{X_0+X_1}}{2\pi X_1^2},\quad
+  W_m^{0}=-\frac{[\,M_1\,]_{X_0}^{X_0+X_1}}{2\pi X_1}-W_m^{1},\quad
+  M_1=\!\int\!\frac{\xi\,\Theta}{\sqrt{\xi^2+\sigma^2}}d\xi,\ \ M_1'=\!\int\!\frac{\xi^2\,\Theta}{\sqrt{\xi^2+\sigma^2}}d\xi.
+\]
+
+\cam{\textbf{One master for energy and gradient.} $M_1,M_1'$ and the energy panel's $I_{\tan}$ (\S7) are
+the single family -- integrate $\arctan\times$weight by parts,}
+\[
+  \mathbb M[V]\equiv\int V'(\xi)\,\Theta(\xi)\,d\xi=V(\xi)\,\Theta(\xi)-\int V(\xi)\,\Theta'(\xi)\,d\xi,
+  \qquad \Theta'=\frac{\mu\sigma^2-\sigma\nu\xi}{\sqrt{\xi^2+\sigma^2}\,Q_2},
+\]
+\cam{$Q_2=(1+\mu^2)\xi^2+2\mu\sigma\nu\,\xi+\sigma^2(1+\nu^2)$, differing only in the weight $V'$:}
+\[
+\begin{array}{l@{\qquad}l@{\qquad}l}
+  V'=\sqrt{\xi^2+\sigma^2} & V=v_+\equiv\tfrac12\big(\xi\sqrt{\xi^2+\sigma^2}+\sigma^2\arcsinh\tfrac\xi\sigma\big) & \text{energy }I_{\tan}\\
+  V'=\xi/\sqrt{\xi^2+\sigma^2} & V=\sqrt{\xi^2+\sigma^2} & \text{gradient }M_1\\
+  V'=\xi^2/\sqrt{\xi^2+\sigma^2} & V=v_-\equiv\tfrac12\big(\xi\sqrt{\xi^2+\sigma^2}-\sigma^2\arcsinh\tfrac\xi\sigma\big) & \text{gradient }M_1'
+\end{array}
+\]
+\cam{In $\int V\Theta'\,d\xi$ the $\tfrac12\xi\sqrt{\xi^2+\sigma^2}$ of $v_\pm$ (over $\sqrt{\xi^2+\sigma^2}$)
+leaves the elementary $\tfrac12\varrho$, $\varrho\equiv\int\tfrac{\xi(\mu\sigma^2-\sigma\nu\xi)}{Q_2}d\xi$;
+the $\sqrt{\xi^2+\sigma^2}$ of $M_1$ leaves the elementary $\varsigma\equiv\int\tfrac{\mu\sigma^2-\sigma\nu\xi}
+{Q_2}d\xi$; and the $\pm\tfrac{\sigma^2}2\arcsinh(\xi/\sigma)$ of $v_\pm$ leaves $\pm\tfrac{\sigma^2}2T$,
+$T\equiv\int\arcsinh\tfrac\xi\sigma\,\tfrac{\mu\sigma^2-\sigma\nu\xi}{\sqrt{\xi^2+\sigma^2}\,Q_2}d\xi$, so}
+\[
+  M_1=\sqrt{\xi^2+\sigma^2}\,\Theta-\varsigma,\qquad
+  M_1'=v_-\Theta-\tfrac12\varrho+\tfrac{\sigma^2}2T,\qquad
+  I_{\tan}\text{ core}=v_+\Theta-\tfrac12\varrho-\tfrac{\sigma^2}2T .
+\]
+\cam{The one transcendental $T$ is the \S7 arcsinh integral: with $X=\xi/\sigma$,
+$T=-\!\int\!\tfrac{\arcsinh X\,(\nu X-\mu)}{\sqrt{X^2+1}\,(AX^2+BX+C)}dX=-2J_{\arcsinh}$
+($A=1+\mu^2,B=2\mu\nu,C=1+\nu^2$), closed by the fully-real recipe
+\eqref{eq:Jarcsinh-t}--\eqref{eq:Jarcsinh-clausen} at $(m,\nu)=(\mu,\nu)$. So the whole gradient is fully
+real: $W^0$ ($M_1$) is elementary, and the only transcendental in $W^1$ is the \emph{same} $J_{\arcsinh}$
+that closes the energy -- entering $+$ there ($v_+$), $-$ here ($v_-$).}
+
+\cam{Verified in \texttt{notes/master\_form.py} (the three $\mathbb M[V]$ reductions, energy$/W^0/W^1$
+$=+J/0/-J$ to $\sim10^{-16}$) and \texttt{notes/verify\_gradient\_masters.py} ($M_1,M_1'$ and
+$T=-2J_{\arcsinh}$ to $\sim10^{-14}$); the assembled $W^0,W^1$ (\texttt{energies.py} \texttt{\_wClosedVec})
+match a central finite difference of $A_\cap^\sigma$ to $\sim3\times10^{-9}$. Both $W^1$ (via $1/X_1^2$)
+and the energy panel amplify near-parallel edge pairs, so both need the bridge below.}
+
+\cam{\textbf{Near-parallel bridge (my color).} $X_1=\vv e_m\times\hat e_k=|\vv e_m|\sin\theta_{mk}$
+vanishes as the two edges align, and the energy panel's $I_c,I_d$ carry the same degeneracy through the
+$\sigma/e_\beta^y$ Jacobian of \eqref{eq:Xsub}. There $\mu=P_1/X_1\to\infty$ and the closed forms lose
+all precision to cancellation -- yet each is a \emph{finite} integral. Writing $\xi=X_0+uX_1$ and undoing
+the $X_1$ division, the panel arctangent term (its $I_c,I_d$) and the two moment cores are}
+\[
+  \int_0^1\!\sqrt{\xi^2+\sigma^2}\,\Theta\,du,\qquad
+  \int_0^1\!\frac{\xi\,\Theta}{\sqrt{\xi^2+\sigma^2}}\,du,\qquad
+  \int_0^1\!\frac{u\,\xi\,\Theta}{\sqrt{\xi^2+\sigma^2}}\,du,\qquad
+  \Theta=\arctan\frac{U_0+P_1u}{\sqrt{\xi^2+\sigma^2}},
+\]
+\cam{manifestly regular as $X_1\to0$, with limit the parallel branch. The only feature is the arctangent
+node $u_\star=-U_0/P_1$ (a peak of width $\sim\sigma$); splitting there, a $2\times24$ Gauss rule holds
+$\sim10^{-15}$ down to $\sigma\sim10^{-3}$. Used for $|X_1|\le10^{-2}|\vv e_m|$, closed forms elsewhere
+(\texttt{energies.py} \texttt{\_ceBridge}, \texttt{\_wBridge}).}
+\cam{Verified against a dense 2-D quadrature of $\int\!\!\int\ln(|\vv x-\vv y|^2+\sigma^2)$: panel and
+moments hold $\sim10^{-16}$ across the near-parallel sweep (was $4\times10^{-6}$ at $|X_1|=10^{-6}$
+pre-bridge). At the relaxed $N{=}6$ grazing config ($\min|\sin\theta_{mk}|\!\sim\!9\times10^{-6}$)
+the exact energy self-consistency improves $5\times10^{-2}\!\to\!7\times10^{-9}$ and the gradient
+$5\times10^{-3}\!\to\!3\times10^{-9}$; Newton on the fully-analytic force then reaches
+$\max|F|\!\sim\!9\times10^{-13}$ in $4$ steps, where it stalled at $\sim10^{-2}$ before.}
+
+\end{document}

@@ -1,0 +1,220 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\half}{\tfrac{1}{2}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\note}[1]{\textcolor{blue}{#1}}
+
+\title{Analytic gradients for the exact-arc contact law}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+The derivative of \code{roundedContact}'s two functionals with respect to the body arrays, in closed
+form. Both were previously taken by complex step, one whole evaluation per degree of freedom; this is
+what replaces that. \note{Blue marks remarks rather than derivation.}
+
+\section{The two derivative arguments}
+
+The boundary of a rounded body is $n$ circular arcs alternating with $n$ straight segments, meeting
+tangentially, so it is $C^1$ with no vertices at all. Write $\partial A\cap B$ as a disjoint union of
+sub-stretches on each of which the nearest feature of $B$ is a single segment or a single arc; that
+partition is what \code{substretches} returns.
+
+\paragraph{Energy.} $E=\int_{\partial A\cap B}\tfrac{k}{3}\,d_B^3\,d\ell$. Differentiating moves the
+breakpoints, but every Leibniz term vanishes: at a span endpoint $d_B=0$, and at an interior feature
+switch $d_B$ is continuous, so the terms from the two adjacent sub-stretches cancel. The derivative is
+therefore the derivative at \emph{frozen} combinatorics, and the argmin and root solving that produced
+the partition never have to be differentiated.
+
+\paragraph{Area.} Green's integrand does \emph{not} vanish at a crossing, so the same argument fails
+--- freezing the partition is measured $40$--$60\%$ wrong. Use the shape derivative instead,
+\begin{equation}
+  \frac{\partial}{\partial p}\,|A\cap B|
+  = \int_{\partial A\cap B}\!\!\vv v_A\cdot \vv n_A\,ds
+  + \int_{\partial B\cap A}\!\!\vv v_B\cdot \vv n_B\,ds ,
+  \qquad \vv v=\frac{\partial \vv x}{\partial p}\Big|_{\text{fixed parameter}},
+\end{equation}
+which has no boundary terms at all; the moving crossings enter only through the domains, and a point
+is of measure zero. So the spans may be frozen here too, but for a different reason and through a
+different formula.
+
+\section{Body parameters}
+
+Differentiate with respect to the arrays a body is stored in rather than the backbone: centers
+$\vv z_k$, radii $\rho_k$, sweeps $\psi_k$, and the kiss points $\vv a^+_k=\code{tail}[k]$,
+$\vv a^-_{k+1}=\code{head}[k]$. They are treated as \emph{independent} here even though they are not;
+imposing the relations between them is the separate per-body pass of \S6. That is what makes each
+case below a plain chain rule with no geometry hidden inside it.
+
+An arc is parametrized by rotation of $\vv w_0=\code{head}[k-1]-\vv z_k$ rather than by absolute
+angle,
+\begin{equation}
+  \vv x(t)=\vv z_k+\cos(\psi_k t)\,\vv w_0+\sin(\psi_k t)\,J\vv w_0,
+  \qquad J=\begin{pmatrix}0&-1\\1&0\end{pmatrix},\qquad t\in[0,1],
+\end{equation}
+so no $\arctan\!2$ ever appears. A segment is $\vv x(t)=\vv a^+_k+t\,\vv e_k$ with
+$\vv e_k=\code{head}[k]-\code{tail}[k]$.
+
+\section{Energy: the four integrals}
+
+Let $K\vv e=(e_y,-e_x)$, so the inward unit normal of a segment of $B$ is $\vv n=K\vv e/|\vv e|$.
+Signed distances, positive inside $B$.
+
+\paragraph{(1) Segment along, segment to.} With $\alpha=\vv n\cdot(\code{tail}_B-\vv a^+)$ and
+$m=\vv n\cdot\vv e$, the contribution is $|\vv e|\,P$ with
+$P=\int_{t_0}^{t_1}(\alpha-mt)^3dt$. Expanded (\emph{not} as
+$-[(\alpha-mt)^4]/4m$, which divides by zero whenever the two segments are parallel):
+\begin{equation}
+  P=\alpha^3\Delta_1-\tfrac32\alpha^2m\,\Delta_2+\alpha m^2\Delta_3-\tfrac14 m^3\Delta_4,
+  \qquad \Delta_j=t_1^{\,j}-t_0^{\,j},
+\end{equation}
+\begin{equation}
+  \frac{\partial P}{\partial\alpha}=3\alpha^2\Delta_1-3\alpha m\Delta_2+m^2\Delta_3,
+  \qquad
+  \frac{\partial P}{\partial m}=-\tfrac32\alpha^2\Delta_2+2\alpha m\Delta_3-\tfrac34 m^2\Delta_4 .
+\end{equation}
+
+\paragraph{(2) Segment along, arc to.} \code{pairEnergy} writes this as
+$\sqrt{q_at^2+q_bt+q_c}$ in the segment's own parameter with $|\vv e|$ carried outside.
+Differentiating \emph{that} form in $(q_a,q_b,q_c)$ gives expressions with $q_a^{13/2}$ in the
+denominator. Change to arc length first. Let $\hat u=\vv e/|\vv e|$, $\vv \delta=\vv a^+-\vv z_B$,
+$s=\vv\delta\cdot\hat u$, $\vv\delta_\perp=\vv\delta-s\hat u$, $h=|\vv\delta_\perp|$. Then
+$w=|\vv e|\,t+s$ absorbs the speed into the measure and
+\begin{equation}
+  |\vv e|\!\int_{t_0}^{t_1}\!\!\big(r-\sqrt{q_at^2+q_bt+q_c}\big)^3dt
+  \;=\;G(r,h,w_0,w_1),\qquad
+  G=\int_{w_0}^{w_1}\!\!\big(r-R\big)^3dw,\quad R=\sqrt{w^2+h^2}.
+\end{equation}
+Only five antiderivatives are needed, and they are the same five the \emph{value} needs:
+\begin{equation}
+  \int\!\frac{dw}{R}=\operatorname{asinh}\frac{w}{h},\quad
+  \int\! dw=w,\quad
+  \int\! R\,dw,\quad
+  \int\! R^2dw=\frac{w^3}{3}+h^2w,\quad
+  \int\! R^3dw .
+\end{equation}
+Writing $\Delta F$ for $F(w_1)-F(w_0)$,
+\begin{align}
+  \frac{\partial G}{\partial r}&=3r^2\Delta w-6r\,\Delta\!\!\int\! R+3\,\Delta\!\!\int\! R^2,\\
+  \frac{\partial G}{\partial h}&=-3h\Big[r^2\,\Delta\operatorname{asinh}\tfrac{w}{h}-2r\,\Delta w+\Delta\!\!\int\! R\Big],\\
+  \frac{\partial G}{\partial w_1}&=(r-R(w_1))^3,\qquad
+  \frac{\partial G}{\partial w_0}=-(r-R(w_0))^3 ,
+\end{align}
+the last two by the fundamental theorem, so they cost nothing. The middle line follows from
+$\partial R/\partial h=h/R$ and $(r-R)^2/R=r^2/R-2r+R$. \note{$h\to0$ (arc center on the chord's
+line) is removable: $h\operatorname{asinh}(w/h)\to0$, so $\partial G/\partial h\to0$.}
+
+Chaining back, with $\vv\delta=\vv a^+-\vv z_B$ and $\vv e=\vv a^--\vv a^+$,
+\begin{align}
+  \frac{\partial G}{\partial\vv\delta}&=W\hat u+\frac{\partial G}{\partial h}\,\frac{\vv\delta_\perp}{h},
+  &W&=\frac{\partial G}{\partial w_0}+\frac{\partial G}{\partial w_1},\\
+  \frac{\partial G}{\partial\vv e}&=S\,\hat u
+  +\frac{1}{|\vv e|}\Big(W\vv\delta_\perp-\frac{s}{h}\frac{\partial G}{\partial h}\vv\delta_\perp\Big),
+  &S&=t_0\frac{\partial G}{\partial w_0}+t_1\frac{\partial G}{\partial w_1},
+\end{align}
+using $\partial s/\partial\vv e=\vv\delta_\perp/|\vv e|$ and
+$\partial h/\partial\vv e=-s\,\vv\delta_\perp/(h|\vv e|)$.
+
+\paragraph{(3) Arc along, segment to.} The integrand is
+$(a+b\cos\psi+c\sin\psi)^3$ with $a=\vv n\cdot(\code{tail}_B-\vv z)$, $b=-\vv n\cdot\vv w_0$,
+$c=-\vv n\cdot J\vv w_0$, and the contribution is $\rho\,\mathrm{sgn}(\psi_k)\,[F(\psi_kt_1)-F(\psi_kt_0)]$.
+With $F=\int(a+b\cos+c\sin)^3d\psi$,
+\begin{align}
+  F_a&=3a^2\psi+6a(b\sin\psi-c\cos\psi)+\tfrac32\psi(b^2+c^2)
+       +\tfrac34(b^2-c^2)\sin2\psi-\tfrac32 bc\cos2\psi,\\
+  F_b&=3a^2\sin\psi+\tfrac32 a(2b\psi+b\sin2\psi-c\cos2\psi)
+       +b^2(\cos^2\!\psi+2)\sin\psi-2bc\cos^3\!\psi+c^2\sin^3\!\psi,\\
+  F_c&=-3a^2\cos\psi-\tfrac32 a(b\cos2\psi-2c\psi+c\sin2\psi)
+       -b^2\cos^3\!\psi+2bc\sin^3\!\psi+c^2(\cos^2\!\psi-3)\cos\psi,\\
+  F_\psi&=(a+b\cos\psi+c\sin\psi)^3 .
+\end{align}
+$F_a$ is $\int 3(\cdot)^2d\psi$ term by term; $F_\psi$ is the fundamental theorem and is the cheapest
+available check on the other three. The sweep derivative is $t_1F_\psi(\psi_kt_1)-t_0F_\psi(\psi_kt_0)$.
+\note{These are derivatives of the same antiderivative the value uses, so the additive constant
+cancels in the difference and never needs tracking.}
+
+\paragraph{(4) Arc along, arc to.} $\int\!\sqrt{A+B\cos\psi}\,d\psi$ is an incomplete elliptic
+integral, so this one is Gauss--Legendre. The integrand is analytic on a sub-stretch --- that is
+exactly what the partition guarantees --- so it is differentiated \emph{pointwise} at the nodes and
+the same weights carry the derivative. The derivative is then exact for the same reason the value is.
+
+\section{The normal pullback}
+
+Cases (1) and (3) both differentiate through $\vv n=K\vv e/|\vv e|$. Since
+$d\vv n=K\,d\vv e/|\vv e|-\vv n(\vv e\cdot d\vv e)/|\vv e|^2$, the covector conjugate to $d\vv e$ is
+\begin{equation}
+  \frac{1}{|\vv e|}\Big[K^{\mathsf T}\vv g-(\vv g\cdot\vv n)\frac{\vv e}{|\vv e|}\Big],
+  \qquad K^{\mathsf T}\vv g=(-g_y,g_x),
+\end{equation}
+where $\vv g$ collects the coefficients conjugate to $\vv n$
+($\vv g=P_\alpha(\code{tail}_B-\vv a^+)+P_m\vv e$ in case (1),
+$\vv g=F_a(\code{tail}_B-\vv z)-F_b\vv w_0-F_cJ\vv w_0$ in case (3)).
+\note{The two terms carry different powers of $|\vv e|$. Factoring a single $1/|\vv e|$ out of both is
+the obvious slip and is nearly invisible --- measured, it left one component $1.6\%$ wrong and the
+other completely wrong, so a spot check on the wrong component reads as a pass. It was the only bug in
+the whole derivation.}
+
+\section{Area: everything is elementary}
+
+For a segment piece, $\vv v=(1-t)\,d\vv a^+ + t\,d\vv a^-$ and $\vv n\,ds=K\vv e\,dt$, so
+\begin{equation}
+  \int(\vv v\cdot\vv n)\,ds
+  = K\vv e\cdot\Big[\big(\Delta_1-\tfrac12\Delta_2\big)\,d\vv a^+ +\tfrac12\Delta_2\,d\vv a^-\Big].
+\end{equation}
+For an arc piece, write $\vv w(t)=\cos(\psi t)\vv w_0+\sin(\psi t)J\vv w_0$, so
+$\vv x=\vv z+\vv w$, $\vv n=\vv w/\rho$ and $ds=\rho|\psi|\,dt$. Two identities collapse it:
+\begin{equation}
+  \vv w\cdot\big(-\sin(\psi t)\vv w_0+\cos(\psi t)J\vv w_0\big)=0,
+  \qquad
+  \big(\cos(\psi t)I+\sin(\psi t)J\big)^{\mathsf T}\vv w=\mathrm{Rot}(-\psi t)\,\vv w=\vv w_0 .
+\end{equation}
+The first says the tangential velocity has no normal component, so $\partial/\partial\psi$ vanishes
+\emph{identically} rather than merely being small; the second kills all the trigonometry in the
+$\vv w_0$ term. What is left is
+\begin{equation}
+  \int(\vv v\cdot\vv n)\,ds
+  = |\psi|\Big[d\vv z\cdot\!\int_{t_0}^{t_1}\!\!\vv w\,dt+\Delta_1\,d\vv w_0\cdot\vv w_0\Big],
+  \qquad
+  \int\vv w\,dt=\frac{\sin\psi t_1-\sin\psi t_0}{\psi}\vv w_0+\frac{\cos\psi t_0-\cos\psi t_1}{\psi}J\vv w_0 .
+\end{equation}
+Note also that $\vv x$ contains neither $\rho$ nor $\psi$, so $\partial|A\cap B|/\partial\rho_k=0$ and
+$\partial|A\cap B|/\partial\psi_k=0$ at the body level --- all of the $\rho$ dependence reaches the
+area through $\vv z$ and the kiss points. \note{So the area gradient needs no quadrature at all, and
+is therefore \emph{exacter} than the order-12 Gauss--Legendre it replaces, as well as cheaper: the arc
+integrand is trigonometric, and that quadrature was very accurate on it but never exact.}
+
+\section{From body arrays back to the backbone}
+
+The corner map $(\vv v_{k-1},\vv v_k,\vv v_{k+1},\rho_k)\mapsto(\vv z_k,\rho_k,\psi_k,\vv a^\pm_k)$ is
+local and cheap, so its Jacobian is still taken by complex step --- but \emph{once per body} per force
+evaluation, $3n$ evaluations of a vectorized closed form, not once per pair. Every pair scatters into
+$\partial E/\partial(\text{body})$ and each body is converted at the end. That ordering is what makes
+the corner map cost $O(\text{bodies})$ rather than $O(\text{pairs})$, and it is the ordering a kernel
+wants.
+
+\section{Status}
+
+Verified in \code{tests/roundedContactGradientCheck.py}, innermost first: each coefficient partial
+against a complex step of its own value routine ($10^{-15}$); the body-array gradient against a
+complex step of the same energy written in the body arrays ($10^{-15}$ to $10^{-14}$); the assembled
+gradient against the old per-degree-of-freedom complex step ($10^{-16}$ to $10^{-13}$), with both
+agreeing with a central difference of the \emph{true} energy at the difference's own floor; and both
+packing drivers against the assemblies they replace ($10^{-15}$). At $\rho=0$ the area tier still
+reproduces \code{energies.sharpOverlapEnergyForce} to $3\times10^{-15}$ in force.
+
+At $N=11$ the depth tier went $1.39\,\mathrm{s}$ to $0.27\,\mathrm{s}$ per force evaluation and the
+area tier $0.39\,\mathrm{s}$ to $0.14\,\mathrm{s}$. \note{The gradient is no longer what costs:
+\code{substretches} is $82\%$ of the depth driver, over half of that inside \code{numpy.roots}. The
+switch equations are quartics after $u=\tan(p/2)$, so the next worthwhile step is a closed-form
+quartic in \code{\_solveTrig} --- which is also what the device needs, since a companion-matrix
+eigensolve is not something a kernel should be doing.}
+
+\end{document}

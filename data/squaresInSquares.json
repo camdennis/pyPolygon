@@ -1,0 +1,987 @@
+{
+ "description": "Best known side length s(n) of the smallest square containing n unit squares.",
+ "source": "https://kingbird.myphotos.cc/packing/squares_in_squares.html",
+ "sourceNote": "David Ellsworth's continuation of Erich Friedman's Packing Center page (https://erich-friedman.github.io/packing/squinsqu/ now points here).",
+ "retrieved": "2026-08-12",
+ "provenance": "Transcribed by an automated fetch of the page above, then self-checked two ways: every symbolic expression was evaluated against its own decimal, and s(n) was confirmed non-decreasing in n. One row failed the first check and is flagged in place rather than guessed at.",
+ "coverage": "Only the n the source lists. Values for any other n are ABSENT, not inferred -- the loader returns None rather than extrapolating a rule the source did not state.",
+ "conflicts": [
+  179
+ ],
+ "units": "side length in unit-square edges; the container is s x s and the squares are 1 x 1",
+ "records": [
+  {
+   "n": 1,
+   "side": 1.0,
+   "exact": "1",
+   "proved": true
+  },
+  {
+   "n": 2,
+   "side": 2.0,
+   "exact": "2",
+   "proved": true
+  },
+  {
+   "n": 3,
+   "side": 2.0,
+   "exact": "2",
+   "proved": true
+  },
+  {
+   "n": 4,
+   "side": 2.0,
+   "exact": "2",
+   "proved": true
+  },
+  {
+   "n": 5,
+   "side": 2.70710678,
+   "exact": "2 + 1/2 sqrt(2)",
+   "proved": true
+  },
+  {
+   "n": 6,
+   "side": 3.0,
+   "exact": "3",
+   "proved": true
+  },
+  {
+   "n": 7,
+   "side": 3.0,
+   "exact": "3",
+   "proved": true
+  },
+  {
+   "n": 8,
+   "side": 3.0,
+   "exact": "3",
+   "proved": true
+  },
+  {
+   "n": 9,
+   "side": 3.0,
+   "exact": "3",
+   "proved": true
+  },
+  {
+   "n": 10,
+   "side": 3.70710678,
+   "exact": "3 + 1/2 sqrt(2)",
+   "proved": true
+  },
+  {
+   "n": 11,
+   "side": 3.87708359,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 13,
+   "side": 4.0,
+   "exact": "4",
+   "proved": true
+  },
+  {
+   "n": 14,
+   "side": 4.0,
+   "exact": "4",
+   "proved": true
+  },
+  {
+   "n": 15,
+   "side": 4.0,
+   "exact": "4",
+   "proved": true
+  },
+  {
+   "n": 17,
+   "side": 4.67553009,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 18,
+   "side": 4.82287566,
+   "exact": "7/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 19,
+   "side": 4.88561808,
+   "exact": "3 + 4 sqrt(2)/3",
+   "proved": false
+  },
+  {
+   "n": 22,
+   "side": 5.0,
+   "exact": "5",
+   "proved": true
+  },
+  {
+   "n": 23,
+   "side": 5.0,
+   "exact": "5",
+   "proved": true
+  },
+  {
+   "n": 24,
+   "side": 5.0,
+   "exact": "5",
+   "proved": true
+  },
+  {
+   "n": 26,
+   "side": 5.62132034,
+   "exact": "7/2 + 3 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 27,
+   "side": 5.70710678,
+   "exact": "5 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 28,
+   "side": 5.82444462,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 29,
+   "side": 5.93383346,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 33,
+   "side": 6.0,
+   "exact": "6",
+   "proved": true
+  },
+  {
+   "n": 34,
+   "side": 6.0,
+   "exact": "6",
+   "proved": true
+  },
+  {
+   "n": 35,
+   "side": 6.0,
+   "exact": "6",
+   "proved": true
+  },
+  {
+   "n": 37,
+   "side": 6.59861961,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 38,
+   "side": 6.70710678,
+   "exact": "6 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 39,
+   "side": 6.81072208,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 40,
+   "side": 6.82842712,
+   "exact": "4 + 2 sqrt(2)",
+   "proved": true
+  },
+  {
+   "n": 41,
+   "side": 6.92669309,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 46,
+   "side": 7.0,
+   "exact": "7",
+   "proved": true
+  },
+  {
+   "n": 47,
+   "side": 7.0,
+   "exact": "7",
+   "proved": true
+  },
+  {
+   "n": 48,
+   "side": 7.0,
+   "exact": "7",
+   "proved": true
+  },
+  {
+   "n": 50,
+   "side": 7.57142857,
+   "exact": "7 + 4/7",
+   "proved": false
+  },
+  {
+   "n": 51,
+   "side": 7.70079924,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 52,
+   "side": 7.70710678,
+   "exact": "7 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 53,
+   "side": 7.82287566,
+   "exact": "13/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 54,
+   "side": 7.84666719,
+   "exact": "7 - 1/2 sqrt(2) + sqrt(1 + sqrt(2))",
+   "proved": false
+  },
+  {
+   "n": 55,
+   "side": 7.94577101,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 62,
+   "side": 8.0,
+   "exact": "8",
+   "proved": true
+  },
+  {
+   "n": 63,
+   "side": 8.0,
+   "exact": "8",
+   "proved": true
+  },
+  {
+   "n": 65,
+   "side": 8.53553391,
+   "exact": "5 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 66,
+   "side": 8.65685425,
+   "exact": "3 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 67,
+   "side": 8.70710678,
+   "exact": "8 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 68,
+   "side": 8.80345994,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 69,
+   "side": 8.82721206,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 70,
+   "side": 8.88166676,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 71,
+   "side": 8.94407156,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 79,
+   "side": 9.0,
+   "exact": "9",
+   "proved": true
+  },
+  {
+   "n": 80,
+   "side": 9.0,
+   "exact": "9",
+   "proved": true
+  },
+  {
+   "n": 82,
+   "side": 9.53553391,
+   "exact": "6 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 83,
+   "side": 9.63482562,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 84,
+   "side": 9.70710678,
+   "exact": "9 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 85,
+   "side": 9.74264069,
+   "exact": "11/2 + 3 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 86,
+   "side": 9.82287566,
+   "exact": "17/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 87,
+   "side": 9.83881744,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 88,
+   "side": 9.88815305,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 89,
+   "side": 9.94974747,
+   "exact": "5 + 7 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 98,
+   "side": 10.0,
+   "exact": "10",
+   "proved": true
+  },
+  {
+   "n": 99,
+   "side": 10.0,
+   "exact": "10",
+   "proved": true
+  },
+  {
+   "n": 101,
+   "side": 10.53553391,
+   "exact": "7 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 102,
+   "side": 10.61138823,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 103,
+   "side": 10.70383477,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 104,
+   "side": 10.70710678,
+   "exact": "10 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 105,
+   "side": 10.80789399,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 106,
+   "side": 10.82297973,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 107,
+   "side": 10.84666719,
+   "exact": "10 - 1/2 sqrt(2) + sqrt(1 + sqrt(2))",
+   "proved": false
+  },
+  {
+   "n": 108,
+   "side": 10.92591939,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 109,
+   "side": 10.94974747,
+   "exact": "6 + 7 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 110,
+   "side": 10.99683778,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 119,
+   "side": 11.0,
+   "exact": "11",
+   "proved": true
+  },
+  {
+   "n": 120,
+   "side": 11.0,
+   "exact": "11",
+   "proved": true
+  },
+  {
+   "n": 122,
+   "side": 11.53553391,
+   "exact": "8 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 123,
+   "side": 11.60139979,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 124,
+   "side": 11.65685425,
+   "exact": "6 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 125,
+   "side": 11.70710678,
+   "exact": "11 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 126,
+   "side": 11.77617895,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 127,
+   "side": 11.82287566,
+   "exact": "21/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 128,
+   "side": 11.82509197,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 129,
+   "side": 11.88130622,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 130,
+   "side": 11.91119052,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 131,
+   "side": 11.95654869,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 132,
+   "side": 11.99143644,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 142,
+   "side": 12.0,
+   "exact": "12",
+   "proved": true
+  },
+  {
+   "n": 143,
+   "side": 12.0,
+   "exact": "12",
+   "proved": true
+  },
+  {
+   "n": 145,
+   "side": 12.53553391,
+   "exact": "9 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 146,
+   "side": 12.60090778,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 147,
+   "side": 12.65685425,
+   "exact": "7 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 148,
+   "side": 12.65685425,
+   "exact": "7 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 149,
+   "side": 12.70710678,
+   "exact": "12 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 150,
+   "side": 12.77817459,
+   "exact": "5 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 151,
+   "side": 12.82287566,
+   "exact": "23/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 152,
+   "side": 12.83100282,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 153,
+   "side": 12.88166676,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 154,
+   "side": 12.93171184,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 155,
+   "side": 12.95851389,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 156,
+   "side": 12.98219172,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 167,
+   "side": 13.0,
+   "exact": "13",
+   "proved": true
+  },
+  {
+   "n": 168,
+   "side": 13.0,
+   "exact": "13",
+   "proved": true
+  },
+  {
+   "n": 170,
+   "side": 13.53553391,
+   "exact": "10 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 171,
+   "side": 13.57142857,
+   "exact": "13 + 4/7",
+   "proved": false
+  },
+  {
+   "n": 172,
+   "side": 13.61898899,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 173,
+   "side": 13.65685425,
+   "exact": "8 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 174,
+   "side": 13.70710678,
+   "exact": "13 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 175,
+   "side": 13.77817459,
+   "exact": "6 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 176,
+   "side": 13.82287566,
+   "exact": "25/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 177,
+   "side": 13.82302875,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 178,
+   "side": 13.84666719,
+   "exact": "13 - 1/2 sqrt(2) + sqrt(1 + sqrt(2))",
+   "proved": false
+  },
+  {
+   "n": 179,
+   "side": 13.89540982,
+   "exact": null,
+   "proved": false,
+   "note": "source transcription conflict: the expression '25/2 + sqrt(2)' evaluates to 13.91421356, not the 13.89540982 given alongside it. Decimal kept, expression dropped; verify this row against the source before using it."
+  },
+  {
+   "n": 180,
+   "side": 13.9351393,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 181,
+   "side": 13.95698416,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 182,
+   "side": 13.97442961,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 194,
+   "side": 14.0,
+   "exact": "14",
+   "proved": true
+  },
+  {
+   "n": 195,
+   "side": 14.0,
+   "exact": "14",
+   "proved": true
+  },
+  {
+   "n": 197,
+   "side": 14.53553391,
+   "exact": "11 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 198,
+   "side": 14.57142857,
+   "exact": "14 + 4/7",
+   "proved": false
+  },
+  {
+   "n": 199,
+   "side": 14.61898899,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 200,
+   "side": 14.65685425,
+   "exact": "9 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 201,
+   "side": 14.70710678,
+   "exact": "14 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 202,
+   "side": 14.72792206,
+   "exact": "2 + 9 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 203,
+   "side": 14.77817459,
+   "exact": "7 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 204,
+   "side": 14.82287566,
+   "exact": "27/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 205,
+   "side": 14.82445115,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 206,
+   "side": 14.87253189,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 207,
+   "side": 14.8939786,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 208,
+   "side": 14.93783045,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 209,
+   "side": 14.95868244,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 210,
+   "side": 14.97421397,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 223,
+   "side": 15.0,
+   "exact": "15",
+   "proved": true
+  },
+  {
+   "n": 224,
+   "side": 15.0,
+   "exact": "15",
+   "proved": true
+  },
+  {
+   "n": 226,
+   "side": 15.53553391,
+   "exact": "12 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 227,
+   "side": 15.57106781,
+   "exact": "17/2 + 5 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 228,
+   "side": 15.60902282,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 229,
+   "side": 15.65685425,
+   "exact": "10 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 230,
+   "side": 15.68292683,
+   "exact": "15 + 28/41",
+   "proved": false
+  },
+  {
+   "n": 231,
+   "side": 15.70710678,
+   "exact": "15 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 232,
+   "side": 15.77817459,
+   "exact": "8 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 233,
+   "side": 15.77817459,
+   "exact": "8 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 234,
+   "side": 15.82287566,
+   "exact": "29/2 + 1/2 sqrt(7)",
+   "proved": false
+  },
+  {
+   "n": 235,
+   "side": 15.82660563,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 236,
+   "side": 15.87607677,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 237,
+   "side": 15.91421356,
+   "exact": "29/2 + sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 238,
+   "side": 15.93984676,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 239,
+   "side": 15.95643304,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 240,
+   "side": 15.97559404,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 241,
+   "side": 15.99091685,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 254,
+   "side": 16.0,
+   "exact": "16",
+   "proved": true
+  },
+  {
+   "n": 255,
+   "side": 16.0,
+   "exact": "16",
+   "proved": true
+  },
+  {
+   "n": 257,
+   "side": 16.53553391,
+   "exact": "13 + 5 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 258,
+   "side": 16.57106781,
+   "exact": "19/2 + 5 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 259,
+   "side": 16.60257141,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 260,
+   "side": 16.65685425,
+   "exact": "11 + 4 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 261,
+   "side": 16.68292683,
+   "exact": "16 + 28/41",
+   "proved": false
+  },
+  {
+   "n": 262,
+   "side": 16.70710678,
+   "exact": "16 + 1/2 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 263,
+   "side": 16.74264069,
+   "exact": "25/2 + 3 sqrt(2)",
+   "proved": false
+  },
+  {
+   "n": 264,
+   "side": 16.77817459,
+   "exact": "9 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 265,
+   "side": 16.77817459,
+   "exact": "9 + 11 sqrt(2)/2",
+   "proved": false
+  },
+  {
+   "n": 266,
+   "side": 16.82306208,
+   "exact": null,
+   "proved": false
+  },
+  {
+   "n": 267,
+   "side": 16.84666719,
+   "exact": "16 - 1/2 sqrt(2) + sqrt(1 + sqrt(2))",
+   "proved": false
+  },
+  {
+   "n": 268,
+   "side": 16.87933209,
+   "exact": null,
+   "proved": false
+  }
+ ]
+}

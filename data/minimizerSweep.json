@@ -1,0 +1,637 @@
+[
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 100,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 2.584536552429199,
+  "steps": 2600,
+  "evaluations": 3009,
+  "maxForce": 1.2305818422091044e-15,
+  "energy": 1.1291696306138944e-29,
+  "turning": 360.0,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 360.0,
+   "simple": true,
+   "pairOverlap": 1.1718057080223332e-15,
+   "packingFraction": 0.9999999999999997,
+   "worstAreaError": 6.661338147750939e-16,
+   "worstEdgeError": 0.9029226811128828
+  },
+  "N": 4,
+  "n": 4,
+  "mode": "springs",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 100,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 2.400646924972534,
+  "steps": 2600,
+  "evaluations": 2681,
+  "maxForce": 9.208197106085228e-13,
+  "energy": 3.473850121655063e-25,
+  "turning": 576.3939433387017,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 576.3939433387017,
+   "simple": false,
+   "pairOverlap": 1.025942134923476e-13,
+   "packingFraction": 0.9999999999999789,
+   "worstAreaError": 5.310196726782124e-13,
+   "worstEdgeError": 1.0308326798058145
+  },
+  "N": 4,
+  "n": 8,
+  "mode": "springs",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 450,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 26.059399843215942,
+  "steps": 2950,
+  "evaluations": 9782,
+  "maxForce": 4.658433666354736e-15,
+  "energy": 3.1037961807888004e-21,
+  "turning": 1066.5605093843242,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 1066.5605093843242,
+   "simple": false,
+   "pairOverlap": 1.969568930691723e-11,
+   "packingFraction": 1.0000000000000007,
+   "worstAreaError": 2.6645352591003757e-15,
+   "worstEdgeError": 3.7617646058510505
+  },
+  "N": 4,
+  "n": 16,
+  "mode": "springs",
+  "device": "numpy",
+  "fellBack": true,
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 100,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 1.8297369480133057,
+  "steps": 2600,
+  "evaluations": 2687,
+  "maxForce": 1.3312498617544812e-15,
+  "energy": 2.8738332439840947e-30,
+  "turning": 360.0,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 360.0,
+   "simple": true,
+   "pairOverlap": 3.567091265714305e-16,
+   "packingFraction": 0.9999999999999998,
+   "worstAreaError": 8.881784197001252e-16,
+   "worstEdgeError": 0.7047773520639122
+  },
+  "N": 8,
+  "n": 4,
+  "mode": "springs",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 350,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 2.6278908252716064,
+  "steps": 2850,
+  "evaluations": 3245,
+  "maxForce": 5.565108602924332e-11,
+  "energy": 6.207363393264549e-17,
+  "turning": 515.507179720533,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 515.507179720533,
+   "simple": false,
+   "pairOverlap": 1.74612258809978e-09,
+   "packingFraction": 0.9999999999934623,
+   "worstAreaError": 4.098466011015489e-11,
+   "worstEdgeError": 1.2298769372705904
+  },
+  "N": 8,
+  "n": 8,
+  "mode": "springs",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "N": 8,
+  "n": 16,
+  "mode": "springs",
+  "phi": 1.0,
+  "kappa": 4.0,
+  "seed": 42,
+  "forceTarget": 1e-10,
+  "plan": "fire:2500+lbfgs:7500",
+  "device": "numpy",
+  "outcome": "timeout",
+  "reached": false,
+  "seconds": 1800.0,
+  "maxForce": NaN,
+  "energy": NaN,
+  "evaluations": 0,
+  "steps": 0,
+  "fellBack": true,
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 7500,
+    "outcome": "steps"
+   }
+  ],
+  "outcome": "steps",
+  "seconds": 10.989147663116455,
+  "steps": 10000,
+  "evaluations": 12595,
+  "maxForce": 7.971678674729129e-08,
+  "energy": 1.3096950722827994e-11,
+  "turning": 360.00000000000006,
+  "reached": false,
+  "rejected": false,
+  "feasibility": {
+   "turning": 360.00000000000006,
+   "simple": true,
+   "pairOverlap": 1.4450589324336563e-06,
+   "packingFraction": 0.9999999914478976,
+   "worstAreaError": 1.7259261575475193e-08,
+   "worstEdgeError": 0.9089734929336555
+  },
+  "N": 16,
+  "n": 4,
+  "mode": "springs",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "N": 16,
+  "n": 8,
+  "mode": "springs",
+  "phi": 1.0,
+  "kappa": 4.0,
+  "seed": 42,
+  "forceTarget": 1e-10,
+  "plan": "fire:2500+lbfgs:7500",
+  "device": "numpy",
+  "outcome": "timeout",
+  "reached": false,
+  "seconds": 1800.0,
+  "maxForce": NaN,
+  "energy": NaN,
+  "evaluations": 0,
+  "steps": 0,
+  "fellBack": true,
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "N": 16,
+  "n": 16,
+  "mode": "springs",
+  "phi": 1.0,
+  "kappa": 4.0,
+  "seed": 42,
+  "forceTarget": 1e-10,
+  "plan": "fire:2500+lbfgs:7500",
+  "device": "numpy",
+  "outcome": "timeout",
+  "reached": false,
+  "seconds": 1800.0,
+  "maxForce": NaN,
+  "energy": NaN,
+  "evaluations": 0,
+  "steps": 0,
+  "fellBack": true,
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 100,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 3.532421588897705,
+  "steps": 2600,
+  "evaluations": 3239,
+  "maxForce": 1.4102198944729805e-25,
+  "energy": 8.73477308212857e-35,
+  "turning": 360.00000000000006,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 360.00000000000006,
+   "simple": true,
+   "pairOverlap": 0.0,
+   "packingFraction": 1.0000000000000007,
+   "maxResidual": 5.995204332975845e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 5.773159728050814e-15,
+   "worstEdgeError": 2.886579864025407e-15
+  },
+  "N": 4,
+  "n": 4,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 50,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 3.392488479614258,
+  "steps": 2550,
+  "evaluations": 2732,
+  "maxForce": 3.581192984730317e-15,
+  "energy": 1.5108032918494912e-21,
+  "turning": 423.2417493984518,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 423.2417493984518,
+   "simple": false,
+   "pairOverlap": 1.9637466380314805e-11,
+   "packingFraction": 0.9999999999999998,
+   "maxResidual": 1.1102230246251565e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 4.440892098500626e-16,
+   "worstEdgeError": 6.661338147750939e-16
+  },
+  "N": 4,
+  "n": 8,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 50,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 4.064667701721191,
+  "steps": 2550,
+  "evaluations": 2602,
+  "maxForce": 1.1326083273901525e-21,
+  "energy": 3.558323705283552e-29,
+  "turning": 640.2289366223642,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 640.2289366223642,
+   "simple": false,
+   "pairOverlap": 2.1098574276567916e-15,
+   "packingFraction": 0.9999999999999998,
+   "maxResidual": 6.8833827526759706e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 2.220446049250313e-16,
+   "worstEdgeError": 3.3306690738754696e-15
+  },
+  "N": 4,
+  "n": 16,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 200,
+    "outcome": "force"
+   }
+  ],
+  "outcome": "force",
+  "seconds": 8.948038816452026,
+  "steps": 2700,
+  "evaluations": 4687,
+  "maxForce": 1.505685163553304e-25,
+  "energy": 1.3802418045982038e-34,
+  "turning": 360.00000000000006,
+  "reached": true,
+  "rejected": false,
+  "feasibility": {
+   "turning": 360.00000000000006,
+   "simple": true,
+   "pairOverlap": 2.0505259220733566e-18,
+   "packingFraction": 0.9999999999999998,
+   "maxResidual": 9.325873406851315e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 1.9984014443252818e-15,
+   "worstEdgeError": 4.6629367034256575e-15
+  },
+  "N": 8,
+  "n": 4,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 7500,
+    "outcome": "steps"
+   }
+  ],
+  "outcome": "steps",
+  "seconds": 171.79502987861633,
+  "steps": 10000,
+  "evaluations": 121717,
+  "maxForce": 0.007303788900461594,
+  "energy": 0.00035116417753749724,
+  "turning": 434.64699223987157,
+  "reached": false,
+  "rejected": false,
+  "feasibility": {
+   "turning": 434.64699223987157,
+   "simple": false,
+   "pairOverlap": 0.008027615723081595,
+   "packingFraction": 1.0,
+   "maxResidual": 1.1102230246251565e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 6.661338147750939e-16,
+   "worstEdgeError": 5.551115123125783e-16
+  },
+  "N": 8,
+  "n": 8,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 7500,
+    "outcome": "steps"
+   }
+  ],
+  "outcome": "steps",
+  "seconds": 361.0950949192047,
+  "steps": 10000,
+  "evaluations": 269427,
+  "maxForce": 1.1075692173679164e-07,
+  "energy": 4.981384246385714e-11,
+  "turning": 568.5363553785085,
+  "reached": false,
+  "rejected": false,
+  "feasibility": {
+   "turning": 568.5363553785085,
+   "simple": false,
+   "pairOverlap": 4.5504764964427545e-06,
+   "packingFraction": 0.9999999999999999,
+   "maxResidual": 5.551115123125783e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 8.881784197001252e-16,
+   "worstEdgeError": 2.886579864025407e-15
+  },
+  "N": 8,
+  "n": 16,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 7500,
+    "outcome": "steps"
+   }
+  ],
+  "outcome": "steps",
+  "seconds": 509.5284962654114,
+  "steps": 10000,
+  "evaluations": 70495,
+  "maxForce": 0.013038552768736347,
+  "energy": 0.006098465228115431,
+  "turning": 360.00000000000006,
+  "reached": false,
+  "rejected": false,
+  "feasibility": {
+   "turning": 360.00000000000006,
+   "simple": true,
+   "pairOverlap": 0.040310948674389314,
+   "packingFraction": 0.9999999999999682,
+   "maxResidual": 7.402967128200544e-13,
+   "constraintsHeld": true,
+   "worstAreaError": 7.390754674929667e-13,
+   "worstEdgeError": 3.701483564100272e-13
+  },
+  "N": 16,
+  "n": 4,
+  "mode": "constrained",
+  "device": "numpy",
+  "fellBack": true,
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 7500,
+    "outcome": "steps"
+   }
+  ],
+  "outcome": "steps",
+  "seconds": 100.62772226333618,
+  "steps": 10000,
+  "evaluations": 35890,
+  "maxForce": 0.11246034944080284,
+  "energy": 0.01635714818781029,
+  "turning": 414.06791670813095,
+  "reached": false,
+  "rejected": false,
+  "feasibility": {
+   "turning": 414.06791670813095,
+   "simple": false,
+   "pairOverlap": 0.0016689156179559637,
+   "packingFraction": 1.0,
+   "maxResidual": 4.218847493575595e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 2.9976021664879227e-15,
+   "worstEdgeError": 1.9984014443252818e-15
+  },
+  "N": 16,
+  "n": 8,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ },
+ {
+  "plan": "fire:2500+lbfgs:7500",
+  "stages": [
+   {
+    "minimizer": "fire",
+    "steps": 2500,
+    "outcome": "steps"
+   },
+   {
+    "minimizer": "lbfgs",
+    "steps": 7500,
+    "outcome": "steps"
+   }
+  ],
+  "outcome": "steps",
+  "seconds": 45.660730838775635,
+  "steps": 10000,
+  "evaluations": 12136,
+  "maxForce": 0.0002574476473693217,
+  "energy": 4.240571571811059e-05,
+  "turning": 574.2395754699639,
+  "reached": false,
+  "rejected": false,
+  "feasibility": {
+   "turning": 574.2395754699639,
+   "simple": false,
+   "pairOverlap": 0.004132028885491058,
+   "packingFraction": 0.9999999999999996,
+   "maxResidual": 3.6637359812630166e-15,
+   "constraintsHeld": true,
+   "worstAreaError": 1.9984014443252818e-15,
+   "worstEdgeError": 1.887379141862766e-15
+  },
+  "N": 16,
+  "n": 16,
+  "mode": "constrained",
+  "device": "cuda",
+  "schedule": "fire+lbfgs"
+ }
+]

@@ -1,0 +1,178 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\half}{\tfrac{1}{2}}
+\newcommand{\cross}[2]{#1\!\times\!#2}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\note}[1]{\textcolor{blue}{#1}}
+
+\title{Sharp-polygon overlap: area, gradient, and implementation}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent
+A self-contained reference tying the straight-edged (no-rounding) overlap \emph{area} and
+\emph{gradient} formulas (Cam's \texttt{definitions.tex}, \S3--4) to their implementation in
+\code{polygonOverlap.py}, with the validation status and the non-smoothness we hit. Everything here
+is the sharp model: features are the $n$ edges of each polygon, the only crossings are edge--edge,
+and a boundary point's velocity is a plain vertex velocity (no corner Jacobians). \note{Blue marks
+my own remarks / corrections to the handwritten notes.}
+
+\section{Data structures}
+
+A packing stores flat vertices $\vv v_k$, $k\in[0,N_v)$, with CSR \code{startIndices} and
+\code{next}/\code{prev} (so edge $k$ runs $\vv v_k\to\vv v_{z(k)}$, $z(k)=\code{next}[k]$). All
+polygons are CCW. Two quantities are attached to the packing by ``update'' functions:
+
+\begin{description}[leftmargin=1.5em]
+\item[\code{packing.intersections}] an $(M,6)$ array; row = one edge--edge crossing, columns
+\[
+  \big(\ \rho_i,\ \rho_j,\ j,\ s_j,\ i,\ s_i\ \big),
+\]
+where $\rho_i,\rho_j$ are the two polygon indices, $i,j$ are \emph{global} edge (start-vertex)
+indices, and $s_i,s_j\in(0,1)$ the fraction along each edge. The record is \emph{oriented}: edge $i$
+is the one whose forward $(+s)$ direction \emph{enters} the other polygon --- it continues the CCW
+overlap boundary --- and $j$ is the other edge. \note{We store $\rho$ (topology, constant) even
+though $\rho_i=\code{shapeId}[i]$: the row \emph{is} the \S5 sort key, so sorting/pairing is a
+lexicographic sort with no gather, and keeping $(i,s_i)$ separate (not a fused $c_i=i+s_i$) preserves
+full float precision on $s$ regardless of $N_v$.}
+\item[\code{packing.followerIndices}] an $(M,)$ int array; \code{followerIndices[$\alpha$]} is the
+index of the intersection that \emph{follows} $\alpha$ along the CCW overlap boundary.
+\end{description}
+
+\section{Intersections}
+
+\paragraph{Two edges (\code{polygonPairIntersections}).} Edges $i=(\vv v_i,\vv e_i)$ and $j=(\vv
+v_j,\vv e_j)$ cross where $\vv v_i+s\vv e_i=\vv v_j+t\vv e_j$. Solving,
+\begin{equation}
+  s=\frac{\cross{(\vv v_j-\vv v_i)}{\vv e_j}}{\cross{\vv e_i}{\vv e_j}},\qquad
+  t=\frac{\cross{(\vv v_i-\vv v_j)}{\vv e_i}}{\cross{\vv e_j}{\vv e_i}},
+  \qquad \cross{\vv a}{\vv b}=a_xb_y-a_yb_x,
+\end{equation}
+a genuine crossing needing $s,t\in(0,1)$ (parallel edges, $\cross{\vv e_i}{\vv e_j}=0$, skipped).
+\note{This is the \emph{corrected} sign of \texttt{definitions.tex} eq (2.2)/(2.3), whose numerators
+are flipped ($\vv v_i-\vv v_j$ where it should be $\vv v_j-\vv v_i$ for $s$). The code has the right
+sign, which is why the MC area check passes.} In code, with A the first loop and B the second,
+\code{sA=cross(w,dB)/cross(dA,dB)}, \code{w=rB[b]-rA[a]}.
+
+\paragraph{Assembly (\code{updateIntersections}).} All-to-all over polygon pairs $(A,B)$, $A<B$ (the
+neighbor-list version is a later drop-in). $B$ is brought into $A$'s minimum image
+(\code{minImageShift}), edges are tested pairwise, and each crossing is written as a global oriented
+record. Orientation is a pure sign test: since $B$ is CCW its interior is to the left of edge $b$, so
+\emph{edge A enters B iff $\cross{\vv e_B}{\vv e_A}>0$} --- no point-in-polygon needed. If A enters,
+$(\rho_i,\rho_j,i,j)=(A,B,\text{edge}_A,\text{edge}_B)$; else the roles swap.
+
+\paragraph{Pairing (\code{updateFollowers}).} At intersection $\alpha$ we leave along edge $i$ on
+polygon $\rho_i$ at continuous coordinate $c=i+s_i$. Walking $\rho_i$'s boundary forward, the next
+crossing of the \emph{same} pair is the follower: the intersection $\beta$ with the polygons swapped
+($\rho_i[\beta]=\rho_j[\alpha]$, $\rho_j[\beta]=\rho_i[\alpha]$) whose arrival coordinate on $\rho_i$
+(its $j$ field, $l+s_l$) has the smallest forward distance $\bmod\ n_{\rho_i}$ from $c$. The
+followers form a permutation whose cycles are the overlap-region boundary loops. \note{$O(M^2)$
+reference scan; the notes' sort $+$ binary search is the fast version (TODO).}
+
+\section{Overlap area}
+
+The area of $A\cap B$ is the shoelace boundary integral, discretized into chord triangles from a
+fixed reference $\vv R$:
+\begin{equation}
+  |A\cap B|=\half\eps_{\alpha\beta}\oint_{\partial(A\cap B)}X^\alpha\,dX^\beta,\qquad
+  h(\vv P,\vv Q)=\half\,\cross{(\vv P-\vv R)}{(\vv Q-\vv R)} .
+\end{equation}
+$\vv R$ is the lowest-indexed vertex of the lower-indexed polygon of the pair (the $R$-dependence
+cancels over a closed loop, so the total is $R$-independent). Walking from a crossing $\alpha$ (point
+$\vv q_i$ on edge $i$) to its follower $\beta$ (point $\vv q_l$ on edge $l$, both on $\rho_i$), the
+run contributes
+\begin{equation}
+  \underbrace{h(\vv q_i,\vv q_l)}_{\text{same edge}}
+  \quad\text{or}\quad
+  \underbrace{h(\vv q_i,\vv v_{z(i)})+h(\vv v_l,\vv q_l)}_{\text{end caps (}U_{\text{ex}})}
+  +\underbrace{\sum_{m\ \text{strictly between }i,l}h(\vv v_m,\vv v_{z(m)})}_{\text{full interior edges (}U_{\text{int}})}.
+\end{equation}
+Summed over all runs this is the total overlap area, split for parallelism into
+\begin{align}
+  U_{\text{ex}} &=\sum_{\alpha}\big[\text{end caps / single chord of run }\alpha\big]
+    &&(\text{one thread per intersection}),\\
+  U_{\text{int}}&=\sum_{m=0}^{N_v-1}\ \sum_{\text{runs }p\ \ni\ m}h(\vv v_m,\vv v_{z(m)})
+    &&(\text{one thread per edge, }\delta_{pm}),\\
+  U &=U_{\text{ex}}+U_{\text{int}}. &&
+\end{align}
+
+\paragraph{Implementation (\code{updateOverlapArea}).} \code{AEx} loops over intersections: with
+$\vv q_i=\vv v_i+\text{shift}+s_i\vv e_i$ and $\vv q_l$ likewise, it adds the single chord (if
+$i=l$ and $s_i\le s_l$) or the two end caps. \code{AInt} loops over every edge $m$: for each run
+$\alpha$ on $m$'s polygon it tests membership
+\[
+  0<(m-i)\bmod n_{\rho}<\text{span},\qquad
+  \text{span}=\begin{cases}(l-i)\bmod n_\rho & i\ne l\\ 0\ \text{or}\ n_\rho & i=l,\ s_i\lessgtr s_l\end{cases}
+\]
+and if inside adds $h(\vv v_m,\vv v_{z(m)})$ with that pair's $\vv R$ and min-image shift. \note{The
+$U_{\text{int}}$ loop is genuinely per-edge (no boundary walk) --- an earlier version walked the
+interior edges serially and was replaced.}
+
+\paragraph{Validation.} MC (image-aware $\int\binom{k}{2}\,dx$, $k=$ polygons covering a point):
+analytic $0.42377$ vs MC $0.42397$ (diff $2\times10^{-4}$, sampling noise).
+
+\section{Overlap gradient (the force)}
+
+Differentiating the boundary integral, the intersection-point motion cancels around the closed loop
+(Hadamard / the \S4 trick), leaving a boundary term:
+\begin{equation}
+  \delta A_\cap=\oint_{\partial(A\cap B)}\delta\vv X\times d\vv X .
+\end{equation}
+On a segment of edge $m$ from $\lambda_0$ to $\lambda_f$, $\vv X(\lambda)=\vv v_m+\lambda\vv e_m$ so
+$\delta\vv X=(1-\lambda)\delta\vv v_m+\lambda\,\delta\vv v_{z(m)}$, and integrating,
+\begin{equation}
+  \boxed{\ \frac{\partial A_\cap}{\partial v_k^\alpha}
+  =\sum_{\text{segments }m}\big[(1-\bar s_m)\delta_{mk}+\bar s_m\,\delta_{z(m)k}\big]\,
+   \Delta s_m\,\eps_{\alpha\beta}\,e_m^\beta\ },\qquad
+  \bar s_m=\tfrac{\lambda_0+\lambda_f}{2},\ \ \Delta s_m=\lambda_f-\lambda_0 .
+\end{equation}
+Each boundary segment deposits $(1-\bar s)\Delta s\,(\eps\vv e_m)$ on its start vertex $m$ and $\bar
+s\,\Delta s\,(\eps\vv e_m)$ on its end vertex $z(m)$, with $(\eps\vv e_m)=(e_m^y,-e_m^x)$. The
+segments are exactly those of \S3: end caps ($\lambda\!:\,s_i\!\to\!1$ and $0\!\to\!s_l$) and full
+interior edges ($\lambda\!:\,0\!\to\!1$, so $\bar s=\half$, $\Delta s=1$). \note{Crucially eq (4.3)
+needs \emph{no} reference $\vv R$ and \emph{no} min-image shift --- it depends only on edge vectors
+and the $s$ parameters. The physical force is $-\partial A_\cap/\partial\vv v$.}
+
+\paragraph{Implementation (\code{updateOverlapGradient}).} A \code{deposit(edge,\,l0,\,lf)} helper
+does exactly the boxed rule; it is called once per end cap (per intersection, mirror of $U_{\text{ex}}$)
+and once per full interior edge (per edge, mirror of $U_{\text{int}}$). The result is stored in
+\code{packing.overlapGradient} $=\partial A_\cap/\partial\vv v$.
+
+\paragraph{Validation.} Central-difference vs $d(\text{overlapArea})/d\vv v$ at a generic config:
+$\max|\text{err}|=5.3\times10^{-10}$, median $9.8\times10^{-11}$, net gradient
+$4\times10^{-16}$ (translation invariance).
+
+\section{Smoothness --- the wall}
+
+The overlap area is continuous ($C^0$) in the vertices, but its \emph{gradient is discontinuous} at
+a vertex--edge crossing event (a vertex passing through another polygon's edge): a wedge of overlap
+appears/vanishes at the corner, so $dA/dv$ jumps. Measured directly at a stalled config, vertex $20$:
+one-sided slopes were $+0.075$ (forward) vs $-0.012$ (backward) in $x$, $+0.0007$ vs $-0.043$ in $y$
+--- a genuine kink, not a bug (only $4/36$ vertices, all on the topology boundary; the other $32$ FD
+to $10^{-9}$). Consequences:
+\begin{itemize}[leftmargin=1.5em]
+\item A line-search minimizer (CG, L-BFGS) walks onto such a kink and \emph{hard-stalls}: no descent
+direction exists there. Our CG reaches machine precision on any smooth energy but floors at
+$\max|F|\approx3.5\times10^{-2}$ here; FIRE creeps lower ($\sim8\times10^{-3}$) only because it is
+damped dynamics, not a line search.
+\item So the sharp model \emph{did not} remove the non-smoothness --- it traded the rounded model's
+divergent contact stiffness ($d^{-1/2}$ at arc contacts) for vertex--edge force \emph{jumps}. Neither
+exact-overlap energy is smooth enough for a descent method to reach machine precision.
+\item A genuinely $C^\infty$ energy needs the mollified / diffuse-interface overlap
+(\code{smoothOverlap.tex}); that is the route if machine-precision minimization is the goal.
+\end{itemize}
+
+\paragraph{Other known gaps.} Exactly-collinear shared edges or a crossing landing on a vertex are
+skipped by the strict $0<s<1$ test (measure-zero); pure containment (one polygon inside another, no
+crossing) returns $0$ (cannot occur in a dense equal-size packing). See \code{TODO.md}.
+
+\end{document}

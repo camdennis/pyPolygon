@@ -1,0 +1,109 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell["J_arcsinh, fully real (Clausen) evaluation", "Section"],
+
+Cell["\
+Pieces and checks for the all-real evaluation of the arcsinh dilog integral
+(definitions.tex, mollified overlap):
+
+  J = (1/2) Integrate[(ArcSinh[x]/Sqrt[x^2+1]) (nu x - m)/((1+m^2) x^2 + 2 m nu x + 1 + nu^2), {x, X0, X1}]
+
+Plan: partial fractions in y = Exp[ArcSinh[x]] give four poles beta with residues +/- I/4;
+the two upper-half poles in closed form; Bloch-Wigner D reduced to the Clausen function Cl2;
+final recipe uses only atan2, log, sqrt, and Cl2 -- no complex arithmetic.\
+", "Text"],
+
+Cell["1. Closed-form poles and the partial-fraction identity", "Subsection"],
+
+Cell["\
+w = Sqrt[1 + m^2 + nu^2];
+betaP  = (w - nu)*(m + I)/(1 + m^2);
+betaM  = (w + nu)*(-m + I)/(1 + m^2);
+betaPc = (w - nu)*(m - I)/(1 + m^2);
+betaMc = (w + nu)*(-m - I)/(1 + m^2);
+rat = (nu*(y^2 - 1) - 2*m*y)/((1 + m^2)*(y^4 + 1) + 4*m*nu*(y^3 - y) + (2 + 4*nu^2 - 2*m^2)*y^2);
+pf  = (I/4)*(1/(y - betaP) - 1/(y - betaM) - 1/(y - betaPc) + 1/(y - betaMc));
+Abs[rat - pf /. {m -> 0.7, nu -> -0.4, y -> 1.37}]
+Abs[rat - pf /. {m -> -1.3, nu -> 0.9, y -> 0.41}]\
+", "Input"],
+
+Cell["\
+sqrt(s^2+1) closed form: with the upper root s = (-m nu + I w)/(1+m^2), check
+s^2 + 1 = ((m w - I nu)/(1+m^2))^2 exactly.\
+", "Text"],
+
+Cell["\
+s = (-m*nu + I*w)/(1 + m^2);
+FullSimplify[s^2 + 1 - ((m*w - I*nu)/(1 + m^2))^2]\
+", "Input"],
+
+Cell["2. Bloch-Wigner via Clausen", "Subsection"],
+
+Cell["\
+cl2 is the reference Clausen implementation; dBW is Bloch-Wigner; dCl is the
+Lewin reduction D(r Exp[I th]) = (Cl2[2 th] + Cl2[2 om] - Cl2[2 th + 2 om])/2
+with om = -Arg[1 - z].  The max difference over random z should be ~1*^-15.\
+", "Text"],
+
+Cell["\
+cl2[t_?NumericQ] := Im[PolyLog[2, Exp[I*t]]]
+dBW[z_?NumericQ] := Im[PolyLog[2, z]] + Arg[1 - z]*Log[Abs[z]]
+dCl[z_?NumericQ] := (cl2[2*Arg[z]] + cl2[-2*Arg[1 - z]] - cl2[2*Arg[z] - 2*Arg[1 - z]])/2
+SeedRandom[3];
+Max[Table[With[{z = RandomComplex[{-3 - 3*I, 3 + 3*I}]}, Abs[dBW[z] - dCl[z]]], {200}]]\
+", "Input"],
+
+Cell["3. Real series for Cl2 (the implementation piece)", "Subsection"],
+
+Cell["\
+Cl2[t] = t - t Log[t] + Sum[c[k] t^(2k+1)] on [0, Pi] (radius 2 Pi); reduce any
+argument to [0, Pi] first using oddness and 2 Pi periodicity.  The c[k] come from
+integrating the series of Log[2 Sin[t/2]] - Log[t].\
+", "Text"],
+
+Cell["\
+ck = Table[-SeriesCoefficient[Log[2*Sin[t/2]] - Log[t], {t, 0, 2*k}]/(2*k + 1), {k, 1, 20}];
+N[ck[[1 ;; 6]], 16]
+cl2Series[t_, K_] := t - t*Log[t] + Sum[ck[[k]]*t^(2*k + 1), {k, 1, K}]
+Table[cl2Series[t, 20] - cl2[t], {t, {0.5, 1.5, 2.5, 3.1}}]\
+", "Input"],
+
+Cell["4. Fully real J and comparison against the direct integral", "Subsection"],
+
+Cell["\
+jReal follows the definitions.tex recipe exactly: psi = arg(m + I),
+L = Log[|betaP|] = -Log[|betaM|], phiP/phiM from atan2 (note ArcTan[x, y] is
+Mathematica for atan2(y, x)), Clausen combinations for D, then
+J = -( (DP + L phiP) - (DM - L phiM) )/2 evaluated between Y0 and Y1.\
+", "Text"],
+
+Cell["\
+jReal[m0_, nu0_, x0_, x1_] := Module[{w0, psi, ll, imG, y0, y1},
+  w0 = Sqrt[1 + m0^2 + nu0^2];
+  psi = ArcTan[m0, 1];
+  ll = Log[w0 - nu0] - Log[1 + m0^2]/2;
+  imG[y_] := Module[{fp, fm, dp, dm},
+    fp = ArcTan[w0 - nu0 - m0*y, y];
+    fm = ArcTan[w0 + nu0 + m0*y, y];
+    dp = (cl2[2*psi + 2*fp] - cl2[2*psi] - cl2[2*fp])/2;
+    dm = (cl2[2*psi] - cl2[2*fm] - cl2[2*psi - 2*fm])/2;
+    (dp + ll*fp) - (dm - ll*fm)];
+  y0 = Exp[ArcSinh[x0]]; y1 = Exp[ArcSinh[x1]];
+  -((imG[y1] - imG[y0])/2)]
+
+jDirect[m0_, nu0_, x0_, x1_] := (1/2)*NIntegrate[
+  (ArcSinh[x]/Sqrt[x^2 + 1])*(nu0*x - m0)/((1 + m0^2)*x^2 + 2*m0*nu0*x + 1 + nu0^2),
+  {x, x0, x1}, WorkingPrecision -> 20]
+
+{jReal[0.7, -0.4, 0.3, 1.5]  - jDirect[7/10, -2/5, 3/10, 3/2],
+ jReal[-1.3, 0.9, -0.8, 0.9] - jDirect[-13/10, 9/10, -4/5, 9/10],
+ jReal[2.5, -1.5, -2.0, -0.2] - jDirect[5/2, -3/2, -2, -1/5]}\
+", "Input"]
+}]
+(* End of Notebook Content *)

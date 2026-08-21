@@ -1,0 +1,897 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\numberwithin{equation}{section}
+\newcommand{\vv}[1]{\vec{#1}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\half}{\tfrac{1}{2}}
+\DeclareMathOperator{\arcsinh}{arcsinh}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Li}{Li}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\atantwo}{atan2}
+
+\title{The Mollified Polygon Overlap:\\ Area, Gradient, and Exact Newton Minimization}
+\author{Derivation notes}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent A self-contained derivation of the Plummer-mollified overlap area between two convex
+polygons, its exact vertex gradient, and the Newton scheme they enable. Everything reduces, in closed
+form, to elementary functions plus a \emph{single} transcendental --- the Clausen function
+$\Cl_2$ --- and the whole evaluation is carried out without complex arithmetic. Numerical
+verification of every step is collected in \S\ref{sec:verify}.
+\end{abstract}
+
+\tableofcontents
+
+%========================================================================
+\section{Why mollify}\label{sec:why}
+
+Let $A$ and $B$ be simple polygons with CCW vertices $\vv v_k$ and edges
+$\vv e_k=\vv v_{z(k)}-\vv v_k$ ($z(k)$ the next vertex). The sharp overlap area
+\begin{equation}\label{eq:sharp}
+  A_\cap=\int_{\mathbb R^2}\mathbf 1_A(\vv x)\,\mathbf 1_B(\vv x)\,d^2x
+\end{equation}
+is a perfectly good energy, but its \emph{gradient} is only $C^0$: as a vertex of $A$ slides across an
+edge of $B$, the contact set changes non-smoothly and $\partial A_\cap/\partial\vv v$ has a kink. Two
+consequences:
+\begin{itemize}
+\item first-order relaxation (FIRE) stalls --- in practice $\max|F|$ floors around $3.6\times10^{-3}$;
+\item the Hessian is undefined at contacts, so no second-order method can be used at all.
+\end{itemize}
+Both problems disappear if we smooth the indicator. Convolving \emph{one} of the two indicators with a
+mollifier $K_\sigma$ gives
+\begin{equation}\label{eq:Acapsig}
+  A_\cap^\sigma=\int_{\mathbb R^2}\mathbf 1_A\,(K_\sigma*\mathbf 1_B)\,d^2x
+  =\int\!\!\int d^2x\,d^2x'\;\mathbf 1_A(\vv x)\,K_\sigma(\vv x-\vv x')\,\mathbf 1_B(\vv x') ,
+\end{equation}
+which is $C^\infty$ in the vertices for any smooth $K_\sigma$ and converges to \eqref{eq:sharp} as
+$\sigma\to0$. The parameter $\sigma$ is a genuine model choice (a softening length), not a numerical
+fudge.
+
+\paragraph{Choice of kernel.} A Gaussian makes the boundary integrals intractable. The 2D Plummer
+profile
+\begin{equation}\label{eq:K}
+  K_\sigma(\vv r)=\frac{\sigma^2}{\pi\,(\sigma^2+|\vv r|^2)^2},\qquad \int_{\mathbb R^2}K_\sigma=1,
+\end{equation}
+is the right compromise: it is smooth, normalized, and --- as we now show --- its potential is a
+logarithm, which is exactly what makes every edge-pair integral doable.
+
+%========================================================================
+\section{From a double area integral to a double boundary integral}\label{sec:boundary}
+
+\subsection{The field and the potential}
+Seek $\vv E_\sigma$ with $\nabla\!\cdot\!\vv E_\sigma=K_\sigma$. Try $\vv E_\sigma=C\vv r/(\sigma^2+r^2)$:
+\[
+  \frac{\partial}{\partial x}\frac{Cx}{\sigma^2+r^2}=C\,\frac{\sigma^2+y^2-x^2}{(\sigma^2+r^2)^2},
+\]
+so by symmetry
+\[
+  \nabla\!\cdot\!\vv E_\sigma=C\,\frac{(\sigma^2+y^2-x^2)+(\sigma^2+x^2-y^2)}{(\sigma^2+r^2)^2}
+  =2\pi C\,\frac{\sigma^2}{\pi(\sigma^2+r^2)^2}=2\pi C\,K_\sigma .
+\]
+Matching forces $C=1/2\pi$:
+\begin{equation}\label{eq:E}
+  \vv E_\sigma(\vv r)=\frac{\vv r}{2\pi(|\vv r|^2+\sigma^2)} .
+\end{equation}
+Next seek $\Phi_\sigma$ with $\nabla\Phi_\sigma=\vv E_\sigma$. Trying $\Phi_\sigma=C\ln(r^2+\sigma^2)$
+gives $\nabla\Phi_\sigma=2C\,\vv r/(r^2+\sigma^2)$, so $2C=1/2\pi$ and
+\begin{equation}\label{eq:Phi}
+  \boxed{\;\Phi_\sigma(r)=\frac{1}{4\pi}\ln(r^2+\sigma^2)\;}
+\end{equation}
+
+\subsection{Two applications of the divergence theorem}
+Define the \emph{softened membership function}
+\begin{equation}\label{eq:Psidef}
+  \Psi_B^\sigma(\vv x)\equiv(K_\sigma*\mathbf 1_B)(\vv x)
+  =\int d^2y\;(\nabla\!\cdot\!\vv E_\sigma)(\vv y-\vv x)\,\mathbf 1_B(\vv y).
+\end{equation}
+Gauss's theorem on $B$ turns the area integral into a boundary integral,
+\begin{equation}\label{eq:PsiGauss}
+  \Psi_B^\sigma(\vv x)=\oint_{\partial B}\vv E_\sigma(\vv y-\vv x)\!\cdot\!\hat n_B(\vv y)\,d\ell_y .
+\end{equation}
+As $\sigma\to0$, $\Psi_B^\sigma\to1$ strictly inside $B$, $\to\half$ on an edge, $\to(\text{interior
+angle})/2\pi$ at a vertex, and $\to0$ outside: it is a smoothed indicator, which is the useful way to
+think about it.
+
+Now $A_\cap^\sigma=\int_A\Psi_B^\sigma\,d^2x$. Writing $\vv E_\sigma=\nabla_{\!\vv x}\Phi_\sigma$ and
+applying the gradient theorem $\int_\Omega\nabla u\,dV=\oint_{\partial\Omega}u\,\hat\nu\,dS$ on $A$,
+\begin{equation}\label{eq:Acap-double-boundary}
+  \boxed{\;A_\cap^\sigma=-\oint_{\partial A}\!d\ell_x\oint_{\partial B}\!d\ell_y\;
+  \Phi_\sigma(|\vv x-\vv y|)\;\hat n_A(\vv x)\!\cdot\!\hat n_B(\vv y)\;}
+\end{equation}
+The two-dimensional overlap has become a \emph{one}-dimensional double integral over the two
+boundaries. With \eqref{eq:Phi} and polygonal boundaries this is a finite sum over edge pairs:
+\begin{equation}\label{eq:edge-sum}
+  A_\cap^\sigma=-\frac{1}{4\pi}\sum_{\alpha\in\partial A}\sum_{\beta\in\partial B}
+  (\hat n_\alpha\!\cdot\!\hat n_\beta)\int_{e_\alpha}\!\!d\ell_x\int_{e_\beta}\!\!d\ell_y\,
+  \ln\!\big(|\vv x-\vv y|^2+\sigma^2\big).
+\end{equation}
+Everything that follows is the evaluation of one such edge-pair panel.
+
+%========================================================================
+\section{The edge-pair panel}\label{sec:panel}
+
+\subsection{The normalized frame}
+Everything that follows is one edge of $\partial A$ against one edge of $\partial B$, so fix the frame
+once, at the start, and never change variables again. Parametrize
+\[
+  \vv x=\vv v_\alpha+t\,\vv e_\alpha,\qquad \vv y=\vv v_\beta+s\,\vv e_\beta,
+  \qquad t,s\in[0,1],
+\]
+write $L\equiv|\vv e_\alpha|$ and $\vv\Delta\equiv\vv v_\alpha-\vv v_\beta$, and rotate so that
+$\vv e_\alpha=(L,0)$. Then
+\begin{equation}\label{eq:xminusy}
+  \vv x-\vv y=\big(\;\Delta^x-e_\beta^x s+Lt\;,\;\;\Delta^y-e_\beta^y s\;\big),
+\end{equation}
+whose second component carries \emph{no} $t$: moving along the inner edge changes only the coordinate
+parallel to it. That is the one structural fact the whole reduction rests on. Measure the transverse
+component in units of $\sigma$ and name, once, the variable $X$ and the three parameters $m,\nu,w$ that
+carry the rest of these notes,
+\begin{equation}\label{eq:Xsub}
+  \boxed{\;X\equiv\frac{\Delta^y-e_\beta^y s}{\sigma},\qquad
+  m\equiv\frac{e_\beta^x}{e_\beta^y},\qquad
+  \nu_0\equiv\frac{\Delta^x-m\Delta^y}{\sigma},\quad \nu_1\equiv\nu_0+\frac L\sigma,\qquad
+  w\equiv\sqrt{1+m^2+\nu^2}\;}
+\end{equation}
+with $\nu$ standing for either $\nu_0$ or $\nu_1$. Eliminating $s$ in favor of $X$ turns the parallel
+component of \eqref{eq:xminusy} into $\sigma(\nu_0+mX)$ at $t=0$ and $\sigma(\nu_1+mX)$ at $t=1$: $m$ is
+the slope of the outer edge in this frame, and $\nu_0,\nu_1$ are the scaled parallel offsets of the
+inner edge's two endpoints. So the softened square distance at either endpoint is $\sigma^2F(X)$ with
+\begin{equation}\label{eq:F}
+  F(X)\equiv(\nu+mX)^2+X^2+1=AX^2+BX+C,\qquad A=1+m^2,\quad B=2m\nu,\quad C=1+\nu^2 .
+\end{equation}
+Completing the square in \eqref{eq:F} produces $w$ and, with it, the identity that removes every branch
+condition and all case analysis from these notes:
+\begin{equation}\label{eq:disc}
+  A\,F(X)=(AX+m\nu)^2+w^2,\qquad w^2=1+m^2+\nu^2>0\quad\text{always}
+  \qquad\big(\text{equivalently }4AC-B^2=4w^2\big).
+\end{equation}
+So $F$ has \emph{no real roots} for any $m,\nu$: every antiderivative below is a real logarithm plus a
+real arctangent, and the dilogarithm that eventually appears is genuinely irreducible (\S\ref{sec:J}).
+
+\subsection{The panel}
+The inner integral $\int_0^1\ln(|\vv x-\vv y|^2+\sigma^2)\,dt$ is now a single antiderivative. By
+\eqref{eq:xminusy} the transverse part is frozen at $\rho\equiv\sigma\sqrt{X^2+1}$ while the parallel
+part sweeps $u=\sigma(\nu_0+mX)\to\sigma(\nu_1+mX)$, so with $du=L\,dt$ and
+$\int\ln(u^2+\rho^2)du=u\ln(u^2+\rho^2)-2u+2\rho\arctan\frac u\rho$,
+\begin{equation}\label{eq:panel}
+  \boxed{\;\int_0^1\!\ln\big(|\vv x-\vv y|^2+\sigma^2\big)dt
+  =\frac\sigma L\Big[\,(\nu+mX)\ln\big(\sigma^2F(X)\big)-2(\nu+mX)
+    +2\sqrt{X^2+1}\;\Theta(X)\,\Big]_{\nu=\nu_0}^{\nu=\nu_1}\;}
+\end{equation}
+because $u^2+\rho^2=\sigma^2F(X)$ and $u/\rho=(\nu+mX)/\sqrt{X^2+1}$ at both endpoints. That last ratio
+is the object the rest of these notes is about:
+\begin{equation}\label{eq:Itan}
+  \boxed{\;\Theta(X)\equiv\arctan\frac{\nu+mX}{\sqrt{X^2+1}}\;}
+\end{equation}
+No auxiliary quadratic coefficients, no discriminant, and no separate arctangent difference: the two
+$\nu$ values \emph{are} the two ends of the inner edge, and $\Theta$ emerges on its own.
+
+\subsection{Outer integral}
+Integrate \eqref{eq:panel} over $s$ using $ds=-\frac\sigma{e_\beta^y}dX$, with endpoints
+$X_0=\Delta^y/\sigma$ and $X_1=(\Delta^y-e_\beta^y)/\sigma$. The middle term of \eqref{eq:panel} is a
+polynomial and the $\ln\sigma^2$ splits off, leaving exactly two nonelementary-looking integrals:
+\begin{equation}\label{eq:Isplit}
+  \frac{I_2}{|\vv e_\beta|}=-\frac{\sigma^2}{L\,e_\beta^y}
+  \bigg[\;\underbrace{\int_{X_0}^{X_1}\!(\nu+mX)\ln F\,dX}_{\text{elementary}}
+  \;+\;2\underbrace{\int_{X_0}^{X_1}\!\sqrt{X^2+1}\;\Theta\,dX}_{\text{the only hard object}}
+  \;+\;\text{polynomial in }X\;\bigg]_{\nu=\nu_0}^{\nu=\nu_1},
+\end{equation}
+where the two polynomial terms of \eqref{eq:panel} share a coefficient and collect as
+\[
+  \Big[\nu(X_1{-}X_0)+\tfrac m2(X_1^2{-}X_0^2)\Big]\big(\ln\sigma^2-2\big).
+\]
+Its $-2$ half reproduces the bare constant $-2$ of the old four-piece form, since
+$\nu_1-\nu_0=L/\sigma$ and $X_1-X_0=-e_\beta^y/\sigma$.
+
+\paragraph{The logarithmic piece.} It is elementary: with
+$\Lambda_0=\int\ln F\,dX$ and $\Lambda_1=\int X\ln F\,dX$,
+\begin{align}
+  \Lambda_0(X)&=\Big(X+\tfrac{B}{2A}\Big)\ln F-2X+\frac{2w}{A}\arctan\frac{AX+m\nu}{w},
+    \label{eq:Lam0}\\
+  \Lambda_1(X)&=\Big(\tfrac{X^2}{2}-\tfrac{B^2-2AC}{4A^2}\Big)\ln F-\tfrac{X^2}{2}+\tfrac{BX}{2A}
+    -\frac{Bw}{A^2}\arctan\frac{AX+m\nu}{w},\label{eq:Lam1}
+\end{align}
+giving $\int_{X_0}^{X_1}(\nu+mX)\ln F\,dX=\big[\nu\Lambda_0+m\Lambda_1\big]_{X_0}^{X_1}$, which closes
+the logarithmic half of \eqref{eq:Isplit} completely.
+
+\paragraph{The arctangent piece.} Everything hard in this problem is now the one integral
+$\int\sqrt{X^2+1}\,\Theta\,dX$ --- and, as \S\ref{sec:master} shows, the two cousins of it that
+the gradient needs.
+
+%========================================================================
+\section{The master arctangent integral}\label{sec:master}
+
+The energy needs $\int\sqrt{X^2+1}\,\Theta\,dX$; the gradient (\S\ref{sec:grad}) will need
+$\int\frac{X}{\sqrt{X^2+1}}\Theta\,dX$ and $\int\frac{X^2}{\sqrt{X^2+1}}\Theta\,dX$. All three are
+instances of one object. Define, for any weight $V'$,
+\begin{equation}\label{eq:master}
+  \boxed{\;\mathbb M[V]\equiv\int V'(X)\,\Theta(X)\,dX=V(X)\Theta(X)-\int V(X)\,\Theta'(X)\,dX\;}
+\end{equation}
+The derivative of $\Theta$ is the reason this works. Writing $\tau=(\nu+mX)/\sqrt{X^2+1}$ for its
+argument,
+\[
+  \tau'=\frac{m(X^2+1)-X(\nu+mX)}{(X^2+1)^{3/2}}=\frac{m-\nu X}{(X^2+1)^{3/2}},\qquad
+  1+\tau^2=\frac{F(X)}{X^2+1},
+\]
+the second identity being \eqref{eq:F} itself, so
+\begin{equation}\label{eq:Thetaprime}
+  \Theta'(X)=\frac{\tau'}{1+\tau^2}=\frac{m-\nu X}{\sqrt{X^2+1}\;F(X)} .
+\end{equation}
+The $\sqrt{X^2+1}$ in the denominator is what makes the three weights close on the same objects.
+Introduce
+\begin{equation}\label{eq:vpm}
+  v_\pm(X)\equiv\half\Big(X\sqrt{X^2+1}\pm\arcsinh X\Big),\qquad
+  v_+'=\sqrt{X^2+1},\quad v_-'=\frac{X^2}{\sqrt{X^2+1}},
+\end{equation}
+(check: $\frac{d}{dX}\,X\sqrt{X^2+1}=\frac{2X^2+1}{\sqrt{X^2+1}}$ and
+$\frac{d}{dX}\arcsinh X=\frac{1}{\sqrt{X^2+1}}$), and the two elementary primitives
+\begin{equation}\label{eq:lamrho}
+  \lambda(X)\equiv\int\frac{m-\nu X}{F}\,dX,\qquad
+  \varrho(X)\equiv\int\frac{X(m-\nu X)}{F}\,dX,
+\end{equation}
+and the one transcendental
+\begin{equation}\label{eq:Jdef}
+  \boxed{\;J_{\arcsinh}\equiv\half\int\frac{\arcsinh X\,(\nu X-m)}{\sqrt{X^2+1}\;F(X)}\,dX\;}
+\end{equation}
+Then, splitting $v_\pm$ into its $X\sqrt{X^2+1}$ and $\arcsinh$ halves against \eqref{eq:Thetaprime}
+(the first half cancels the $\sqrt{X^2+1}$ and leaves $\varrho$; the second leaves $\mp2J_{\arcsinh}$):
+
+\begin{equation}\label{eq:mastertable}
+  \begin{array}{lllll}
+    \text{weight }V' & V & \mathbb M[V] & \text{transcendental} & \text{used by}\\[2pt]
+    \sqrt{X^2+1} & v_+ & v_+\Theta-\half\varrho+J_{\arcsinh} & +J_{\arcsinh} & \text{energy }\eqref{eq:Isplit}\\[2pt]
+    X/\sqrt{X^2+1} & \sqrt{X^2+1} & \sqrt{X^2+1}\,\Theta-\lambda & \text{none} & \text{gradient }W^0\\[2pt]
+    X^2/\sqrt{X^2+1} & v_- & v_-\Theta-\half\varrho-J_{\arcsinh} & -J_{\arcsinh} & \text{gradient }W^1
+  \end{array}
+\end{equation}
+
+Three remarks, all useful later:
+\begin{itemize}
+\item The middle row is \emph{purely elementary} --- the $\sqrt{X^2+1}$ weight cancels the one in
+  $\Theta'$ outright. The gradient's $W^0$ costs no special functions at all.
+\item The outer rows differ only through $v_\pm=\half(X\sqrt{X^2+1}\pm\arcsinh X)$, so they carry
+  \emph{the same} $J_{\arcsinh}$ with opposite sign. Energy and force share one transcendental.
+\item Consequently $\mathbb M[\sqrt{\cdot}]+\mathbb M[X^2/\sqrt{\cdot}]=X\sqrt{X^2+1}\,\Theta-\varrho$
+  is elementary (the dilogarithms cancel), a cheap internal consistency check.
+\end{itemize}
+
+\paragraph{The elementary primitives explicitly.} Using $4AC-B^2=4w^2$ and
+$\int\frac{dX}{F}=\frac1w\arctan\frac{AX+m\nu}{w}$:
+\begin{align}
+  \lambda(X)&=-\frac{\nu}{2A}\ln F+\frac{mw}{A}\arctan\frac{AX+m\nu}{w},\label{eq:lam}\\
+  \varrho(X)&=-\frac{\nu X}{A}+\frac{P}{2A}\ln F
+    +\Big(Q-\frac{PB}{2A}\Big)\frac1w\arctan\frac{AX+m\nu}{w},
+    \qquad P=m+\frac{\nu B}{A},\ \ Q=\frac{\nu C}{A}.\label{eq:rho}
+\end{align}
+(For \eqref{eq:lam}: write $m-\nu X=-\frac{\nu}{2A}(2AX+B)+\big(m+\frac{\nu B}{2A}\big)$ and note
+$m+\frac{\nu B}{2A}=\frac{mw^2}{A}$.)
+
+%========================================================================
+\section{Evaluating \texorpdfstring{$J_{\arcsinh}$}{J\_arcsinh}: a fully real route}\label{sec:J}
+
+$J_{\arcsinh}$ is genuinely dilogarithm-level: by \eqref{eq:disc} the quadratic $F$ always has a
+complex-conjugate root pair, so no algebraic manipulation reduces it to elementary functions. What we
+\emph{can} do is evaluate it without ever performing complex arithmetic. That is this section.
+
+\subsection{Setup and integration by parts}
+Substitute $X=\sinh t$ (so $\arcsinh X=t$, $dX/\sqrt{X^2+1}=dt$), with
+$t_0=\arcsinh X_0$, $t_1=\arcsinh X_1$:
+\begin{equation}\label{eq:Jt}
+  J_{\arcsinh}=\half\int_{t_0}^{t_1}t\,\frac{\nu\sinh t-m}{Q(t)}\,dt,
+  \qquad Q(t)\equiv A\sinh^2t+B\sinh t+C .
+\end{equation}
+Integrate by parts with $u=t$, $dv=(\nu\sinh t-m)\,dt/Q$, i.e.\ $V(t)\equiv\int(\nu\sinh t-m)\,dt/Q$:
+\begin{equation}\label{eq:Jibp}
+  J_{\arcsinh}=\half\big[t\,V(t)\big]_{t_0}^{t_1}-\half\int_{t_0}^{t_1}V(t)\,dt .
+\end{equation}
+Both pieces will turn out real, and $V$ will turn out to be a difference of two arctangents.
+
+\subsection{The rational factor, its poles and residues}
+Put $y=e^t$, so $\sinh t=\half(y-1/y)$ and $dt=dy/y$. Then
+$\nu\sinh t-m=N(y)/(2y)$ and $Q=D(y)/(4y^2)$ with
+\begin{equation}\label{eq:R}
+\begin{gathered}
+  \frac{\nu\sinh t-m}{Q}\,dt=2R(y)\,dy,\qquad R(y)\equiv\frac{N(y)}{D(y)},\\
+  N(y)=\nu(y^2-1)-2my,\qquad D(y)=A(y^4+1)+2B(y^3-y)+(4C-2A)y^2 .
+\end{gathered}
+\end{equation}
+so $V=\int 2R\,dy$. The poles of $R$ are the roots of $D$. Now $Q=0$ means $\sinh t=\zeta$ with $\zeta$
+a root of $A\zeta^2+B\zeta+C$; by \eqref{eq:disc},
+\begin{equation}\label{eq:zeta}
+  \zeta=\frac{-m\nu\pm iw}{1+m^2}.
+\end{equation}
+Each $\sinh t=\zeta$ is $y^2-2\zeta y-1=0$, i.e.\ $y=\zeta\pm\sqrt{\zeta^2+1}$, so $D$ has four roots.
+For the upper $\zeta$ one finds $\zeta^2+1=(mw-i\nu)^2/(1+m^2)^2$, hence
+$\sqrt{\zeta^2+1}=(mw-i\nu)/(1+m^2)$, and $\zeta\pm\sqrt{\zeta^2+1}$ collapses --- with \emph{no
+complex square root left} --- to the two poles in the upper half-plane,
+\begin{equation}\label{eq:eta}
+  \boxed{\;\eta_+=\frac{(w-\nu)(m+i)}{1+m^2},\qquad \eta_-=\frac{(w+\nu)(-m+i)}{1+m^2}\;}
+\end{equation}
+the other two being the conjugates $\bar\eta_\pm$. Their real coordinates are
+\begin{equation}\label{eq:ab}
+  a_\pm\equiv\operatorname{Re}\eta_\pm=\frac{\pm m(w\mp\nu)}{1+m^2},\qquad
+  b_\pm\equiv\operatorname{Im}\eta_\pm=\frac{w\mp\nu}{1+m^2}\;(>0).
+\end{equation}
+Note for later that $\eta_+\eta_-=-1$, since $(m+i)(-m+i)=-(1+m^2)$ and $(w-\nu)(w+\nu)=1+m^2$.
+
+\paragraph{Residues.} The residue of $R$ at a simple pole $\eta$ is $c=N(\eta)/D'(\eta)$. On the
+factored denominator $D=A(y^2-2\zeta_1y-1)(y^2-2\zeta_2y-1)$ a pole $\eta=\zeta_i\pm r_i$
+($r_i=\sqrt{\zeta_i^2+1}$) obeys $\eta^2=2\zeta_i\eta+1$, so $N(\eta)=2\eta(\nu\zeta_i-m)$ and
+$D'(\eta)=4A(\pm r_i)(\zeta_i-\zeta_j)\eta$, giving
+\begin{equation}\label{eq:res}
+  c=\frac{N(\eta)}{D'(\eta)}=\frac{\nu\zeta_i-m}{2A(\pm r_i)(\zeta_i-\zeta_j)}=\pm\frac{i}{4} ,
+\end{equation}
+\emph{purely imaginary}, because $\nu\zeta_i-m=-w\,r_i$ (the $mw-i\nu$ of $r_i$ cancels the numerator)
+and $\zeta_1-\zeta_2=2iw/(1+m^2)$. Tracking the branch, $c(\eta_+)=+\tfrac i4$, $c(\eta_-)=-\tfrac i4$,
+and the conjugate poles carry $\mp\tfrac i4$.
+
+\subsection{\texorpdfstring{$V$}{V} is a difference of two arctangents}
+Because the residues are purely imaginary, the logarithms pair up into pure angles. From
+$V=\int2R\,dy=2\sum_{k=1}^4 c_k\ln(y-\eta_k)$, group each pole with its conjugate; the $\eta_+$ pair is
+\[
+  2\Big[\tfrac i4\ln(y-\eta_+)-\tfrac i4\ln(y-\bar\eta_+)\Big]
+  =\tfrac i2\ln\frac{y-\eta_+}{y-\bar\eta_+} .
+\]
+For real $y$ we have $y-\bar\eta_+=\overline{y-\eta_+}$, so the ratio is
+$(y-\eta_+)/\overline{(y-\eta_+)}=e^{2i\arg(y-\eta_+)}$, of unit modulus: the $\ln|\cdot|$ parts cancel
+identically and the pair collapses to $\tfrac i2\cdot2i\arg(y-\eta_+)=-\arg(y-\eta_+)$. The $\eta_-$
+pair (residue $-\tfrac i4$) gives $+\arg(y-\eta_-)$ the same way. Hence, using
+$y-\eta_\pm=(y-a_\pm)-ib_\pm$,
+\begin{equation}\label{eq:V}
+  \boxed{\;V(t)=\arg(y-\eta_-)-\arg(y-\eta_+)
+  =\atantwo(-b_-,\,y-a_-)-\atantwo(-b_+,\,y-a_+),\qquad y=e^t\;}
+\end{equation}
+This is manifestly real and, since $b_\pm>0$, manifestly continuous in $t$ (the arguments never cross
+the branch cut). \emph{All four} poles are needed for this cancellation: keeping only $\eta_\pm$ leaves
+a complex $V$.
+
+\subsection{The remaining integral and the real result}
+$\arg(y-\eta)=\operatorname{Im}\ln(y-\eta)$, and splitting
+$\ln(y-\eta)=\ln(-\eta)+\ln(1-y/\eta)$ with $\int\ln(1-y/\eta)\,dy/y=-\Li_2(y/\eta)$ gives
+$\int\ln(y-\eta)\,dy/y=\ln(-\eta)\ln y-\Li_2(y/\eta)$, hence
+\begin{equation}\label{eq:intarg}
+  \int\arg(y-\eta)\,dt=\ln y\,\arg(-\eta)-\operatorname{Im}\Li_2(y/\eta).
+\end{equation}
+In \eqref{eq:Jibp} we have $t=\ln y$, so $t\,V=\ln y\,[\arg(y-\eta_-)-\arg(y-\eta_+)]$. Combining
+$\half[t\,V]-\half\int V\,dt$ and using $\arg(y-\eta)-\arg(-\eta)=\arg(1-y/\eta)$ on the two $\ln y$
+terms, everything assembles into
+\begin{equation}\label{eq:Jreal}
+  \boxed{\;J_{\arcsinh}=-\half\Big[\operatorname{Im}G(\eta_+)-\operatorname{Im}G(\eta_-)\Big]_{Y_0}^{Y_1},
+  \qquad G(\eta)\equiv\Li_2\!\Big(\frac{y}{\eta}\Big)+\ln y\,\ln\!\Big(1-\frac{y}{\eta}\Big)\;}
+\end{equation}
+with $\operatorname{Im}G(\eta)=\operatorname{Im}\Li_2(y/\eta)+\ln y\,\arg(1-y/\eta)$ and
+$Y_0=e^{\arcsinh X_0}$, $Y_1=e^{\arcsinh X_1}$.
+
+\subsection{Bloch--Wigner and Clausen: removing the last complex object}
+The only non-elementary object left is $\operatorname{Im}\Li_2$. The Bloch--Wigner function
+\begin{equation}\label{eq:BW}
+  \mathcal D(z)\equiv\operatorname{Im}\Li_2(z)+\arg(1-z)\ln|z|
+\end{equation}
+is real-valued and single-valued on $\mathbb C\setminus\{0,1\}$. Substituting
+$\operatorname{Im}\Li_2(z)=\mathcal D(z)-\arg(1-z)\ln|z|$ with $z=y/\eta$ and
+$\ln|z|=\ln y-\ln|\eta|$, the $\ln y$ terms cancel and
+\begin{equation}\label{eq:ImG}
+  \operatorname{Im}G(\eta)=\mathcal D\!\Big(\frac{y}{\eta}\Big)+\ln|\eta|\,\arg\!\Big(1-\frac{y}{\eta}\Big).
+\end{equation}
+Specializing to \eqref{eq:eta}: $\arg\eta_+=\psi$, $\arg\eta_-=\pi-\psi$, and
+$|\eta_+|=(w-\nu)/\sqrt{1+m^2}=1/|\eta_-|$, so
+\begin{equation}\label{eq:clparams}
+\begin{gathered}
+  \psi=\atantwo(1,m),\qquad
+  L\equiv\ln|\eta_+|=\ln(w-\nu)-\half\ln(1+m^2)=-\ln|\eta_-| ,\\
+  \varphi_\pm\equiv\arg\!\Big(1-\frac{y}{\eta_\pm}\Big)=\atantwo\big(y,\;w\mp\nu\mp my\big).
+\end{gathered}
+\end{equation}
+Finally, Lewin's reduction expresses $\mathcal D$ through the Clausen function,
+\begin{equation}\label{eq:lewin}
+  \mathcal D(re^{i\theta})=\half\big[\Cl_2(2\theta)+\Cl_2(2\omega)-\Cl_2(2\theta+2\omega)\big],
+  \qquad \omega=-\arg(1-z),
+\end{equation}
+which holds for all $z$ ($\Cl_2$ is odd and $2\pi$-periodic, so a $2\pi$ jump in $\theta$ or $\omega$ is
+invisible). With $\theta=\arg(y/\eta_\pm)$ this gives
+\begin{equation}\label{eq:Dcl}
+\begin{aligned}
+  \mathcal D\!\Big(\frac{y}{\eta_+}\Big)&=\half\big[\Cl_2(2\psi+2\varphi_+)-\Cl_2(2\psi)-\Cl_2(2\varphi_+)\big],\\
+  \mathcal D\!\Big(\frac{y}{\eta_-}\Big)&=\half\big[\Cl_2(2\psi)-\Cl_2(2\varphi_-)-\Cl_2(2\psi-2\varphi_-)\big].
+\end{aligned}
+\end{equation}
+Since $\operatorname{Im}G(\eta_+)=\mathcal D(y/\eta_+)+L\varphi_+$ and
+$\operatorname{Im}G(\eta_-)=\mathcal D(y/\eta_-)-L\varphi_-$, \eqref{eq:Jreal} becomes the final,
+entirely real recipe
+\begin{equation}\label{eq:Jclausen}
+  \boxed{\;J_{\arcsinh}=-\half\Big[\mathcal D\!\Big(\frac{y}{\eta_+}\Big)-\mathcal D\!\Big(\frac{y}{\eta_-}\Big)
+  +L\,(\varphi_++\varphi_-)\Big]_{Y_0}^{Y_1}\;}
+\end{equation}
+The $y$-independent $\Cl_2(2\psi)$ cancels across $Y_0\to Y_1$, leaving eight $\Cl_2$ evaluations.
+\emph{No complex arithmetic appears anywhere}: only $\sqrt{\ }$, $\ln$, $\atantwo$, and $\Cl_2$.
+
+\paragraph{Evaluating $\Cl_2$.} Reduce the argument to $[0,\pi]$ using oddness and $2\pi$-periodicity,
+then sum
+\begin{equation}\label{eq:cl2}
+  \Cl_2(\theta)=-\int_0^\theta\ln\Big|2\sin\frac{u}{2}\Big|du=\sum_{k\ge1}\frac{\sin k\theta}{k^2}
+  =\theta-\theta\ln\theta+\sum_{k\ge1}c_k\,\theta^{2k+1},\qquad
+  c_k=\frac{|B_{2k}|}{2k\,(2k+1)!},
+\end{equation}
+with $B_{2k}$ the Bernoulli numbers ($c_1=\tfrac1{72}$, $c_2=\tfrac1{14400},\dots$). Twenty terms give
+$\sim10^{-15}$ uniformly on $[0,\pi]$.
+
+\paragraph{No further collapse.} It is tempting to use $\eta_+\eta_-=-1$ and the inversion
+$\mathcal D(1/z)=-\mathcal D(z)$ to fold the two Bloch--Wigner terms into one. This fails: the inversion
+needs $y/\eta_-=1/(y/\eta_+)=\eta_+/y$, whereas $y/\eta_-=-y\eta_+$ (equal only if $-y^2=1$).
+Numerically $\mathcal D(y/\eta_-)\ne\pm\mathcal D(y/\eta_+)$, the arguments are not a $z,-z$
+duplication pair, and $\varphi_++\varphi_-$ is not constant. Equation \eqref{eq:Jclausen} is minimal.
+
+%========================================================================
+\section{The gradient}\label{sec:grad}
+
+\subsection{Varying the double boundary integral}
+Use $\hat n_A^\alpha\,d\ell_x=\eps_{\alpha\beta}dx^\beta$ (here $\alpha,\beta$ are Cartesian indices) to
+rewrite \eqref{eq:Acap-double-boundary} without normals:
+\[
+  n_A^\alpha d\ell_x\,n_B^\alpha d\ell_y=\eps_{\alpha\beta}dx^\beta\eps_{\alpha\gamma}dy^\gamma
+  =dx^\gamma dy^\gamma
+  \quad\Longrightarrow\quad
+  A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\oint_{\partial B}dy^\alpha\,\Phi_\sigma .
+\]
+Now perturb $\vv x\mapsto\vv x+\delta\vv x$. With
+$\delta\Phi_\sigma=\frac{\partial\Phi_\sigma}{\partial x^\beta}\delta x^\beta$,
+\[
+  \delta A_\cap^\sigma=-\oint_{\partial B}dy^\alpha\oint_{\partial A}
+  \Big[\frac{\partial\Phi_\sigma}{\partial x^\beta}\delta x^\beta dx^\alpha
+  +\Phi_\sigma\,d\delta x^\alpha\Big].
+\]
+Integrating the second term by parts (the boundary term vanishes on a closed loop) and relabelling
+dummy indices gives an expression antisymmetric in $\alpha\beta$,
+\[
+  \delta A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\oint_{\partial B}
+  \Big[dy^\alpha\frac{\partial\Phi_\sigma}{\partial x^\beta}
+  -dy^\beta\frac{\partial\Phi_\sigma}{\partial x^\alpha}\Big]\delta x^\beta ,
+\]
+and restoring $\eps_{\alpha\beta}dy^\beta=\hat n_B^\alpha d\ell_y$ collapses it, via \eqref{eq:PsiGauss}
+and $\vv E_\sigma=\nabla\Phi_\sigma$, to the remarkably clean
+\begin{equation}\label{eq:dAcap}
+  \boxed{\;\delta A_\cap^\sigma=-\oint_{\partial A}dx^\alpha\,\delta x^\beta\,\eps_{\alpha\beta}\,
+  \Psi_B^\sigma(\vv x)\;}
+\end{equation}
+The entire variation is weighted by the softened membership $\Psi_B^\sigma$ --- the mollified analogue
+of ``how much of $B$ is here.'' No derivative of an intersection point is ever needed.
+
+\subsection{Vertex gradient}
+Traverse the edges of $\partial A$ with $\vv x_k(s)=\vv v_k+s\vv e_k=(1-s)\vv v_k+s\vv v_{z(k)}$, so
+$\delta\vv x_k=(1-s)\delta\vv v_k+s\,\delta\vv v_{z(k)}$ and $dx_k^\alpha=e_k^\alpha ds$. Defining the
+two moments
+\begin{equation}\label{eq:W}
+  W_k^{0}\equiv\int_0^1(1-s)\,\Psi_B^\sigma(\vv x_k(s))\,ds,\qquad
+  W_k^{1}\equiv\int_0^1 s\,\Psi_B^\sigma(\vv x_k(s))\,ds,
+\end{equation}
+and collecting the coefficient of each $\delta\vv v_m$,
+\begin{equation}\label{eq:gradA}
+  \boxed{\;\frac{\partial A_\cap^\sigma}{\partial v_m^\beta}
+  =\eps_{\beta\alpha}\Big[W_m^{0}\,e_m^\alpha+W_{z'(m)}^{1}\,e_{z'(m)}^\alpha\Big]\;}
+\end{equation}
+($z'$ = previous vertex): each edge deposits $W^0$ of its cross term on its start vertex and $W^1$ on
+its end vertex.
+
+\subsection{\texorpdfstring{$\Psi_B^\sigma$}{Psi\_B} in closed form}
+With $\hat n_B^\alpha d\ell_y=\eps_{\alpha\beta}dy^\beta$ and $\vv y_k(s)-\vv x=-\vv w_k+\vv e_k s$
+($\vv w_k=\vv x-\vv v_k$), \eqref{eq:PsiGauss} for one edge is
+\[
+  \Psi_k^\sigma(\vv x)=\int_0^1\!ds\,
+  \frac{-w_k^\alpha+e_k^\alpha s}{2\pi(|\vv w_k-\vv e_k s|^2+\sigma^2)}\,\eps_{\alpha\beta}e_k^\beta .
+\]
+The $\vv e_k s$ term dies ($\vv e_k\!\times\!\vv e_k=0$), leaving a single arctangent: with
+$a_k=|\vv e_k|^2$, $b_k=-2\vv w_k\!\cdot\!\vv e_k$, $c_k=|\vv w_k|^2+\sigma^2$ and
+$D_k=\sqrt{4a_kc_k-b_k^2}$,
+\begin{equation}\label{eq:Psik}
+  \Psi_k^\sigma(\vv x)=-\frac{w_k^\alpha\eps_{\alpha\beta}e_k^\beta}{\pi D_k}
+  \Big[\arctan\frac{2a_k+b_k}{D_k}-\arctan\frac{b_k}{D_k}\Big],\qquad
+  \Psi_B^\sigma=\sum_{k\in\partial B}\Psi_k^\sigma .
+\end{equation}
+
+\subsection{The moments via the master form}
+Equation \eqref{eq:W} is an outer integral over an $A$-edge of the arctangent \eqref{eq:Psik}. Resolving
+the field point along and across the inner edge $\hat e_k=\vv e_k/|\vv e_k|$ --- write $P_0,P_1$ for the
+along components and $X_0,X_1$ for the across components of $(\vv v_m-\vv v_k)$ and $\vv e_m$ --- the
+across coordinate is $\xi=X_0+sX_1$ and, because $D_k=2|\vv e_k|\sqrt{\xi^2+\sigma^2}$ and
+$\vv w_k\!\times\!\vv e_k=|\vv e_k|\xi$, the prefactor and the arctangent arguments reduce to exactly
+the $\Theta$ of \eqref{eq:Itan}. Changing variable from $s$ to $\xi$, the two moments are the
+$\xi$-integrals of $\frac{\xi}{\sqrt{\xi^2+\sigma^2}}\Theta$ and
+$\frac{\xi^2}{\sqrt{\xi^2+\sigma^2}}\Theta$ --- i.e.\ precisely rows two and three of the master table
+\eqref{eq:mastertable}:
+\begin{equation}\label{eq:WM}
+  W^{0}\ \longleftrightarrow\ M_1\equiv\mathbb M\big[\sqrt{\xi^2+\sigma^2}\big]
+  =\sqrt{\xi^2+\sigma^2}\,\Theta-\lambda,
+  \qquad
+  W^{1}\ \longleftrightarrow\ M_1'\equiv\mathbb M[v_-]=v_-\Theta-\half\varrho-J_{\arcsinh}.
+\end{equation}
+So the force needs \emph{no new analysis whatsoever}: $W^0$ is elementary, and $W^1$'s only
+transcendental is the same $J_{\arcsinh}$ that closes the energy --- reached through $v_-$ rather than
+the energy's $v_+$, and entering with the opposite sign. One Clausen evaluation serves both.
+
+%========================================================================
+\section{The near-parallel bridge}\label{sec:bridge}
+
+The assembled panel and moments divide by $X_1=\vv e_m\!\times\!\hat e_k=|\vv e_m|\sin\theta_{mk}$,
+which vanishes as two edges align: the energy carries $1/X_1$, the $W^1$ moment $1/X_1^2$, and the
+slope $\mu=P_1/X_1\to\infty$. The closed forms then lose all precision to cancellation --- at
+$|\sin\theta|\sim10^{-6}$ the panel is wrong in the sixth digit, and finite-differencing the energy
+amplifies that by $1/2h$ into an $O(10^{-2})$ force error.
+
+The cure is to recognize that each of these quantities is a \emph{perfectly regular integral}; only the
+closed form is singular. Undoing the $X_1$ division with $\xi=X_0+u X_1$, $u\in[0,1]$:
+\begin{equation}\label{eq:bridge}
+  \int_0^1\!\sqrt{\xi^2+\sigma^2}\,\Theta\,du,\qquad
+  \int_0^1\!\frac{\xi\,\Theta}{\sqrt{\xi^2+\sigma^2}}\,du,\qquad
+  \int_0^1\!\frac{u\,\xi\,\Theta}{\sqrt{\xi^2+\sigma^2}}\,du,
+  \qquad \Theta=\arctan\frac{U_0+P_1u}{\sqrt{\xi^2+\sigma^2}},
+\end{equation}
+all manifestly finite as $X_1\to0$, with limits equal to the exactly-parallel branch. The only feature
+is the arctangent's node $u_\star=-U_0/P_1$, a peak of width $\sim\sigma$; splitting the interval there
+and applying a fixed Gauss rule ($2\times24$ nodes) holds $\sim10^{-15}$ down to $\sigma\sim10^{-3}$.
+Used for $|X_1|\le10^{-2}|\vv e_m|$ and the closed forms elsewhere, this restores machine precision
+uniformly.
+
+%========================================================================
+\section{Packing energy and exact Newton minimization}\label{sec:newton}
+
+\subsection{The energy}
+For a packing of $N$ polygons the overlap energy is the normalized, squared form
+\begin{equation}\label{eq:U}
+  U_{\text{ov}}=2\sum_{A<B}\left(\frac{A_\cap^{\sigma,AB}}{A_A^{t}+A_B^{t}}\right)^{\!2},
+\end{equation}
+where $A^t$ are the constant \emph{target} areas. Squaring makes the contact force vanish smoothly as
+an overlap closes, so the packing jams near the target packing fraction instead of collapsing; the
+constant normalizer keeps $\partial U/\partial\vv v=4\sum(A_\cap/\text{norm}^2)\,\partial A_\cap/\partial\vv v$,
+so \eqref{eq:gradA} is all that is needed. To this we add the soft-body springs (area and perimeter,
+in relative form) and an intra-polygon self-repulsion barrier. Far pairs are pruned with a neighbour
+list and a $C^2$ switch on the centroid separation, so excluded pairs contribute \emph{exactly} zero
+and the energy stays smooth.
+
+\subsection{Why Newton is now available}
+Newton's method needs two things that the sharp model cannot supply:
+\begin{enumerate}
+\item a $C^\infty$ energy, so the Hessian exists --- provided by mollification;
+\item a force that is \emph{self-consistent} with its own energy to near machine precision, i.e.\
+  $\vv F=-\nabla U$ to far better than the step size --- provided by the closed forms above, once the
+  near-parallel bridge (\S\ref{sec:bridge}) removes the cancellation.
+\end{enumerate}
+Point 2 is the subtle one: a force that is merely \emph{accurate} is not enough. If $\vv F$ and
+$\nabla U$ disagree by $\eps$, the finite-difference Hessian inherits $\eps/h$ and Newton stalls at
+that level. Before the bridge, the exact tier disagreed with itself by $\sim10^{-2}$ and Newton stalled
+there; after it, the agreement is $\sim10^{-9}$ (the finite-difference floor) and Newton runs to the
+numerical bottom.
+
+\subsection{The scheme}
+\begin{enumerate}
+\item \textbf{FIRE} from the initial configuration to reach the basin, to $\max|F|\sim10^{-6}$. FIRE is
+  robust and cheap but first-order, so it cannot go much further.
+\item \textbf{Newton polish}: solve $H\,\delta\vv v=-\vv F$ and step, with $H$ the Hessian obtained by
+  central-differencing the analytic force, $2\times(2N_v)$ force evaluations per step.
+\end{enumerate}
+At $N=6$ this converges in four steps with textbook quadratic behaviour,
+\[
+  9.3\times10^{-7}\ \longrightarrow\ 3.7\times10^{-8}\ \longrightarrow\ 1.7\times10^{-12}
+  \ \longrightarrow\ \max|F|=9.3\times10^{-13},
+\]
+about nine decades below the sharp model's $3.6\times10^{-3}$ floor. That gap is the whole point of
+mollifying.
+
+\subsection{Cost}
+The finite-difference Hessian is the bottleneck: $2\times(2N_v)$ analytic force evaluations per Newton
+step, fine at $N=6$ but impractical by $N=32$. The remedy is the \emph{analytic} Hessian ---
+equivalently the stiffness matrix, so it is wanted anyway --- derived in \S\ref{sec:hessian}. It costs
+one pass over edge pairs, comparable to a single force evaluation, and introduces \emph{no} new
+transcendentals.
+
+%========================================================================
+\section{The analytic Hessian}\label{sec:hessian}
+
+We now differentiate \eqref{eq:gradA} once more. The pleasant surprise is that the second derivative is
+\emph{easier} than the first: its one new ingredient is the gradient of the softened membership, which
+turns out to be a boundary integral of the \emph{kernel itself} and is entirely elementary.
+
+\subsection{What has to be differentiated}
+Write the force as $g_m^\beta\equiv\partial A_\cap^\sigma/\partial v_m^\beta
+=\eps_{\beta\alpha}\big[W_m^{0}e_m^\alpha+W_{z'(m)}^{1}e_{z'(m)}^\alpha\big]$. Differentiating with
+respect to $v_n^\gamma$ produces exactly two kinds of term:
+\begin{equation}\label{eq:H2kinds}
+\begin{aligned}
+  H^{\beta\gamma}_{mn}\equiv\frac{\partial^2A_\cap^\sigma}{\partial v_m^\beta\,\partial v_n^\gamma}
+  =\ &\underbrace{\eps_{\beta\alpha}\Big[\frac{\partial W_m^{0}}{\partial v_n^\gamma}e_m^\alpha
+   +\frac{\partial W_{z'(m)}^{1}}{\partial v_n^\gamma}e_{z'(m)}^\alpha\Big]}_{\text{moment part}}\\
+  +\ &\underbrace{\eps_{\beta\gamma}\Big[W_m^{0}\big(\delta_{z(m)n}-\delta_{mn}\big)
+   +W_{z'(m)}^{1}\big(\delta_{mn}-\delta_{z'(m)n}\big)\Big]}_{\text{geometric part}} ,
+\end{aligned}
+\end{equation}
+using $\partial e_k^\alpha/\partial v_n^\gamma=\delta^{\alpha\gamma}(\delta_{z(k)n}-\delta_{kn})$ and
+$z(z'(m))=m$. The geometric part is free: it reuses the $W^{0},W^{1}$ already computed for the force,
+weighted by Kronecker deltas. All the work is in $\partial W/\partial v$.
+
+\subsection{The one new object: \texorpdfstring{$\nabla\Psi_B^\sigma$}{grad Psi\_B}}
+Since $W_k^{0,1}$ are integrals of $\Psi_B^\sigma$ along an edge of $A$, moving a vertex of $A$ moves
+the \emph{field point}, and the chain rule needs $\nabla_{\!\vv x}\Psi_B^\sigma$. Using
+$\Psi_B^\sigma=K_\sigma*\mathbf 1_B$ and $\nabla_{\!\vv x}K_\sigma(\vv x-\vv y)
+=-\nabla_{\!\vv y}K_\sigma(\vv x-\vv y)$, the gradient theorem on $B$ gives
+\begin{equation}\label{eq:gradPsi}
+  \boxed{\;\nabla_{\!\vv x}\Psi_B^\sigma(\vv x)
+  =-\oint_{\partial B}K_\sigma(|\vv x-\vv y|)\,\hat n_B(\vv y)\,d\ell_y\;}
+\end{equation}
+The potential $\Phi_\sigma$ and the field $\vv E_\sigma$ have dropped out: differentiating the softened
+membership returns the \emph{mollifier itself}, smeared along $\partial B$. This is the analogue, one
+derivative up, of $\Psi_B^\sigma=\oint\vv E_\sigma\!\cdot\!\hat n_B$, and it is why the Hessian needs no
+new special functions.
+
+\paragraph{Closed form per edge.} On edge $k$ of $\partial B$, with $\vv w_k=\vv x-\vv v_k$ and the same
+$a_k=|\vv e_k|^2$, $b_k=-2\vv w_k\!\cdot\!\vv e_k$, $c_k=|\vv w_k|^2+\sigma^2$, $D_k^2=4a_kc_k-b_k^2$ as
+in \eqref{eq:Psik}, we have $|\vv x-\vv y_k(r)|^2+\sigma^2=a_kr^2+b_kr+c_k\equiv q_k(r)$, so
+\begin{equation}\label{eq:gradPsiedge}
+  \nabla_{\!\vv x}\Psi_B^\sigma=-\sum_{k\in\partial B}\hat n_k\,|\vv e_k|\,\frac{\sigma^2}{\pi}
+  \int_0^1\frac{dr}{q_k(r)^2},
+\end{equation}
+and the reduction $\int dr/q^2=\frac{2ar+b}{D^2q}+\frac{2a}{D^2}\int\frac{dr}{q}$ together with
+$\int dr/q=\frac2D\arctan\frac{2ar+b}{D}$ gives the elementary closed form
+\begin{equation}\label{eq:Iq}
+  \int_0^1\frac{dr}{q^2}=\left[\frac{2ar+b}{D^2\,q(r)}\right]_0^1
+  +\frac{4a}{D^3}\left[\arctan\frac{2ar+b}{D}\right]_0^1 .
+\end{equation}
+Rational plus arctangent --- nothing more.
+
+\subsection{Moving \texorpdfstring{$B$}{B}: the cross block}
+If instead a vertex of $B$ moves, the boundary $\partial B$ itself moves and
+$\delta\Psi_B^\sigma=\oint_{\partial B}K_\sigma(|\vv x-\vv y|)\,(\delta\vv y\!\cdot\!\hat n_B)\,d\ell_y$.
+With $\delta\vv y=(1-r)\delta\vv v_k+r\,\delta\vv v_{z(k)}$ on edge $k$,
+\begin{equation}\label{eq:PsiBvert}
+  \frac{\partial\Psi_B^\sigma}{\partial v_n^\gamma}
+  =\sum_{k\in\partial B}\hat n_k^\gamma\,|\vv e_k|\,\frac{\sigma^2}{\pi}
+  \Big[\delta_{kn}\!\int_0^1\!\frac{(1-r)\,dr}{q_k^2}+\delta_{z(k)n}\!\int_0^1\!\frac{r\,dr}{q_k^2}\Big],
+\end{equation}
+which needs only the first moment $\int r\,dr/q^2=-\frac1{2a}\big[q^{-1}\big]-\frac{b}{2a}\int dr/q^2$,
+again elementary. So the $A$--$B$ cross block costs the same objects as \eqref{eq:Iq}.
+
+\subsection{Second moments and the extended master form}
+Moving a vertex of $A$ on edge $k$ shifts the field point by
+$\partial\vv x_k(s)/\partial v_n=\big[(1-s)\delta_{kn}+s\,\delta_{z(k)n}\big]\mathbb 1$, so with the
+\emph{second moments}
+\begin{equation}\label{eq:S}
+  \vv S_k^{(pq)}\equiv\int_0^1(1-s)^p\,s^q\;\nabla\Psi_B^\sigma\big(\vv x_k(s)\big)\,ds,
+  \qquad (p,q)\in\{(2,0),(1,1),(0,2)\},
+\end{equation}
+the chain rule gives compactly
+\begin{equation}\label{eq:dW}
+  \frac{\partial W_k^{0}}{\partial v_n^\gamma}=S_k^{(20)\gamma}\delta_{kn}+S_k^{(11)\gamma}\delta_{z(k)n},
+  \qquad
+  \frac{\partial W_k^{1}}{\partial v_n^\gamma}=S_k^{(11)\gamma}\delta_{kn}+S_k^{(02)\gamma}\delta_{z(k)n}.
+\end{equation}
+It remains to do the outer $s$-integral in \eqref{eq:S}. Substituting \eqref{eq:gradPsiedge} and passing
+to the normalized frame of \eqref{eq:Xsub}, the rational part of \eqref{eq:Iq} integrates to a rational
+function of $X$, while the arctangent part carries the prefactor $4a/D^3$ with
+$D=2|\vv e|\sigma\sqrt{X^2+1}$ --- that is, weight $(X^2+1)^{-3/2}$ against the same
+$\Theta$ of \eqref{eq:Itan}. So the Hessian is a fourth instance of the master form \eqref{eq:master},
+with $V'=(X^2+1)^{-3/2}$, hence $V=X/\sqrt{X^2+1}$:
+\begin{equation}\label{eq:master4}
+  \mathbb M\big[X/\sqrt{X^2+1}\big]=\frac{X}{\sqrt{X^2+1}}\,\Theta
+  -\int\frac{X(m-\nu X)}{(X^2+1)\,F(X)}\,dX .
+\end{equation}
+The integrand of the correction is \emph{rational}: the weight's $\sqrt{X^2+1}$ cancels the one in
+$\Theta'$ \eqref{eq:Thetaprime} outright. Partial-fractioning over the two irreducible quadratics
+$X^2+1$ and $F$ leaves logarithms and arctangents only. Extending \eqref{eq:mastertable}:
+\begin{equation}\label{eq:mastertable4}
+  \begin{array}{lllll}
+    \text{weight }V' & V & \int V\Theta' & \text{transcendental} & \text{used by}\\[2pt]
+    \sqrt{X^2+1} & v_+ & \half\varrho-J_{\arcsinh} & +J_{\arcsinh} & \text{energy}\\[2pt]
+    X/\sqrt{X^2+1} & \sqrt{X^2+1} & \lambda & \text{none} & \text{force }W^0\\[2pt]
+    X^2/\sqrt{X^2+1} & v_- & \half\varrho+J_{\arcsinh} & -J_{\arcsinh} & \text{force }W^1\\[2pt]
+    (X^2+1)^{-3/2} & X/\sqrt{X^2+1} & \text{rational} & \text{none} & \text{Hessian}
+  \end{array}
+\end{equation}
+
+\subsection{Assembly and remarks}
+Substituting \eqref{eq:dW} into \eqref{eq:H2kinds} gives the $A$--$A$ block
+\begin{equation}\label{eq:HAA}
+\begin{aligned}
+  H^{\beta\gamma}_{mn}=\ \eps_{\beta\alpha}\Big[
+    &\big(S_m^{(20)\gamma}\delta_{mn}+S_m^{(11)\gamma}\delta_{z(m)n}\big)e_m^\alpha
+    +\big(S_{z'(m)}^{(02)\gamma}\delta_{mn}+S_{z'(m)}^{(11)\gamma}\delta_{z'(m)n}\big)e_{z'(m)}^\alpha\Big]\\
+  +\ \eps_{\beta\gamma}\Big[&W_m^{0}\big(\delta_{z(m)n}-\delta_{mn}\big)
+    +W_{z'(m)}^{1}\big(\delta_{mn}-\delta_{z'(m)n}\big)\Big],
+\end{aligned}
+\end{equation}
+and the $A$--$B$ cross block follows by replacing $\nabla\Psi_B^\sigma$ with \eqref{eq:PsiBvert} inside
+\eqref{eq:S}. Three observations:
+\begin{itemize}
+\item \textbf{No new transcendentals.} The Hessian reuses $W^{0},W^{1}$ (which carry $J_{\arcsinh}$ from
+  the force) and adds only \emph{elementary} second moments. The dilogarithm never reappears; in fact
+  the new row of \eqref{eq:mastertable4} is the mildest of the four.
+\item \textbf{Sparsity.} Each vertex couples only to vertices of its own two edges and to the vertices
+  of neighbouring polygons that survive the neighbour list, so $H$ is sparse and banded up to the
+  pair list --- exactly the structure a stiffness matrix should have.
+\item \textbf{Symmetry.} $H^{\beta\gamma}_{mn}=H^{\gamma\beta}_{nm}$ follows from the $A\!\leftrightarrow\!B$
+  symmetry of \eqref{eq:Acap-double-boundary}; it is a useful implementation check, since the two
+  blocks are assembled by different code paths.
+\item \textbf{Cost.} One pass over edge pairs, i.e.\ the same order as a single force evaluation,
+  versus $2\times(2N_v)$ force evaluations for the finite-difference Hessian --- a factor
+  $\sim4N_v$ (about $250\times$ at $N=32$).
+\end{itemize}
+The near-parallel caveat of \S\ref{sec:bridge} applies here too: $\vv S^{(pq)}$ inherits the $1/X_1$
+powers, and the same regular-$u$-integral bridge should be used inside the band.
+
+%========================================================================
+\section{Implementation}\label{sec:impl}
+
+\subsection{From the pair Hessian to the packing Hessian}
+Section \ref{sec:hessian} gives $\partial^2A_\cap^\sigma/\partial\vv v\,\partial\vv v$ for one polygon
+pair. The energy actually minimized is the normalized, squared form \eqref{eq:U}, and each pair carries
+the smooth switch, so one more chain rule is needed. Writing $a=\sum_{\text{images}}S(d)\,A_\cap$ for the
+switched, image-summed overlap of a pair and $\text{nrm}=A_A^t+A_B^t$,
+\begin{align}
+  \delta a&=\textstyle\sum_{\text{im}}\big[S\,\delta A_\cap+A_\cap S'\,\delta d\big],\label{eq:da}\\
+  \delta^2a&=\textstyle\sum_{\text{im}}\big[S\,\delta^2A_\cap
+    +S'\big(\delta d\otimes\delta A_\cap+\delta A_\cap\otimes\delta d\big)
+    +A_\cap\big(S''\,\delta d\otimes\delta d+S'\,\delta^2d\big)\big],\label{eq:d2a}
+\end{align}
+and then
+\begin{equation}\label{eq:d2U}
+  \frac{\partial U}{\partial\vv v}=\frac{4a}{\text{nrm}^2}\,\delta a,\qquad
+  \frac{\partial^2U}{\partial\vv v\,\partial\vv v}
+  =\frac{4}{\text{nrm}^2}\Big(\delta a\otimes\delta a+a\,\delta^2a\Big).
+\end{equation}
+The switch depends on the vertices only through the centroid separation $d=|\vv c_B+\text{shift}-\vv c_A|$,
+so with $\hat d$ the unit separation, $\eps_n=-1$ for $n\in A$ and $+1$ for $n\in B$, and $n_v$ the vertex
+count of the polygon owning $n$,
+\begin{equation}\label{eq:dd}
+  \frac{\partial d}{\partial\vv v_n}=\frac{\eps_n\hat d}{n_v},\qquad
+  \frac{\partial^2 d}{\partial\vv v_n\partial\vv v_m}
+  =\frac{\eps_n\eps_m}{n_v^{(n)}n_v^{(m)}}\,\frac{\mathbb 1-\hat d\hat d^{\mathsf T}}{d}.
+\end{equation}
+Note the $\delta a\otimes\delta a$ term in \eqref{eq:d2U}: because the energy is \emph{squared}, the
+Hessian gets a rank-one piece built from the pair gradient even where $\delta^2A_\cap$ vanishes.
+
+\subsection{Exact inner, quadratured outer}
+The implementation evaluates the inner $\partial B$ integrals in closed form --- $\Psi_B^\sigma$ by
+\eqref{eq:Psik}, $\nabla\Psi_B^\sigma$ by \eqref{eq:Iq}, and $\partial\Psi_B^\sigma/\partial\vv v_B$ by
+\eqref{eq:PsiBvert} --- and takes the \emph{outer} edge integral \eqref{eq:S} by Gauss quadrature. This
+is deliberate. Newton's converged configuration is determined by where the \emph{force} vanishes, not by
+the Hessian: an inexact $H$ changes the path and the convergence rate, but the fixed point is
+$\vv F=\vv 0$, which is evaluated with the exact tier of \S\ref{sec:panel}--\S\ref{sec:J}. So outer
+quadrature in the Hessian costs nothing in final precision, while removing the entire
+$2\times(2N_v)$-force-evaluation cost of a finite-difference Hessian. (The fully closed-form outer
+integral is available if wanted --- it is row four of \eqref{eq:mastertable4} --- but buys only speed.)
+
+\subsection{Code map}
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Symbol / step & \texttt{energies.py}\\
+\hline
+$I_0=\int_0^1dr/q^2$, $I_1=\int_0^1r\,dr/q^2$ \eqref{eq:Iq} & \texttt{\_plummerQuadInts}\\
+$\Psi_B^\sigma$ \eqref{eq:Psik} & \texttt{plummerMeasure}\\
+$\nabla_{\!\vv x}\Psi_B^\sigma$ \eqref{eq:gradPsi} & \texttt{\_gradPlummerMeasure}\\
+$\partial\Psi_B^\sigma/\partial\vv v_B$ \eqref{eq:PsiBvert} & \texttt{\_dPlummerMeasureDvB}\\
+moments $W^{0,1}$, $\vv S^{(pq)}$, blocks \eqref{eq:HAA} & \texttt{\_pairHessianOneSided}\\
+pair Hessian (all four blocks) & \texttt{plummerPairHessian}\\
+packing Hessian \eqref{eq:da}--\eqref{eq:dd} & \texttt{plummerOverlapHessian}\\
+Newton hook & \texttt{minimize.minimizeNewton(hessian=...)}\\
+\hline
+\end{tabular}
+\end{center}
+\paragraph{Quadrature order matters more here than for the force.} The outer rule for the Hessian must
+be finer than the one used for $\Psi_B^\sigma$ in the force, because $\nabla\Psi_B^\sigma$ is sharper
+than $\Psi_B^\sigma$ (it is the kernel, not its potential). Reusing the force's $32$-point rule leaves
+the Hessian only $\sim8\times10^{-7}$ accurate and Newton loses its quadratic tail entirely --- it
+crawls, taking $30$ steps and stalling near $3\times10^{-12}$. A dedicated $96$-point rule
+(\texttt{\_HNODES}) restores it: Newton then converges in \emph{two} steps. The remaining
+$\sim2.5\times10^{-7}$ is not quadrature at all --- it is the gap between the semi-analytic and exact
+tiers, i.e.\ the exact tier's own $\sim3\times10^{-9}$ gradient noise amplified by the $1/\sigma$ of
+differentiation; refining the rule past $64$ points changes nothing.
+
+\noindent The $B$--$B$ block is obtained by calling \texttt{\_pairHessianOneSided} with the loops
+swapped, and the two cross blocks are computed independently; that they agree to machine precision
+($|H-H^{\mathsf T}|=0$ exactly in the assembled pair matrix) is a strong check, since they come from
+different code paths --- one differentiates the field point, the other moves $\partial B$.
+
+The soft-body springs and the self-repulsion barrier are cheap and local; their Hessian is still taken
+by finite differences, which costs $2\times(2N_v)$ evaluations of a \emph{cheap} force and leaves the
+expensive mollified-overlap part fully analytic.
+
+%========================================================================
+\section{Numerical verification}\label{sec:verify}
+
+Every step above is checked against an independent computation; all agreements are reported as maximum
+absolute error over randomized parameters.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Quantity & Checked against & Agreement\\
+\hline
+Panel \eqref{eq:panel} & direct $t$-quadrature & $\sim2\times10^{-14}$\\
+Assembly \eqref{eq:Isplit} & direct $(t,s)$-quadrature & $\sim2\times10^{-13}$\\
+$\Lambda_0,\Lambda_1$ \eqref{eq:Lam0}--\eqref{eq:Lam1} & direct quadrature & $\sim3\times10^{-13}$\\
+$\lambda,\varrho$ \eqref{eq:lam}--\eqref{eq:rho} & direct quadrature & $\sim10^{-15}$\\
+Master table \eqref{eq:mastertable} & quadrature, each weight & $\sim10^{-16}$\\
+Poles \eqref{eq:eta}, residues \eqref{eq:res} & \texttt{roots}$(D)$, $N/D'$ & $\sim10^{-15}$\\
+$V$ \eqref{eq:V} & finite difference of \eqref{eq:Jt} integrand & $\sim10^{-10}$\\
+$J_{\arcsinh}$ \eqref{eq:Jreal}, \eqref{eq:Jclausen} & direct integral \eqref{eq:Jdef} & $\sim10^{-16}$\\
+$\Cl_2$ series \eqref{eq:cl2} & \texttt{mpmath} & $\sim10^{-15}$\\
+Gradient \eqref{eq:gradA} & central difference of $A_\cap^\sigma$ & $\sim3\times10^{-9}$\\
+$\nabla\Psi_B^\sigma$ \eqref{eq:gradPsi} & central difference of $\Psi_B^\sigma$ & $\sim3\times10^{-10}$\\
+$\int dr/q^2$ \eqref{eq:Iq} & direct quadrature & $\sim2\times10^{-15}$\\
+Hessian master row \eqref{eq:master4} & direct quadrature & $\sim6\times10^{-16}$\\
+Near-parallel bridge \eqref{eq:bridge} & dense 2D reference & $\sim10^{-16}$\\
+Exact-tier self-consistency & semi-analytic tier & $\sim3\times10^{-9}$\\
+Pair Hessian \eqref{eq:HAA} & central difference of the pair gradient & $\sim5\times10^{-11}$\\
+Pair Hessian symmetry & $|H-H^{\mathsf T}|$ (blocks from distinct paths) & $0$ exactly\\
+Packing Hessian \eqref{eq:d2U} & central difference of the exact gradient & $\sim2.5\times10^{-7}$*\\
+\hline
+\end{tabular}
+\end{center}
+\noindent *at the tier floor, not an implementation error: the semi/exact gradient gap
+($3\times10^{-9}$) divided by $\sigma$ reproduces it, and the analytic Hessian is \emph{closer} to the
+exact-tier Hessian ($2.5\times10^{-7}$) than the semi-tier Hessian is ($7.8\times10^{-7}$).
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Newton at $N=6$, same start ($\max|F|=9.3\times10^{-7}$) & steps & wall clock\\
+\hline
+finite-difference Hessian, $\max|F|=9.3\times10^{-13}$ & 4 & $345$ s\\
+analytic Hessian, $\max|F|=6.2\times10^{-13}$ & \textbf{2} & $\mathbf{6}$ \textbf{s}\\
+\hline
+\end{tabular}
+\end{center}
+\noindent The analytic Hessian builds in $0.9$ s against $83$ s for the finite-difference one
+($\sim110\times$), giving $\sim57\times$ end to end --- and the advantage grows linearly with $N_v$,
+since the finite-difference cost is $2(2N_v)$ \emph{force} evaluations while the analytic cost is one
+edge-pair pass.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+\end{tabular}
+\end{center}
+
+\begin{sloppypar}
+\noindent Supporting scripts: \texttt{notes/verifyPanelFrame.py}
+(the normalized frame, \eqref{eq:panel} and \eqref{eq:Isplit}),
+\texttt{notes/master\_form.py} (master table),
+\texttt{notes/verify\_realroute.py} ($V$, $J_{\arcsinh}$, the no-collapse check),
+\texttt{notes/partial\_fractions\_arcsinh.py} (poles, residues, Clausen recipe),
+\texttt{notes/verify\_gradient\_masters.py} ($M_1$, $M_1'$), \texttt{notes/arcsinhClausen.nb}
+(Clausen coefficients and cross-checks). The implementation lives in \texttt{energies.py}
+(\texttt{\_masterM}, \texttt{\_tCoreReal}, \texttt{\_cl2}, \texttt{\_ceBridge}, \texttt{\_wBridge}).
+\end{sloppypar}
+
+%========================================================================
+\section{Summary}
+
+The mollified overlap of two polygons reduces, exactly, to a finite sum over edge pairs of elementary
+functions plus one Clausen function:
+\begin{itemize}
+\item mollification turns a 2D area integral into a double \emph{boundary} integral,
+  \eqref{eq:Acap-double-boundary}, because the Plummer kernel's potential is a logarithm;
+\item each edge-pair panel splits into logarithmic pieces (fully elementary, \eqref{eq:Lam0}) and
+  arctangent pieces;
+\item all arctangent pieces --- for both the energy and the force --- are instances of one master
+  integral $\mathbb M[V]$, \eqref{eq:mastertable}, whose only transcendental is $J_{\arcsinh}$;
+\item $J_{\arcsinh}$ evaluates in closed form with no complex arithmetic, \eqref{eq:Jclausen}, via two
+  poles in closed form, purely imaginary residues, a two-arctangent antiderivative, and Bloch--Wigner
+  $\to\Cl_2$;
+\item the gradient follows from the same machinery with $\Psi_B^\sigma$ as the weight,
+  \eqref{eq:dAcap}--\eqref{eq:gradA}, and shares the identical $J_{\arcsinh}$;
+\item with the near-parallel bridge in place the force is self-consistent to $\sim10^{-9}$, which is
+  what makes Newton viable --- driving $\max|F|$ to $\sim10^{-12}$, nine decades past the sharp model;
+\item the analytic Hessian, \eqref{eq:HAA}, needs one genuinely new object,
+  $\nabla\Psi_B^\sigma=-\oint K_\sigma\hat n_B$, \eqref{eq:gradPsi} --- the mollifier smeared along
+  $\partial B$ --- which is elementary, so the second derivative introduces \emph{no} new
+  transcendentals and costs one edge-pair pass instead of $2(2N_v)$ force evaluations.
+\end{itemize}
+
+\end{document}

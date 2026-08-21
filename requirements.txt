@@ -1,4 +1,9 @@
-numpy>=1.22
+# NUMPY 2 IS UNTESTED HERE and pins the whole stack. The upper bound is not about this code: a
+# system matplotlib built against the numpy 1.x C ABI cannot import under numpy 2 at all, which
+# presents as "_ARRAY_API not found" from matplotlib._path and looks like a matplotlib fault.
+# The lower bound is real -- np.linalg.qr only takes stacked (3-D) input from 1.22, which
+# constraints._qrFactor needs (it has a loop fallback, but the stacked path is the fast one).
+numpy>=1.22,<2
 scipy>=1.7
 matplotlib>=3.4
 mpmath>=1.2

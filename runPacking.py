@@ -26,6 +26,7 @@ the same unit squares is the improvement, so ``+0.05%`` beat the record and ``-0
 """
 import argparse
 import os
+import traceback
 import warnings
 
 import matplotlib
@@ -247,7 +248,15 @@ def analyze(packing, count, digits):
     try:
         result = rf.refine(squeezed, tolerance = tolerance, digits = digits)
     except Exception as failure:
-        warnings.warn(f"refinement refused ({failure}); reporting the squeezed packing instead")
+        # NAME THE TYPE AND THE LINE. mpmath raises ZeroDivisionError with NO MESSAGE from a bare mpf
+        # divide, so reporting str(failure) alone printed "refinement refused ()" and said nothing at
+        # all about what went wrong or where.
+        frame = traceback.extract_tb(failure.__traceback__)[-1]
+        warnings.warn(f"refinement refused -- {type(failure).__name__}"
+                      f"{': ' + str(failure) if str(failure) else ''} "
+                      f"at {os.path.basename(frame.filename)}:{frame.lineno}; "
+                      f"reporting the squeezed packing instead, so the side is the squeeze's "
+                      f"~1e-12 value rather than an exact one")
         result = None
     return state, rattlers, flexible, result
 

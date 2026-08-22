@@ -118,7 +118,12 @@ def _leastSquares(J, F):
     the fallback rather than the default."""
     try:
         return mp.qr_solve(J, F)[0]
-    except ValueError:
+    except (ValueError, ZeroDivisionError):
+        # BOTH EXCEPTION TYPES, because mpmath is not consistent about which it uses for a singular
+        # system: householder raises ValueError('matrix is numerically singular') while the LU path
+        # raises ZeroDivisionError, sometimes with that same text and sometimes -- from a bare mpf
+        # divide -- with NO MESSAGE AT ALL. Catching only ValueError let the fallback's own failure
+        # escape, which is what surfaced as "refinement refused ()" with an empty parenthesis.
         transpose = J.T
         return mp.lu_solve(transpose * J, transpose * F)
 

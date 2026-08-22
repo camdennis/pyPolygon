@@ -8,7 +8,7 @@ and refines it to an exact side, then writes
     <prefix>.png    the packing, colored by how the contacts hold each square
     <prefix>.txt    4 * count vertex positions, box normalized to the UNIT square
 
-with ``prefix`` defaulting to ``~/data/packings/packing<count>seed<seed>``. OUTSIDE THE REPO ON
+with ``prefix`` defaulting to ``~/data/packings/n<count>_s<side>_seed<seed>``. OUTSIDE THE REPO ON
 PURPOSE: ``*.png`` is gitignored here, so a run writing into the working tree drops half its output
 somewhere git will not keep and the other half where it will.
 
@@ -326,6 +326,21 @@ def drawPacking(corners, count, side, rattlers, flexible, path):
 
 
 # UNVERIFIED(Cam)
+def outputStem(count, side, seed):
+    """``n026_s5.6213203436_seed0`` -- the count, then THE SIDE, then the seed.
+
+    THE SIDE IS THE RESULT AND THE SEED IS ONLY PROVENANCE, so the side comes first: a listing then
+    sorts into what each arrangement is worth, and two seeds that found the same optimum sit next to
+    each other instead of being scattered by a number that means nothing.
+
+    The count is ZERO PADDED because a lexicographic listing otherwise reads n11, n17, n26, n268, n27,
+    n5. The side is not, and does not need to be: for a fixed count every side is within a percent or
+    so of the record, so they all carry the same number of integer digits and sort correctly as they
+    stand."""
+    return f"n{int(count):03d}_s{float(side):.10f}_seed{int(seed)}"
+
+
+# UNVERIFIED(Cam)
 def main():
     parser = argparse.ArgumentParser(description = __doc__.splitlines()[0])
     parser.add_argument("count", type = int, help = "number of unit squares")
@@ -343,17 +358,18 @@ def main():
                                "otherwise makes redundant")
     given = parser.parse_args()
 
-    prefix = given.prefix or os.path.join(given.outputDir,
-                                          f"packing{given.count}seed{given.seed}")
-    prefix = os.path.expanduser(prefix)
-    parent = os.path.dirname(prefix)
-    if parent:
-        os.makedirs(parent, exist_ok = True)
     model = cornerCut(given.count, given.seed, scheduleSteps = given.steps,
                       exactArcs = not given.chorded, bisect = given.bisect)
     state, rattlers, flexible, result = analyze(asPacking(model, given.count), given.count,
                                                 given.digits)
     corners, side = unitCorners(state, given.count, result, given.digits)
+    # NAMED AFTER THE RUN FINISHES, because the side is in the name and is not known before then.
+    prefix = given.prefix or os.path.join(given.outputDir,
+                                          outputStem(given.count, side, given.seed))
+    prefix = os.path.expanduser(prefix)
+    parent = os.path.dirname(prefix)
+    if parent:
+        os.makedirs(parent, exist_ok = True)
     writePositions(corners, f"{prefix}.txt", given.digits)
     drawPacking(corners, given.count, side, rattlers, flexible, f"{prefix}.png")
 
